@@ -1,0 +1,24 @@
+#ifndef SERVER_HPP
+#define SERVER_HPP
+
+#include <iostream>
+#include <boost/bind/bind.hpp>
+#include <boost/asio.hpp>
+#include <memory>
+
+#include "common.hpp"
+
+// Only accept new connections
+class Server {
+ public:
+    Server(boost::asio::io_context& io_context);
+
+ private:
+    void do_accept();
+
+ private:
+    boost::asio::io_context& io_context_;
+    boost::asio::ip::tcp::acceptor acceptor_;
+};
+
+#endif // SERVER_HPP

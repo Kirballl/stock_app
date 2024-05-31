@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package Serialize;
+
+message TradeOrder {
+    bool for_sell = 1;
+    int32 usd_cost = 2;
+    int32 rub_cost = 3;
+}
