@@ -6,11 +6,15 @@ SET(CMAKE_CXX_STANDARD 17)
 FIND_PACKAGE(Boost 1.40 COMPONENTS system REQUIRED)
 FIND_PACKAGE(Threads REQUIRED)
 
+# Указание пути к библиотекам и заголовочным файлам protobuf
+find_package(Protobuf REQUIRED)
+include_directories(${Protobuf_INCLUDE_DIRS})
+link_directories(${Protobuf_LIBRARY_DIRS})
+
 find_program(PROTOC_EXECUTABLE protoc)
 if (NOT PROTOC_EXECUTABLE)
     message(FATAL_ERROR "protoc executable not found")
 endif()
-
 
 # Обработка .proto файлов
 set(PROTO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/proto/proto_example.proto)
