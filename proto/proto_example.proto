@@ -3,7 +3,18 @@ syntax = "proto3";
 package Serialize;
 
 message TradeOrder {
-    bool for_sell = 1;
+    string type = 1;
     int32 usd_cost = 2;
-    int32 rub_cost = 3;
+    int32 usd_amount = 3;
+    int32 rub_cost = 4;
+    string user_id = 5;
+}
+
+message TradeResponse {
+    string status = 1;
+    string message = 2;
+}
+
+message TradeRequest {
+    repeated TradeOrder orders = 1;
 }

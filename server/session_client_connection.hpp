@@ -9,9 +9,9 @@
 #include "common.hpp"
 
 // Handle certain client connection 
-class Session_client_connection : public  std::enable_shared_from_this<Session_client_connection> {
+class SessionClientConnection : public  std::enable_shared_from_this<SessionClientConnection> {
  public:
-    Session_client_connection(boost::asio::ip::tcp::socket socket);
+    SessionClientConnection(boost::asio::ip::tcp::socket socket, Core& core);
     void start();
 
  private:
@@ -22,6 +22,8 @@ class Session_client_connection : public  std::enable_shared_from_this<Session_c
     boost::asio::ip::tcp::socket socket_;
     enum {max_message_length = 512};
     char data_[max_message_length];
+
+    Core core_;
 };
 
 #endif // SESSION_CLIENT_CONNECTION

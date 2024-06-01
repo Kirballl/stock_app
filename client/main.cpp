@@ -28,6 +28,7 @@ int main () {
     } catch (std::exception& e) {
         std::cerr << "Exeption: " << e.what() << std::endl;
     }
+    // gracefull
 
     return 0;
 }
