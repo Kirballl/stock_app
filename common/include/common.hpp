@@ -6,6 +6,11 @@
 static short port = 5555;
 const std::string host = "127.0.0.1";
 
+enum trade_type_t {
+    BUY,
+    SELL
+};
+
 // namespace Requests {
 //     static std::string Registration = "Reg";
 //     static std::string Hello = "Hel";

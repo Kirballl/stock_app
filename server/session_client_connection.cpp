@@ -17,17 +17,24 @@ void SessionClientConnection::async_read_data_from_socket() {
     socket_.async_read_some(boost::asio::buffer(data_, max_message_length),
         [this, self_ptr](boost::system::error_code ec, std::size_t length) {
             if (!ec) {
-                std::cout << "Received data: " << std::string(data_, length) 
-                    << " from someone" << std::endl;
-                async_write_data_to_socket(length);
+                Serialize::TradeOrder order;
+                // Desereialeze data
+                order.ParseFromArray(data_, length);
+
+                Serialize::TradeResponse responce = core_.handle_order(order);
+                async_write_data_to_socket(responce);
             }
         });
 }
 
-void SessionClientConnection::async_write_data_to_socket(std::size_t length) {
+void SessionClientConnection::async_write_data_to_socket(const Serialize::TradeResponse& responce) {
     auto self_ptr(shared_from_this());
-    boost::asio::async_write(socket_, boost::asio::buffer(data_, length), 
-        [this, self_ptr](boost::system::error_code ec, std::size_t length){
+
+    std::string serialized_response;
+    responce.SerializeToString(&serialized_response);
+
+    boost::asio::async_write(socket_, boost::asio::buffer(serialized_response), 
+        [this, self_ptr](boost::system::error_code ec, std::size_t length) {
             if (!ec) {
                 async_read_data_from_socket();
             }

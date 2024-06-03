@@ -3,6 +3,7 @@ set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/server.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/session_client_connection.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core.cpp
 )
 
 # Создание исполняемых файлов

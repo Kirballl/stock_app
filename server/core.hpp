@@ -7,17 +7,18 @@
 
 class Core {
  public:
-   Core() = default;
+  Core() = default;
 
-   Serialize::TradeResponse handle_order(const Serialize::TradeOrder& order);
-   
-
- private:
-   void match_orders();
+  Serialize::TradeResponse handle_order(const Serialize::TradeOrder& order);
+  //Serialize::TradeResponse process_oreders(const Serialize::TradeRequest& request);
 
  private:
-   std::vector<Serialize::TradeOrder> buy_orders_;
-   std::vector<Serialize::TradeOrder> sell_orders_;
+  //void save_order_to_db();
+  //void match_orders();
+
+ private:
+  std::vector<Serialize::TradeOrder> buy_orders_;
+  std::vector<Serialize::TradeOrder> sell_orders_;
 };
 
 #endif // ORDER_HANDLER_HPP

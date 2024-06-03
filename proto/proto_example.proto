@@ -1,13 +1,17 @@
 syntax = "proto3";
-
+//      naming???
 package Serialize;
 
 message TradeOrder {
-    string type = 1;
+    enum TradeType {
+        BUY = 0;
+        SELL = 1;
+    }
+    TradeType type = 1;
     int32 usd_cost = 2;
     int32 usd_amount = 3;
-    int32 rub_cost = 4;
-    string user_id = 5;
+
+    string username = 4;
 }
 
 message TradeResponse {
@@ -15,6 +19,6 @@ message TradeResponse {
     string message = 2;
 }
 
-message TradeRequest {
-    repeated TradeOrder orders = 1;
-}
+// message TradeRequest {
+//     repeated TradeOrder orders = 1;
+// }
