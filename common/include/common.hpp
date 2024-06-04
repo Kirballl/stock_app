@@ -3,8 +3,8 @@
 
 #include <string>
 
-static short port = 5555;
-const std::string host = "127.0.0.1";
+static short port = 5555; // config
+const std::string host = "127.0.0.1"; // config 
 
 enum trade_type_t {
     BUY,

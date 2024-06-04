@@ -3,23 +3,20 @@
 Serialize::TradeResponse Core::handle_order(const Serialize::TradeOrder& order) {
     Serialize::TradeResponse response;
 
+    std::cout << "handle_order()" << std::endl;
+
     //save_order_to_db();
     switch (order.type()) {
     case Serialize::TradeOrder::SELL :
         sell_orders_.push_back(order);
-
-        response.set_status("Success");
-        response.set_message("Sell order received");
+        response.set_message(Serialize::TradeResponse::SUCCESS);
         break;
     case Serialize::TradeOrder::BUY :
         buy_orders_.push_back(order);
-
-        response.set_status("Success");
-        response.set_message("Buy order received");
+        response.set_message(Serialize::TradeResponse::SUCCESS);
         break;
     default:
-        response.set_status("Error");
-        response.set_message("Unknown order type");
+        response.set_message(Serialize::TradeResponse::ERROR);
         break;
     }
     

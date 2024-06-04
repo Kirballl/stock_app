@@ -25,7 +25,7 @@ class SessionClientConnection : public  std::enable_shared_from_this<SessionClie
    char data_[max_message_length];
 
    // trade logic
-   Core core_;
+   Core& core_; 
 };
 
 #endif // SESSION_CLIENT_CONNECTION

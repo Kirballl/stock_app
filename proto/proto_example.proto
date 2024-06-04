@@ -15,8 +15,11 @@ message TradeOrder {
 }
 
 message TradeResponse {
-    string status = 1;
-    string message = 2;
+    enum status {
+        SUCCESS = 0;
+        ERROR = 1;
+    }
+    status message = 1;
 }
 
 // message TradeRequest {

@@ -39,20 +39,26 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
 }
 
 void Client::get_response_from_stock() {
-    char reply[1024];
+    boost::asio::streambuf response_buf;
     boost::system::error_code error;
-    std::size_t reply_length = boost::asio::read(socket_, boost::asio::buffer(reply, sizeof(reply)), error);
-    if (error) {
-        std::cerr << "Failed to read response: " << error.message() << std::endl;
+
+    std::size_t reply_length = boost::asio::read_until(socket_, response_buf, "\n", error);
+    if (error && error != boost::asio::error::eof) {
+        std::cerr << "Failed to read responce: " <<  error.message() << std::endl;
         return;
     }
 
+    std::istream response_stream(&response_buf);
+    std::string serialized_response;
+    std::getline(response_stream, serialized_response);
+
     Serialize::TradeResponse response;
-    response.ParseFromArray(reply, reply_length);
+    response.ParseFromString(serialized_response);
     std::cout << "Response: " << response.message() << std::endl;
 }
 
 void Client::write_data_to_socket(std::string& serialized_order) {
+    std::cout << "write_data_to_socket()" << std::endl;
     boost::asio::write(socket_, boost::asio::buffer(serialized_order));
 }
 
