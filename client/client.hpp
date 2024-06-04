@@ -12,9 +12,9 @@ class Client {
  public:
    Client(std::string name, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
-   std::string get_name();
    Serialize::TradeOrder form_order(trade_type_t trade_type);
    void send_order_to_stock(const Serialize::TradeOrder& order);
+   
    void close();
 
  private:

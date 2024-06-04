@@ -26,6 +26,8 @@ void SessionClientConnection::async_read_data_from_socket() {
 
                 Serialize::TradeResponse responce = core_.handle_order(order);
                 async_write_data_to_socket(responce);
+            } else {
+                std::cerr << "Failed to receive order" << std::endl;
             }
         });
 }

@@ -3,8 +3,8 @@ PROJECT(my_stock)
 
 SET(CMAKE_CXX_STANDARD 17)
 
-FIND_PACKAGE(Boost 1.40 COMPONENTS system REQUIRED)
-FIND_PACKAGE(Threads REQUIRED)
+find_package(Boost 1.40 COMPONENTS system REQUIRED)
+find_package(Threads REQUIRED)
 
 # Указание пути к библиотекам и заголовочным файлам protobuf
 find_package(Protobuf REQUIRED)

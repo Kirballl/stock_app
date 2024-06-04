@@ -71,10 +71,6 @@ void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
     get_response_from_stock();
 }
 
-std::string Client::get_name() {
-    return name_;
-}
-
 void Client::close() {
     socket_.close();
 }
