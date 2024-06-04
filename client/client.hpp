@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 
-#include "proto_example.pb.h"
+#include "trade_market_protocol.pb.h"
 #include "common.hpp"
 
 class Client {
@@ -14,7 +14,7 @@ class Client {
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
    void send_order_to_stock(const Serialize::TradeOrder& order);
-   
+
    void close();
 
  private:

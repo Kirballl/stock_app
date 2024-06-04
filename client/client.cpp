@@ -54,7 +54,7 @@ void Client::get_response_from_stock() {
 
     Serialize::TradeResponse response;
     response.ParseFromString(serialized_response);
-    std::cout << "Response: " << response.message() << std::endl;
+    std::cout << "Response: " << response.response_msg() << std::endl;
 }
 
 void Client::write_data_to_socket(std::string& serialized_order) {

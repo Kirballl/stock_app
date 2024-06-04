@@ -7,8 +7,8 @@ set(SERVER_SOURCES
 )
 
 # Создание исполняемых файлов
-add_executable(server ${SERVER_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/../generated/proto_example.pb.cc)
-target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/common/include Threads::Threads ${Boost_LIBRARIES} ${CMAKE_CURRENT_BINARY_DIR}/../generated)
+add_executable(server ${SERVER_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated/trade_market_protocol.pb.cc)
+target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/common/include Threads::Threads ${Boost_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated)
 
 # Линковка с protobuf и Boost
 target_link_libraries(server proto_files ${Protobuf_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads)

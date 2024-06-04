@@ -19,7 +19,7 @@ message TradeResponse {
         SUCCESS = 0;
         ERROR = 1;
     }
-    status message = 1;
+    status response_msg = 1;
 }
 
 // message TradeRequest {

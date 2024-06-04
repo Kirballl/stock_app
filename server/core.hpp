@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "proto_example.pb.h"
+#include "trade_market_protocol.pb.h"
 
 class Core {
  public:

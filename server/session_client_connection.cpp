@@ -1,7 +1,7 @@
 #include "session_client_connection.hpp"
 
 #include "core.hpp"
-#include "proto_example.pb.h"
+#include "trade_market_protocol.pb.h"
 
 SessionClientConnection::SessionClientConnection(boost::asio::ip::tcp::socket socket, Core& core) 
     : socket_(std::move(socket)), core_(core) {

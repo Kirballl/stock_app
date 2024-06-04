@@ -9,14 +9,14 @@ Serialize::TradeResponse Core::handle_order(const Serialize::TradeOrder& order) 
     switch (order.type()) {
     case Serialize::TradeOrder::SELL :
         sell_orders_.push_back(order);
-        response.set_message(Serialize::TradeResponse::SUCCESS);
+        response.set_response_msg(Serialize::TradeResponse::SUCCESS);
         break;
     case Serialize::TradeOrder::BUY :
         buy_orders_.push_back(order);
-        response.set_message(Serialize::TradeResponse::SUCCESS);
+        response.set_response_msg(Serialize::TradeResponse::SUCCESS);
         break;
     default:
-        response.set_message(Serialize::TradeResponse::ERROR);
+        response.set_response_msg(Serialize::TradeResponse::ERROR);
         break;
     }
     
