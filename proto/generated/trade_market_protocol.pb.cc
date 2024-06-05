@@ -40,6 +40,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR TradeResponse::TradeResponse(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.response_msg_)*/0
+  , /*decltype(_impl_.message_length_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct TradeResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR TradeResponseDefaultTypeInternal()
@@ -73,6 +74,7 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.response_msg_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.message_length_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Serialize::TradeOrder)},
@@ -89,14 +91,15 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "\"\223\001\n\nTradeOrder\022-\n\004type\030\001 \001(\0162\037.Serializ"
   "e.TradeOrder.TradeType\022\020\n\010usd_cost\030\002 \001(\005"
   "\022\022\n\nusd_amount\030\003 \001(\005\022\020\n\010username\030\004 \001(\t\"\036"
-  "\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"h\n\rTradeR"
-  "esponse\0225\n\014response_msg\030\001 \001(\0162\037.Serializ"
-  "e.TradeResponse.status\" \n\006status\022\013\n\007SUCC"
-  "ESS\020\000\022\t\n\005ERROR\020\001b\006proto3"
+  "\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\200\001\n\rTrade"
+  "Response\0225\n\014response_msg\030\001 \001(\0162\037.Seriali"
+  "ze.TradeResponse.status\022\026\n\016message_lengt"
+  "h\030\002 \001(\005\" \n\006status\022\013\n\007SUCCESS\020\000\022\t\n\005ERROR\020"
+  "\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 304, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 329, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
     &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 2,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
@@ -460,10 +463,13 @@ TradeResponse::TradeResponse(const TradeResponse& from)
   TradeResponse* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.response_msg_){}
+    , decltype(_impl_.message_length_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.response_msg_ = from._impl_.response_msg_;
+  ::memcpy(&_impl_.response_msg_, &from._impl_.response_msg_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.message_length_) -
+    reinterpret_cast<char*>(&_impl_.response_msg_)) + sizeof(_impl_.message_length_));
   // @@protoc_insertion_point(copy_constructor:Serialize.TradeResponse)
 }
 
@@ -473,6 +479,7 @@ inline void TradeResponse::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.response_msg_){0}
+    , decltype(_impl_.message_length_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -500,7 +507,9 @@ void TradeResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.response_msg_ = 0;
+  ::memset(&_impl_.response_msg_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.message_length_) -
+      reinterpret_cast<char*>(&_impl_.response_msg_)) + sizeof(_impl_.message_length_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -516,6 +525,14 @@ const char* TradeResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext*
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_response_msg(static_cast<::Serialize::TradeResponse_status>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 message_length = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          _impl_.message_length_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -555,6 +572,12 @@ uint8_t* TradeResponse::_InternalSerialize(
       1, this->_internal_response_msg(), target);
   }
 
+  // int32 message_length = 2;
+  if (this->_internal_message_length() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_message_length(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -575,6 +598,11 @@ size_t TradeResponse::ByteSizeLong() const {
   if (this->_internal_response_msg() != 0) {
     total_size += 1 +
       ::_pbi::WireFormatLite::EnumSize(this->_internal_response_msg());
+  }
+
+  // int32 message_length = 2;
+  if (this->_internal_message_length() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_message_length());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -598,6 +626,9 @@ void TradeResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::
   if (from._internal_response_msg() != 0) {
     _this->_internal_set_response_msg(from._internal_response_msg());
   }
+  if (from._internal_message_length() != 0) {
+    _this->_internal_set_message_length(from._internal_message_length());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -615,7 +646,12 @@ bool TradeResponse::IsInitialized() const {
 void TradeResponse::InternalSwap(TradeResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.response_msg_, other->_impl_.response_msg_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.message_length_)
+      + sizeof(TradeResponse::_impl_.message_length_)
+      - PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.response_msg_)>(
+          reinterpret_cast<char*>(&_impl_.response_msg_),
+          reinterpret_cast<char*>(&other->_impl_.response_msg_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata TradeResponse::GetMetadata() const {

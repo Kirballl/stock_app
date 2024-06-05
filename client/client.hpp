@@ -20,15 +20,14 @@ class Client {
  private:
    void connect_to_server(const boost::asio::ip::tcp::resolver::results_type& endpoints);
    void get_response_from_stock();
-   void write_data_to_socket(std::string& serialized_order);
+   void write_data_to_socket(const std::string& serialized_order);
 
  private:
    boost::asio::ip::tcp::socket socket_;
    std::string name_;
 
    std::string message_;
-   enum {max_message_length = 1024};
-   char data_[max_message_length];
+   char data_length_[sizeof(uint32_t)];
 };
 
 #endif // CLIENT_HPP

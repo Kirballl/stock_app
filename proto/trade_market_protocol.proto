@@ -20,6 +20,7 @@ message TradeResponse {
         ERROR = 1;
     }
     status response_msg = 1;
+    int32 message_length = 2;
 }
 
 // message TradeRequest {

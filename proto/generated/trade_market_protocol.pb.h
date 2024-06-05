@@ -479,6 +479,7 @@ class TradeResponse final :
 
   enum : int {
     kResponseMsgFieldNumber = 1,
+    kMessageLengthFieldNumber = 2,
   };
   // .Serialize.TradeResponse.status response_msg = 1;
   void clear_response_msg();
@@ -487,6 +488,15 @@ class TradeResponse final :
   private:
   ::Serialize::TradeResponse_status _internal_response_msg() const;
   void _internal_set_response_msg(::Serialize::TradeResponse_status value);
+  public:
+
+  // int32 message_length = 2;
+  void clear_message_length();
+  int32_t message_length() const;
+  void set_message_length(int32_t value);
+  private:
+  int32_t _internal_message_length() const;
+  void _internal_set_message_length(int32_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Serialize.TradeResponse)
@@ -498,6 +508,7 @@ class TradeResponse final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     int response_msg_;
+    int32_t message_length_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -646,6 +657,26 @@ inline void TradeResponse::_internal_set_response_msg(::Serialize::TradeResponse
 inline void TradeResponse::set_response_msg(::Serialize::TradeResponse_status value) {
   _internal_set_response_msg(value);
   // @@protoc_insertion_point(field_set:Serialize.TradeResponse.response_msg)
+}
+
+// int32 message_length = 2;
+inline void TradeResponse::clear_message_length() {
+  _impl_.message_length_ = 0;
+}
+inline int32_t TradeResponse::_internal_message_length() const {
+  return _impl_.message_length_;
+}
+inline int32_t TradeResponse::message_length() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeResponse.message_length)
+  return _internal_message_length();
+}
+inline void TradeResponse::_internal_set_message_length(int32_t value) {
+  
+  _impl_.message_length_ = value;
+}
+inline void TradeResponse::set_message_length(int32_t value) {
+  _internal_set_message_length(value);
+  // @@protoc_insertion_point(field_set:Serialize.TradeResponse.message_length)
 }
 
 #ifdef __GNUC__

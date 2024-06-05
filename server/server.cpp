@@ -2,9 +2,9 @@
 
 #include "session_client_connection.hpp"
 
-Server::Server(boost::asio::io_context& io_context)
-    : io_context_(io_context), acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
-    std::cout << "Server started! Listen " << port << " port" << std::endl;
+Server::Server(boost::asio::io_context& io_context, const Config& config)
+    : io_context_(io_context), acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), config.port)) {
+    std::cout << "Server started! Listen " << config.host << ":" << config.port << std::endl;
     accept_new_connection();
 }
 

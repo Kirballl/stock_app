@@ -42,24 +42,35 @@ void Client::get_response_from_stock() {
     boost::asio::streambuf response_buf;
     boost::system::error_code error;
 
-    std::size_t reply_length = boost::asio::read_until(socket_, response_buf, "\n", error);
-    if (error && error != boost::asio::error::eof) {
-        std::cerr << "Failed to read responce: " <<  error.message() << std::endl;
+    boost::asio::read(socket_, boost::asio::buffer(data_length_, sizeof(uint32_t)), error);
+    if (error) {
+        std::cerr << "Failed to read response length from socket: " << error.message() << std::endl;
         return;
     }
 
-    std::istream response_stream(&response_buf);
-    std::string serialized_response;
-    std::getline(response_stream, serialized_response);
+    uint32_t msg_length = ntohl(*reinterpret_cast<uint32_t*>(data_length_));
+    std::vector<char> response_data(msg_length);
+
+    boost::asio::read(socket_, boost::asio::buffer(response_data), error);
+    if (error) {
+        std::cerr << "Failed to read respose message from socket: " << error.message() << std::endl;
+        return;
+    }
 
     Serialize::TradeResponse response;
-    response.ParseFromString(serialized_response);
+    response.ParseFromArray(response_data.data(), msg_length);
     std::cout << "Response: " << response.response_msg() << std::endl;
 }
 
-void Client::write_data_to_socket(std::string& serialized_order) {
-    std::cout << "write_data_to_socket()" << std::endl;
-    boost::asio::write(socket_, boost::asio::buffer(serialized_order));
+void Client::write_data_to_socket(const std::string& serialized_order) {
+    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_order.size()));
+
+    std::vector<boost::asio::const_buffer> buffers = {
+        boost::asio::buffer(&msg_length, sizeof(uint32_t)),
+        boost::asio::buffer(serialized_order)
+    };
+
+    boost::asio::write(socket_, buffers);
 }
 
 void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
@@ -74,3 +85,4 @@ void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
 void Client::close() {
     socket_.close();
 }
+// Давай перед сообщением положим длинe этого сообщения в байтах, чтоб знать сколько читывать и перепишем код убрав логику с разделительным символом

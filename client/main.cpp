@@ -1,16 +1,18 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
+#include "config.hpp"
 #include "common.hpp"
 #include "client.hpp"
 
 
 int main () {
     try {
+    Config config = read_config("server_config.ini");
     boost::asio::io_context io_context;
 
     boost::asio::ip::tcp::resolver resolver(io_context);
-    auto endpoints = resolver.resolve(host, std::to_string(port));
+    auto endpoints = resolver.resolve(config.host, std::to_string(config.port));
 
     std::cout << "Enter Your name:\n" << std::endl;
     std::string client_name;

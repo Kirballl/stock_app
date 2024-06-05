@@ -33,7 +33,7 @@ add_custom_command(
 add_library(proto_files ${GENERATED_PROTO_DIR}/trade_market_protocol.pb.cc)
 
 # Указание директорий с заголовочными файлами
-include_directories(${Boost_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/common/include ${GENERATED_PROTO_DIR})
+include_directories(${Boost_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/config ${CMAKE_CURRENT_SOURCE_DIR}/common/include ${GENERATED_PROTO_DIR})
 
 # Добавление подкаталога 
 add_subdirectory(server)

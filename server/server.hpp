@@ -8,10 +8,11 @@
 
 #include "common.hpp"
 #include "core.hpp"
+#include "config.hpp"
 // Only accept new connections
 class Server {
  public:
-   Server(boost::asio::io_context& io_context);
+   Server(boost::asio::io_context& io_context, const Config& config);
 
  private:
    void accept_new_connection();

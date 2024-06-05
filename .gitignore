@@ -7,9 +7,6 @@
 node_modules/
 dist/
 
-# VS code settings
-.vscode/
-
 # Compiled Java class files
 *.class
 
@@ -28,6 +25,9 @@ dist/
 
 # JetBrains IDE
 .idea/
+
+# VS code settings
+.vscode/
 
 # Unit test reports
 TEST*.xml

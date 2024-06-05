@@ -5,6 +5,7 @@
 #include <boost/bind/bind.hpp>
 #include <boost/asio.hpp>
 #include <memory>
+#include <vector>
 
 #include "core.hpp"
 #include "common.hpp"
@@ -21,8 +22,9 @@ class SessionClientConnection : public  std::enable_shared_from_this<SessionClie
 
  private:
    boost::asio::ip::tcp::socket socket_;
-   enum {max_message_length = 512};
-   char data_[max_message_length];
+   
+   std::vector<char> data_;
+   char data_length_[sizeof(uint32_t)];
 
    // trade logic
    Core& core_; 
