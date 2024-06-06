@@ -1,14 +1,31 @@
 #include <iostream>
+#include <memory>
+#include <csignal>
+
 #include <boost/asio.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 #include "config.hpp"
 #include "common.hpp"
 #include "client.hpp"
 
+void signal_handler(int signal) {
+    spdlog::warn("Interrupt signal ({}) received. Shutting down...", signal);
+    spdlog::shutdown();
+    exit(signal);
+}
 
 int main () {
-    try {
+try {
+    auto rotating_logger = std::make_shared<spdlog::logger>("client_logs", 
+        std::make_shared<spdlog::sinks::rotating_file_sink_mt>("build/logs/client_logs.log", LOGS_FILE_SIZE, AMOUNT_OF_ARCHIVED_FILES));
+    spdlog::set_default_logger(rotating_logger);
+
+    signal(SIGINT, signal_handler);
+
     Config config = read_config("server_config.ini");
+
     boost::asio::io_context io_context;
 
     boost::asio::ip::tcp::resolver resolver(io_context);
@@ -19,6 +36,8 @@ int main () {
     std::cin >> client_name;
 
     Client client(client_name, io_context, endpoints);
+
+    spdlog::info("ping ping");
 
     std::thread io_context_thread([&io_context](){
         io_context.run();
@@ -72,6 +91,7 @@ int main () {
     }
 
     } catch (std::exception& e) {
+        spdlog::error("Exception: {}", e.what());
         std::cerr << "Exeption: " << e.what() << std::endl;
     }
     // gracefull

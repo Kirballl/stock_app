@@ -35,9 +35,6 @@ void SessionClientConnection::async_read_data_from_socket() {
                             std::cerr << "Failed to read order message from socket: " << ec.message() << std::endl;
                         }
                     });
-
-
-
             } else {
                 std::cerr << "Failed to read message length from socket: " << ec.message() << std::endl;
             }

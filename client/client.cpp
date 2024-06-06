@@ -35,6 +35,10 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
         }
     }
 
+    spdlog::info("New order formed: user={} cost={} amount={} type={}", 
+                 order.username(), order.usd_cost(), order.usd_amount(), 
+                 (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+
     return order;
 }
 

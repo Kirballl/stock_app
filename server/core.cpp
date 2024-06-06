@@ -1,9 +1,8 @@
 #include "core.hpp"
+#include "common.hpp"
 
 Serialize::TradeResponse Core::handle_order(const Serialize::TradeOrder& order) {
     Serialize::TradeResponse response;
-
-    std::cout << "handle_order()" << std::endl;
 
     //save_order_to_db();
     switch (order.type()) {
@@ -20,6 +19,10 @@ Serialize::TradeResponse Core::handle_order(const Serialize::TradeOrder& order) 
         break;
     }
     
+    spdlog::info("New order received: user={} cost={} amount={} type={}", 
+                 order.username(), order.usd_cost(), order.usd_amount(), 
+                 (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+
     //match_orders();
 
     return response;
