@@ -6,28 +6,37 @@
 #include <boost/asio.hpp>
 #include <memory>
 #include <vector>
+#include <string>
 
-#include "core.hpp"
 #include "common.hpp"
+#include "order_queue.hpp"
+#include "trade_market_protocol.pb.h"
 
 // Handle certain client connection 
 class SessionClientConnection : public  std::enable_shared_from_this<SessionClientConnection> {
- public:
-   SessionClientConnection(boost::asio::ip::tcp::socket socket, Core& core);
-   void start();
+public:
+   SessionClientConnection(boost::asio::ip::tcp::socket socket, 
+                           std::shared_ptr<OrderQueue> buy_orders_queue,
+                           std::shared_ptr<OrderQueue> sell_orders_queue);
 
- private:
+   void start();
    void async_read_data_from_socket();
+   std::string get_client_endpoint_info() const;
+   bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
+   void close();
+
+private:
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 
- private:
+private:
    boost::asio::ip::tcp::socket socket_;
-   
-   std::vector<char> data_;
-   char data_length_[sizeof(uint32_t)];
+   std::vector<char> raw_data_from_socket_;
+   char raw_data_length_from_socket_[sizeof(uint32_t)];
 
+   std::shared_ptr<OrderQueue> buy_orders_queue_;
+   std::shared_ptr<OrderQueue> sell_orders_queue_;
    // trade logic
-   Core& core_; 
+   //Core core_; 
 };
 
 #endif // SESSION_CLIENT_CONNECTION

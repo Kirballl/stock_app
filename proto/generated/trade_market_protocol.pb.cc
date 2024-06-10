@@ -91,15 +91,15 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "\"\223\001\n\nTradeOrder\022-\n\004type\030\001 \001(\0162\037.Serializ"
   "e.TradeOrder.TradeType\022\020\n\010usd_cost\030\002 \001(\005"
   "\022\022\n\nusd_amount\030\003 \001(\005\022\020\n\010username\030\004 \001(\t\"\036"
-  "\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\200\001\n\rTrade"
+  "\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\222\001\n\rTrade"
   "Response\0225\n\014response_msg\030\001 \001(\0162\037.Seriali"
   "ze.TradeResponse.status\022\026\n\016message_lengt"
-  "h\030\002 \001(\005\" \n\006status\022\013\n\007SUCCESS\020\000\022\t\n\005ERROR\020"
-  "\001b\006proto3"
+  "h\030\002 \001(\005\"2\n\006status\022\035\n\031ORDER_SUCCESSFULLY_"
+  "PLACED\020\000\022\t\n\005ERROR\020\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 329, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 347, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
     &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 2,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
@@ -149,7 +149,7 @@ bool TradeResponse_status_IsValid(int value) {
 }
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-constexpr TradeResponse_status TradeResponse::SUCCESS;
+constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_PLACED;
 constexpr TradeResponse_status TradeResponse::ERROR;
 constexpr TradeResponse_status TradeResponse::status_MIN;
 constexpr TradeResponse_status TradeResponse::status_MAX;

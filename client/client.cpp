@@ -81,12 +81,13 @@ void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
     std::string serialized_order;
     order.SerializeToString(&serialized_order);
 
+    std::cout << "write_data_to_socket(serialized_order)" << std::endl;
     write_data_to_socket(serialized_order);
 
+    std::cout << "get_response_from_stock()" << std::endl;
     get_response_from_stock();
 }
 
 void Client::close() {
     socket_.close();
 }
-// Давай перед сообщением положим длинe этого сообщения в байтах, чтоб знать сколько читывать и перепишем код убрав логику с разделительным символом

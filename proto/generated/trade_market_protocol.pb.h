@@ -85,13 +85,13 @@ inline bool TradeOrder_TradeType_Parse(
     TradeOrder_TradeType_descriptor(), name, value);
 }
 enum TradeResponse_status : int {
-  TradeResponse_status_SUCCESS = 0,
+  TradeResponse_status_ORDER_SUCCESSFULLY_PLACED = 0,
   TradeResponse_status_ERROR = 1,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeResponse_status_IsValid(int value);
-constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_SUCCESS;
+constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_ORDER_SUCCESSFULLY_PLACED;
 constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_ERROR;
 constexpr int TradeResponse_status_status_ARRAYSIZE = TradeResponse_status_status_MAX + 1;
 
@@ -446,8 +446,8 @@ class TradeResponse final :
   // nested types ----------------------------------------------------
 
   typedef TradeResponse_status status;
-  static constexpr status SUCCESS =
-    TradeResponse_status_SUCCESS;
+  static constexpr status ORDER_SUCCESSFULLY_PLACED =
+    TradeResponse_status_ORDER_SUCCESSFULLY_PLACED;
   static constexpr status ERROR =
     TradeResponse_status_ERROR;
   static inline bool status_IsValid(int value) {

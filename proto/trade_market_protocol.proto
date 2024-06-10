@@ -16,7 +16,7 @@ message TradeOrder {
 
 message TradeResponse {
     enum status {
-        SUCCESS = 0;
+        ORDER_SUCCESSFULLY_PLACED = 0;
         ERROR = 1;
     }
     status response_msg = 1;

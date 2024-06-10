@@ -10,7 +10,10 @@
 #include "common.hpp" 
 #include "server.hpp"
 
+std::shared_ptr<Server> server;
+
 void signal_handler(int signal) {
+    server->stop();
     spdlog::warn("Interrupt signal ({}) received. Shutting down...", signal);
     spdlog::shutdown();
     exit(signal);
@@ -22,17 +25,13 @@ int main() {
             std::make_shared<spdlog::sinks::rotating_file_sink_mt>("build/logs/server_logs.log", LOGS_FILE_SIZE, AMOUNT_OF_ARCHIVED_FILES));
         spdlog::set_default_logger(rotating_logger);
 
-        signal(SIGINT, signal_handler);
-
         Config config = read_config("server_config.ini");
 
-        /*Это объект, который управляет асинхронными операциями ввода-вывода.
-         Он обрабатывает события, связанные с сетевыми операциями, таймерами
-         и другими асинхронными задачами. io_context имеет свою собственную 
-         очередь задач, которая исполняется в одном или нескольких потоках.*/ 
         boost::asio::io_context io_context;
         
-        Server server(io_context, config);
+        server = std::make_shared<Server>(io_context, config);
+
+        signal(SIGINT, signal_handler);
 
         io_context.run();
     }

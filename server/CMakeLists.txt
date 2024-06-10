@@ -2,8 +2,10 @@
 set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/server.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/order_queue.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/session_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/session_client_connection.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/config.cpp
 )
 
