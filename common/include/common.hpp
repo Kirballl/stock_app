@@ -11,6 +11,4 @@ enum trade_type_t {
     SELL
 };
 
-
-
 #endif //CLIENSERVERECN_COMMON_HPP

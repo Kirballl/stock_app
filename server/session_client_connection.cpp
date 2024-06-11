@@ -52,32 +52,50 @@ void SessionClientConnection::async_read_data_from_socket() {
         });
 }
 
-Serialize::TradeOrder SessionClientConnection::convert_raw_data_to_command(std::size_t length) {
-    Serialize::TradeOrder order; 
-    order.ParseFromArray(raw_data_from_socket_.data(), length);
-    return order;
+Serialize::TradeRequest SessionClientConnection::convert_raw_data_to_command(std::size_t length) {
+    Serialize::TradeRequest trade_request; 
+    trade_request.ParseFromArray(raw_data_from_socket_.data(), length);
+    return trade_request;
 }
 
-Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeOrder order) {
+Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest trade_request) {
     Serialize::TradeResponse response;
-    // пока только ордера, тут дб и команды
-    if (push_received_from_socket_order_to_queue(order)) {
-        response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_PLACED);
+    
+    switch (trade_request.command()) {
+    case Serialize::TradeRequest::MAKE_ORDER :
+        if (push_received_from_socket_order_to_queue(trade_request.order())) {
+            response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED);
 
-        spdlog::info("New order placed: user={} cost={} amount={} type={}", 
-                     order.username(), order.usd_cost(), order.usd_amount(), 
-                     (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
-    } else {
-        response.set_response_msg(Serialize::TradeResponse::ERROR);
+            spdlog::info("New order placed: user={} cost={} amount={} type={}", trade_request.username(),
+                         trade_request.order().usd_cost(), trade_request.order().usd_amount(), 
+                         (trade_request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+            } else {
+                response.set_response_msg(Serialize::TradeResponse::ERROR);
+            }
+        break;
+    case Serialize::TradeRequest::VIEW_ACTIVE_ORDERS :
+        /* code */
+        break;
+    case Serialize::TradeRequest::VIEW_CONPLETED_TRADES :
+        /* code */
+        break;
+    case Serialize::TradeRequest::VIEW_QUOTE_HISTORY :
+        /* code */
+        break;
+    case Serialize::TradeRequest::CANCEL_ACTIVE_ORDERS :
+        /* code */
+        break;
+    default:
+        break;
     }
 
     return response;
 }
 
 bool SessionClientConnection::push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order) {
-     switch (order.type()) {
+    switch (order.type()) {
     case Serialize::TradeOrder::BUY :
-        return session_manager_->buy_orders_queue_->push(order);
+        return session_manager_->buy_orders_queue_->push(order); //? session_manager_->push_order_to_orders_queue() 
     case Serialize::TradeOrder::SELL :
         return session_manager_->sell_orders_queue_->push(order);
     default:

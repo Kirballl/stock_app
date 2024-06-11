@@ -18,9 +18,11 @@ class SessionManager : public std::enable_shared_from_this<SessionManager> {
 public:
     SessionManager();
     void run();
+
     void add_new_session(boost::asio::ip::tcp::socket new_client_socket);
     void create_session_client_connection();
     void remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info);
+
     void stop();
 
 public:

@@ -29,8 +29,8 @@ public:
 
 private:
    void async_read_data_from_socket();
-   Serialize::TradeOrder convert_raw_data_to_command(std::size_t length);
-   Serialize::TradeResponse handle_received_command(Serialize::TradeOrder order);
+   Serialize::TradeRequest convert_raw_data_to_command(std::size_t length);
+   Serialize::TradeResponse handle_received_command(Serialize::TradeRequest trade_request);
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 
 private:

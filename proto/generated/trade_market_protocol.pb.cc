@@ -23,10 +23,9 @@ namespace _pbi = _pb::internal;
 namespace Serialize {
 PROTOBUF_CONSTEXPR TradeOrder::TradeOrder(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.username_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.type_)*/0
-  , /*decltype(_impl_.usd_cost_)*/0
+    /*decltype(_impl_.usd_cost_)*/0
   , /*decltype(_impl_.usd_amount_)*/0
+  , /*decltype(_impl_.type_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct TradeOrderDefaultTypeInternal {
   PROTOBUF_CONSTEXPR TradeOrderDefaultTypeInternal()
@@ -37,10 +36,28 @@ struct TradeOrderDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeOrderDefaultTypeInternal _TradeOrder_default_instance_;
+PROTOBUF_CONSTEXPR TradeRequest::TradeRequest(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.username_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.order_)*/nullptr
+  , /*decltype(_impl_.command_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct TradeRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeRequestDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeRequestDefaultTypeInternal() {}
+  union {
+    TradeRequest _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeRequestDefaultTypeInternal _TradeRequest_default_instance_;
 PROTOBUF_CONSTEXPR TradeResponse::TradeResponse(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.response_msg_)*/0
-  , /*decltype(_impl_.message_length_)*/0
+    /*decltype(_impl_.active_orders_)*/{}
+  , /*decltype(_impl_.completed_orders_)*/{}
+  , /*decltype(_impl_.account_balance_)*/nullptr
+  , /*decltype(_impl_.quote_history_)*/nullptr
+  , /*decltype(_impl_.response_msg_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct TradeResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR TradeResponseDefaultTypeInternal()
@@ -51,9 +68,50 @@ struct TradeResponseDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeResponseDefaultTypeInternal _TradeResponse_default_instance_;
+PROTOBUF_CONSTEXPR AccountBalance::AccountBalance(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.usd_balance_)*/0
+  , /*decltype(_impl_.rub_balance_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct AccountBalanceDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR AccountBalanceDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~AccountBalanceDefaultTypeInternal() {}
+  union {
+    AccountBalance _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AccountBalanceDefaultTypeInternal _AccountBalance_default_instance_;
+PROTOBUF_CONSTEXPR QuoteHistory::QuoteHistory(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.quotes_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct QuoteHistoryDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR QuoteHistoryDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~QuoteHistoryDefaultTypeInternal() {}
+  union {
+    QuoteHistory _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 QuoteHistoryDefaultTypeInternal _QuoteHistory_default_instance_;
+PROTOBUF_CONSTEXPR Quote::Quote(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.price_)*/0
+  , /*decltype(_impl_.timestamp_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct QuoteDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR QuoteDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~QuoteDefaultTypeInternal() {}
+  union {
+    Quote _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 QuoteDefaultTypeInternal _Quote_default_instance_;
 }  // namespace Serialize
-static ::_pb::Metadata file_level_metadata_trade_5fmarket_5fprotocol_2eproto[2];
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[2];
+static ::_pb::Metadata file_level_metadata_trade_5fmarket_5fprotocol_2eproto[6];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[3];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_trade_5fmarket_5fprotocol_2eproto = nullptr;
 
 const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -66,7 +124,15 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.type_),
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.usd_cost_),
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.usd_amount_),
-  PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.username_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.command_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.order_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.username_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -74,34 +140,82 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.response_msg_),
-  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.message_length_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.account_balance_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.active_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.completed_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.quote_history_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::AccountBalance, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Serialize::AccountBalance, _impl_.usd_balance_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::AccountBalance, _impl_.rub_balance_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::QuoteHistory, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Serialize::QuoteHistory, _impl_.quotes_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::Quote, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Serialize::Quote, _impl_.timestamp_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::Quote, _impl_.price_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Serialize::TradeOrder)},
-  { 10, -1, -1, sizeof(::Serialize::TradeResponse)},
+  { 9, -1, -1, sizeof(::Serialize::TradeRequest)},
+  { 18, -1, -1, sizeof(::Serialize::TradeResponse)},
+  { 29, -1, -1, sizeof(::Serialize::AccountBalance)},
+  { 37, -1, -1, sizeof(::Serialize::QuoteHistory)},
+  { 44, -1, -1, sizeof(::Serialize::Quote)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
   &::Serialize::_TradeOrder_default_instance_._instance,
+  &::Serialize::_TradeRequest_default_instance_._instance,
   &::Serialize::_TradeResponse_default_instance_._instance,
+  &::Serialize::_AccountBalance_default_instance_._instance,
+  &::Serialize::_QuoteHistory_default_instance_._instance,
+  &::Serialize::_Quote_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\033trade_market_protocol.proto\022\tSerialize"
-  "\"\223\001\n\nTradeOrder\022-\n\004type\030\001 \001(\0162\037.Serializ"
-  "e.TradeOrder.TradeType\022\020\n\010usd_cost\030\002 \001(\005"
-  "\022\022\n\nusd_amount\030\003 \001(\005\022\020\n\010username\030\004 \001(\t\"\036"
-  "\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\222\001\n\rTrade"
-  "Response\0225\n\014response_msg\030\001 \001(\0162\037.Seriali"
-  "ze.TradeResponse.status\022\026\n\016message_lengt"
-  "h\030\002 \001(\005\"2\n\006status\022\035\n\031ORDER_SUCCESSFULLY_"
-  "PLACED\020\000\022\t\n\005ERROR\020\001b\006proto3"
+  "\"\201\001\n\nTradeOrder\022-\n\004type\030\001 \001(\0162\037.Serializ"
+  "e.TradeOrder.TradeType\022\020\n\010usd_cost\030\002 \001(\001"
+  "\022\022\n\nusd_amount\030\003 \001(\001\"\036\n\tTradeType\022\007\n\003BUY"
+  "\020\000\022\010\n\004SELL\020\001\"\201\002\n\014TradeRequest\0224\n\007command"
+  "\030\001 \001(\0162#.Serialize.TradeRequest.CommandT"
+  "ype\022$\n\005order\030\002 \001(\0132\025.Serialize.TradeOrde"
+  "r\022\020\n\010username\030\003 \001(\t\"\202\001\n\013CommandType\022\016\n\nM"
+  "AKE_ORDER\020\000\022\026\n\022VIEW_ACTIVE_ORDERS\020\001\022\031\n\025V"
+  "IEW_CONPLETED_TRADES\020\002\022\026\n\022VIEW_QUOTE_HIS"
+  "TORY\020\003\022\030\n\024CANCEL_ACTIVE_ORDERS\020\004\"\276\002\n\rTra"
+  "deResponse\0225\n\014response_msg\030\001 \001(\0162\037.Seria"
+  "lize.TradeResponse.status\0222\n\017account_bal"
+  "ance\030\002 \001(\0132\031.Serialize.AccountBalance\022,\n"
+  "\ractive_orders\030\003 \003(\0132\025.Serialize.TradeOr"
+  "der\022/\n\020completed_orders\030\004 \003(\0132\025.Serializ"
+  "e.TradeOrder\022.\n\rquote_history\030\005 \001(\0132\027.Se"
+  "rialize.QuoteHistory\"3\n\006status\022\036\n\032ORDER_"
+  "SUCCESSFULLY_CREATED\020\000\022\t\n\005ERROR\020\001\":\n\016Acc"
+  "ountBalance\022\023\n\013usd_balance\030\001 \001(\001\022\023\n\013rub_"
+  "balance\030\002 \001(\001\"0\n\014QuoteHistory\022 \n\006quotes\030"
+  "\001 \003(\0132\020.Serialize.Quote\")\n\005Quote\022\021\n\ttime"
+  "stamp\030\001 \001(\005\022\r\n\005price\030\002 \001(\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 347, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 914, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
-    &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 2,
+    &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 6,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
     file_level_metadata_trade_5fmarket_5fprotocol_2eproto, file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto,
     file_level_service_descriptors_trade_5fmarket_5fprotocol_2eproto,
@@ -134,9 +248,36 @@ constexpr TradeOrder_TradeType TradeOrder::TradeType_MIN;
 constexpr TradeOrder_TradeType TradeOrder::TradeType_MAX;
 constexpr int TradeOrder::TradeType_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeRequest_CommandType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_trade_5fmarket_5fprotocol_2eproto);
   return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[1];
+}
+bool TradeRequest_CommandType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+constexpr TradeRequest_CommandType TradeRequest::MAKE_ORDER;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_CONPLETED_TRADES;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_QUOTE_HISTORY;
+constexpr TradeRequest_CommandType TradeRequest::CANCEL_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::CommandType_MIN;
+constexpr TradeRequest_CommandType TradeRequest::CommandType_MAX;
+constexpr int TradeRequest::CommandType_ARRAYSIZE;
+#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_trade_5fmarket_5fprotocol_2eproto);
+  return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[2];
 }
 bool TradeResponse_status_IsValid(int value) {
   switch (value) {
@@ -149,7 +290,7 @@ bool TradeResponse_status_IsValid(int value) {
 }
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_PLACED;
+constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_CREATED;
 constexpr TradeResponse_status TradeResponse::ERROR;
 constexpr TradeResponse_status TradeResponse::status_MIN;
 constexpr TradeResponse_status TradeResponse::status_MAX;
@@ -172,24 +313,15 @@ TradeOrder::TradeOrder(const TradeOrder& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   TradeOrder* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.username_){}
-    , decltype(_impl_.type_){}
-    , decltype(_impl_.usd_cost_){}
+      decltype(_impl_.usd_cost_){}
     , decltype(_impl_.usd_amount_){}
+    , decltype(_impl_.type_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.username_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.username_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_username().empty()) {
-    _this->_impl_.username_.Set(from._internal_username(), 
-      _this->GetArenaForAllocation());
-  }
-  ::memcpy(&_impl_.type_, &from._impl_.type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.usd_amount_) -
-    reinterpret_cast<char*>(&_impl_.type_)) + sizeof(_impl_.usd_amount_));
+  ::memcpy(&_impl_.usd_cost_, &from._impl_.usd_cost_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.usd_cost_)) + sizeof(_impl_.type_));
   // @@protoc_insertion_point(copy_constructor:Serialize.TradeOrder)
 }
 
@@ -198,16 +330,11 @@ inline void TradeOrder::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.username_){}
-    , decltype(_impl_.type_){0}
-    , decltype(_impl_.usd_cost_){0}
+      decltype(_impl_.usd_cost_){0}
     , decltype(_impl_.usd_amount_){0}
+    , decltype(_impl_.type_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
-  _impl_.username_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.username_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 TradeOrder::~TradeOrder() {
@@ -221,7 +348,6 @@ TradeOrder::~TradeOrder() {
 
 inline void TradeOrder::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.username_.Destroy();
 }
 
 void TradeOrder::SetCachedSize(int size) const {
@@ -234,10 +360,9 @@ void TradeOrder::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.username_.ClearToEmpty();
-  ::memset(&_impl_.type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.usd_amount_) -
-      reinterpret_cast<char*>(&_impl_.type_)) + sizeof(_impl_.usd_amount_));
+  ::memset(&_impl_.usd_cost_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.usd_cost_)) + sizeof(_impl_.type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -256,29 +381,19 @@ const char* TradeOrder::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
         } else
           goto handle_unusual;
         continue;
-      // int32 usd_cost = 2;
+      // double usd_cost = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.usd_cost_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.usd_cost_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
-      // int32 usd_amount = 3;
+      // double usd_amount = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.usd_amount_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // string username = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
-          auto str = _internal_mutable_username();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "Serialize.TradeOrder.username"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
+          _impl_.usd_amount_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
@@ -318,26 +433,24 @@ uint8_t* TradeOrder::_InternalSerialize(
       1, this->_internal_type(), target);
   }
 
-  // int32 usd_cost = 2;
-  if (this->_internal_usd_cost() != 0) {
+  // double usd_cost = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_cost = this->_internal_usd_cost();
+  uint64_t raw_usd_cost;
+  memcpy(&raw_usd_cost, &tmp_usd_cost, sizeof(tmp_usd_cost));
+  if (raw_usd_cost != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_usd_cost(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_usd_cost(), target);
   }
 
-  // int32 usd_amount = 3;
-  if (this->_internal_usd_amount() != 0) {
+  // double usd_amount = 3;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_amount = this->_internal_usd_amount();
+  uint64_t raw_usd_amount;
+  memcpy(&raw_usd_amount, &tmp_usd_amount, sizeof(tmp_usd_amount));
+  if (raw_usd_amount != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_usd_amount(), target);
-  }
-
-  // string username = 4;
-  if (!this->_internal_username().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_username().data(), static_cast<int>(this->_internal_username().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "Serialize.TradeOrder.username");
-    target = stream->WriteStringMaybeAliased(
-        4, this->_internal_username(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_usd_amount(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -356,27 +469,28 @@ size_t TradeOrder::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string username = 4;
-  if (!this->_internal_username().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_username());
+  // double usd_cost = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_cost = this->_internal_usd_cost();
+  uint64_t raw_usd_cost;
+  memcpy(&raw_usd_cost, &tmp_usd_cost, sizeof(tmp_usd_cost));
+  if (raw_usd_cost != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double usd_amount = 3;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_amount = this->_internal_usd_amount();
+  uint64_t raw_usd_amount;
+  memcpy(&raw_usd_amount, &tmp_usd_amount, sizeof(tmp_usd_amount));
+  if (raw_usd_amount != 0) {
+    total_size += 1 + 8;
   }
 
   // .Serialize.TradeOrder.TradeType type = 1;
   if (this->_internal_type() != 0) {
     total_size += 1 +
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
-  }
-
-  // int32 usd_cost = 2;
-  if (this->_internal_usd_cost() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_usd_cost());
-  }
-
-  // int32 usd_amount = 3;
-  if (this->_internal_usd_amount() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_usd_amount());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -397,17 +511,22 @@ void TradeOrder::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PRO
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_username().empty()) {
-    _this->_internal_set_username(from._internal_username());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_cost = from._internal_usd_cost();
+  uint64_t raw_usd_cost;
+  memcpy(&raw_usd_cost, &tmp_usd_cost, sizeof(tmp_usd_cost));
+  if (raw_usd_cost != 0) {
+    _this->_internal_set_usd_cost(from._internal_usd_cost());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_amount = from._internal_usd_amount();
+  uint64_t raw_usd_amount;
+  memcpy(&raw_usd_amount, &tmp_usd_amount, sizeof(tmp_usd_amount));
+  if (raw_usd_amount != 0) {
+    _this->_internal_set_usd_amount(from._internal_usd_amount());
   }
   if (from._internal_type() != 0) {
     _this->_internal_set_type(from._internal_type());
-  }
-  if (from._internal_usd_cost() != 0) {
-    _this->_internal_set_usd_cost(from._internal_usd_cost());
-  }
-  if (from._internal_usd_amount() != 0) {
-    _this->_internal_set_usd_amount(from._internal_usd_amount());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -425,19 +544,13 @@ bool TradeOrder::IsInitialized() const {
 
 void TradeOrder::InternalSwap(TradeOrder* other) {
   using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.username_, lhs_arena,
-      &other->_impl_.username_, rhs_arena
-  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(TradeOrder, _impl_.usd_amount_)
-      + sizeof(TradeOrder::_impl_.usd_amount_)
-      - PROTOBUF_FIELD_OFFSET(TradeOrder, _impl_.type_)>(
-          reinterpret_cast<char*>(&_impl_.type_),
-          reinterpret_cast<char*>(&other->_impl_.type_));
+      PROTOBUF_FIELD_OFFSET(TradeOrder, _impl_.type_)
+      + sizeof(TradeOrder::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(TradeOrder, _impl_.usd_cost_)>(
+          reinterpret_cast<char*>(&_impl_.usd_cost_),
+          reinterpret_cast<char*>(&other->_impl_.usd_cost_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata TradeOrder::GetMetadata() const {
@@ -448,10 +561,299 @@ void TradeOrder::InternalSwap(TradeOrder* other) {
 
 // ===================================================================
 
-class TradeResponse::_Internal {
+class TradeRequest::_Internal {
  public:
+  static const ::Serialize::TradeOrder& order(const TradeRequest* msg);
 };
 
+const ::Serialize::TradeOrder&
+TradeRequest::_Internal::order(const TradeRequest* msg) {
+  return *msg->_impl_.order_;
+}
+TradeRequest::TradeRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Serialize.TradeRequest)
+}
+TradeRequest::TradeRequest(const TradeRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  TradeRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.username_){}
+    , decltype(_impl_.order_){nullptr}
+    , decltype(_impl_.command_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.username_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.username_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_username().empty()) {
+    _this->_impl_.username_.Set(from._internal_username(), 
+      _this->GetArenaForAllocation());
+  }
+  if (from._internal_has_order()) {
+    _this->_impl_.order_ = new ::Serialize::TradeOrder(*from._impl_.order_);
+  }
+  _this->_impl_.command_ = from._impl_.command_;
+  // @@protoc_insertion_point(copy_constructor:Serialize.TradeRequest)
+}
+
+inline void TradeRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.username_){}
+    , decltype(_impl_.order_){nullptr}
+    , decltype(_impl_.command_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.username_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.username_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+TradeRequest::~TradeRequest() {
+  // @@protoc_insertion_point(destructor:Serialize.TradeRequest)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void TradeRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.username_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.order_;
+}
+
+void TradeRequest::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void TradeRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.TradeRequest)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.username_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.order_ != nullptr) {
+    delete _impl_.order_;
+  }
+  _impl_.order_ = nullptr;
+  _impl_.command_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* TradeRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .Serialize.TradeRequest.CommandType command = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_command(static_cast<::Serialize::TradeRequest_CommandType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // .Serialize.TradeOrder order = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_order(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string username = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_username();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "Serialize.TradeRequest.username"));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* TradeRequest::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.TradeRequest)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Serialize.TradeRequest.CommandType command = 1;
+  if (this->_internal_command() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_command(), target);
+  }
+
+  // .Serialize.TradeOrder order = 2;
+  if (this->_internal_has_order()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::order(this),
+        _Internal::order(this).GetCachedSize(), target, stream);
+  }
+
+  // string username = 3;
+  if (!this->_internal_username().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_username().data(), static_cast<int>(this->_internal_username().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "Serialize.TradeRequest.username");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_username(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.TradeRequest)
+  return target;
+}
+
+size_t TradeRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.TradeRequest)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string username = 3;
+  if (!this->_internal_username().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_username());
+  }
+
+  // .Serialize.TradeOrder order = 2;
+  if (this->_internal_has_order()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.order_);
+  }
+
+  // .Serialize.TradeRequest.CommandType command = 1;
+  if (this->_internal_command() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_command());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData TradeRequest::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    TradeRequest::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*TradeRequest::GetClassData() const { return &_class_data_; }
+
+
+void TradeRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<TradeRequest*>(&to_msg);
+  auto& from = static_cast<const TradeRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Serialize.TradeRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_username().empty()) {
+    _this->_internal_set_username(from._internal_username());
+  }
+  if (from._internal_has_order()) {
+    _this->_internal_mutable_order()->::Serialize::TradeOrder::MergeFrom(
+        from._internal_order());
+  }
+  if (from._internal_command() != 0) {
+    _this->_internal_set_command(from._internal_command());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void TradeRequest::CopyFrom(const TradeRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.TradeRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TradeRequest::IsInitialized() const {
+  return true;
+}
+
+void TradeRequest::InternalSwap(TradeRequest* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.username_, lhs_arena,
+      &other->_impl_.username_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(TradeRequest, _impl_.command_)
+      + sizeof(TradeRequest::_impl_.command_)
+      - PROTOBUF_FIELD_OFFSET(TradeRequest, _impl_.order_)>(
+          reinterpret_cast<char*>(&_impl_.order_),
+          reinterpret_cast<char*>(&other->_impl_.order_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata TradeRequest::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[1]);
+}
+
+// ===================================================================
+
+class TradeResponse::_Internal {
+ public:
+  static const ::Serialize::AccountBalance& account_balance(const TradeResponse* msg);
+  static const ::Serialize::QuoteHistory& quote_history(const TradeResponse* msg);
+};
+
+const ::Serialize::AccountBalance&
+TradeResponse::_Internal::account_balance(const TradeResponse* msg) {
+  return *msg->_impl_.account_balance_;
+}
+const ::Serialize::QuoteHistory&
+TradeResponse::_Internal::quote_history(const TradeResponse* msg) {
+  return *msg->_impl_.quote_history_;
+}
 TradeResponse::TradeResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -462,14 +864,21 @@ TradeResponse::TradeResponse(const TradeResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   TradeResponse* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.response_msg_){}
-    , decltype(_impl_.message_length_){}
+      decltype(_impl_.active_orders_){from._impl_.active_orders_}
+    , decltype(_impl_.completed_orders_){from._impl_.completed_orders_}
+    , decltype(_impl_.account_balance_){nullptr}
+    , decltype(_impl_.quote_history_){nullptr}
+    , decltype(_impl_.response_msg_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&_impl_.response_msg_, &from._impl_.response_msg_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.message_length_) -
-    reinterpret_cast<char*>(&_impl_.response_msg_)) + sizeof(_impl_.message_length_));
+  if (from._internal_has_account_balance()) {
+    _this->_impl_.account_balance_ = new ::Serialize::AccountBalance(*from._impl_.account_balance_);
+  }
+  if (from._internal_has_quote_history()) {
+    _this->_impl_.quote_history_ = new ::Serialize::QuoteHistory(*from._impl_.quote_history_);
+  }
+  _this->_impl_.response_msg_ = from._impl_.response_msg_;
   // @@protoc_insertion_point(copy_constructor:Serialize.TradeResponse)
 }
 
@@ -478,8 +887,11 @@ inline void TradeResponse::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.response_msg_){0}
-    , decltype(_impl_.message_length_){0}
+      decltype(_impl_.active_orders_){arena}
+    , decltype(_impl_.completed_orders_){arena}
+    , decltype(_impl_.account_balance_){nullptr}
+    , decltype(_impl_.quote_history_){nullptr}
+    , decltype(_impl_.response_msg_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -495,6 +907,10 @@ TradeResponse::~TradeResponse() {
 
 inline void TradeResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.active_orders_.~RepeatedPtrField();
+  _impl_.completed_orders_.~RepeatedPtrField();
+  if (this != internal_default_instance()) delete _impl_.account_balance_;
+  if (this != internal_default_instance()) delete _impl_.quote_history_;
 }
 
 void TradeResponse::SetCachedSize(int size) const {
@@ -507,9 +923,17 @@ void TradeResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&_impl_.response_msg_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.message_length_) -
-      reinterpret_cast<char*>(&_impl_.response_msg_)) + sizeof(_impl_.message_length_));
+  _impl_.active_orders_.Clear();
+  _impl_.completed_orders_.Clear();
+  if (GetArenaForAllocation() == nullptr && _impl_.account_balance_ != nullptr) {
+    delete _impl_.account_balance_;
+  }
+  _impl_.account_balance_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.quote_history_ != nullptr) {
+    delete _impl_.quote_history_;
+  }
+  _impl_.quote_history_ = nullptr;
+  _impl_.response_msg_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -528,10 +952,44 @@ const char* TradeResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext*
         } else
           goto handle_unusual;
         continue;
-      // int32 message_length = 2;
+      // .Serialize.AccountBalance account_balance = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.message_length_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_account_balance(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated .Serialize.TradeOrder active_orders = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_active_orders(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated .Serialize.TradeOrder completed_orders = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_completed_orders(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // .Serialize.QuoteHistory quote_history = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_quote_history(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -572,10 +1030,34 @@ uint8_t* TradeResponse::_InternalSerialize(
       1, this->_internal_response_msg(), target);
   }
 
-  // int32 message_length = 2;
-  if (this->_internal_message_length() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_message_length(), target);
+  // .Serialize.AccountBalance account_balance = 2;
+  if (this->_internal_has_account_balance()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::account_balance(this),
+        _Internal::account_balance(this).GetCachedSize(), target, stream);
+  }
+
+  // repeated .Serialize.TradeOrder active_orders = 3;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_active_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_active_orders(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // repeated .Serialize.TradeOrder completed_orders = 4;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_completed_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_completed_orders(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(4, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // .Serialize.QuoteHistory quote_history = 5;
+  if (this->_internal_has_quote_history()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(5, _Internal::quote_history(this),
+        _Internal::quote_history(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -594,15 +1076,38 @@ size_t TradeResponse::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  // repeated .Serialize.TradeOrder active_orders = 3;
+  total_size += 1UL * this->_internal_active_orders_size();
+  for (const auto& msg : this->_impl_.active_orders_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // repeated .Serialize.TradeOrder completed_orders = 4;
+  total_size += 1UL * this->_internal_completed_orders_size();
+  for (const auto& msg : this->_impl_.completed_orders_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // .Serialize.AccountBalance account_balance = 2;
+  if (this->_internal_has_account_balance()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.account_balance_);
+  }
+
+  // .Serialize.QuoteHistory quote_history = 5;
+  if (this->_internal_has_quote_history()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.quote_history_);
+  }
+
   // .Serialize.TradeResponse.status response_msg = 1;
   if (this->_internal_response_msg() != 0) {
     total_size += 1 +
       ::_pbi::WireFormatLite::EnumSize(this->_internal_response_msg());
-  }
-
-  // int32 message_length = 2;
-  if (this->_internal_message_length() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_message_length());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -623,11 +1128,18 @@ void TradeResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  _this->_impl_.active_orders_.MergeFrom(from._impl_.active_orders_);
+  _this->_impl_.completed_orders_.MergeFrom(from._impl_.completed_orders_);
+  if (from._internal_has_account_balance()) {
+    _this->_internal_mutable_account_balance()->::Serialize::AccountBalance::MergeFrom(
+        from._internal_account_balance());
+  }
+  if (from._internal_has_quote_history()) {
+    _this->_internal_mutable_quote_history()->::Serialize::QuoteHistory::MergeFrom(
+        from._internal_quote_history());
+  }
   if (from._internal_response_msg() != 0) {
     _this->_internal_set_response_msg(from._internal_response_msg());
-  }
-  if (from._internal_message_length() != 0) {
-    _this->_internal_set_message_length(from._internal_message_length());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -646,18 +1158,663 @@ bool TradeResponse::IsInitialized() const {
 void TradeResponse::InternalSwap(TradeResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.active_orders_.InternalSwap(&other->_impl_.active_orders_);
+  _impl_.completed_orders_.InternalSwap(&other->_impl_.completed_orders_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.message_length_)
-      + sizeof(TradeResponse::_impl_.message_length_)
-      - PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.response_msg_)>(
-          reinterpret_cast<char*>(&_impl_.response_msg_),
-          reinterpret_cast<char*>(&other->_impl_.response_msg_));
+      PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.response_msg_)
+      + sizeof(TradeResponse::_impl_.response_msg_)
+      - PROTOBUF_FIELD_OFFSET(TradeResponse, _impl_.account_balance_)>(
+          reinterpret_cast<char*>(&_impl_.account_balance_),
+          reinterpret_cast<char*>(&other->_impl_.account_balance_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata TradeResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[1]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[2]);
+}
+
+// ===================================================================
+
+class AccountBalance::_Internal {
+ public:
+};
+
+AccountBalance::AccountBalance(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Serialize.AccountBalance)
+}
+AccountBalance::AccountBalance(const AccountBalance& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AccountBalance* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.usd_balance_){}
+    , decltype(_impl_.rub_balance_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&_impl_.usd_balance_, &from._impl_.usd_balance_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.rub_balance_) -
+    reinterpret_cast<char*>(&_impl_.usd_balance_)) + sizeof(_impl_.rub_balance_));
+  // @@protoc_insertion_point(copy_constructor:Serialize.AccountBalance)
+}
+
+inline void AccountBalance::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.usd_balance_){0}
+    , decltype(_impl_.rub_balance_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+AccountBalance::~AccountBalance() {
+  // @@protoc_insertion_point(destructor:Serialize.AccountBalance)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void AccountBalance::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void AccountBalance::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void AccountBalance::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.AccountBalance)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&_impl_.usd_balance_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.rub_balance_) -
+      reinterpret_cast<char*>(&_impl_.usd_balance_)) + sizeof(_impl_.rub_balance_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* AccountBalance::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // double usd_balance = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 9)) {
+          _impl_.usd_balance_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double rub_balance = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.rub_balance_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* AccountBalance::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.AccountBalance)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // double usd_balance = 1;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_balance = this->_internal_usd_balance();
+  uint64_t raw_usd_balance;
+  memcpy(&raw_usd_balance, &tmp_usd_balance, sizeof(tmp_usd_balance));
+  if (raw_usd_balance != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(1, this->_internal_usd_balance(), target);
+  }
+
+  // double rub_balance = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_rub_balance = this->_internal_rub_balance();
+  uint64_t raw_rub_balance;
+  memcpy(&raw_rub_balance, &tmp_rub_balance, sizeof(tmp_rub_balance));
+  if (raw_rub_balance != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_rub_balance(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.AccountBalance)
+  return target;
+}
+
+size_t AccountBalance::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.AccountBalance)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // double usd_balance = 1;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_balance = this->_internal_usd_balance();
+  uint64_t raw_usd_balance;
+  memcpy(&raw_usd_balance, &tmp_usd_balance, sizeof(tmp_usd_balance));
+  if (raw_usd_balance != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double rub_balance = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_rub_balance = this->_internal_rub_balance();
+  uint64_t raw_rub_balance;
+  memcpy(&raw_rub_balance, &tmp_rub_balance, sizeof(tmp_rub_balance));
+  if (raw_rub_balance != 0) {
+    total_size += 1 + 8;
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AccountBalance::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    AccountBalance::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AccountBalance::GetClassData() const { return &_class_data_; }
+
+
+void AccountBalance::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AccountBalance*>(&to_msg);
+  auto& from = static_cast<const AccountBalance&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Serialize.AccountBalance)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_usd_balance = from._internal_usd_balance();
+  uint64_t raw_usd_balance;
+  memcpy(&raw_usd_balance, &tmp_usd_balance, sizeof(tmp_usd_balance));
+  if (raw_usd_balance != 0) {
+    _this->_internal_set_usd_balance(from._internal_usd_balance());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_rub_balance = from._internal_rub_balance();
+  uint64_t raw_rub_balance;
+  memcpy(&raw_rub_balance, &tmp_rub_balance, sizeof(tmp_rub_balance));
+  if (raw_rub_balance != 0) {
+    _this->_internal_set_rub_balance(from._internal_rub_balance());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void AccountBalance::CopyFrom(const AccountBalance& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.AccountBalance)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AccountBalance::IsInitialized() const {
+  return true;
+}
+
+void AccountBalance::InternalSwap(AccountBalance* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(AccountBalance, _impl_.rub_balance_)
+      + sizeof(AccountBalance::_impl_.rub_balance_)
+      - PROTOBUF_FIELD_OFFSET(AccountBalance, _impl_.usd_balance_)>(
+          reinterpret_cast<char*>(&_impl_.usd_balance_),
+          reinterpret_cast<char*>(&other->_impl_.usd_balance_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata AccountBalance::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[3]);
+}
+
+// ===================================================================
+
+class QuoteHistory::_Internal {
+ public:
+};
+
+QuoteHistory::QuoteHistory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Serialize.QuoteHistory)
+}
+QuoteHistory::QuoteHistory(const QuoteHistory& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  QuoteHistory* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.quotes_){from._impl_.quotes_}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Serialize.QuoteHistory)
+}
+
+inline void QuoteHistory::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.quotes_){arena}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+QuoteHistory::~QuoteHistory() {
+  // @@protoc_insertion_point(destructor:Serialize.QuoteHistory)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void QuoteHistory::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.quotes_.~RepeatedPtrField();
+}
+
+void QuoteHistory::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void QuoteHistory::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.QuoteHistory)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.quotes_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* QuoteHistory::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated .Serialize.Quote quotes = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_quotes(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* QuoteHistory::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.QuoteHistory)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .Serialize.Quote quotes = 1;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_quotes_size()); i < n; i++) {
+    const auto& repfield = this->_internal_quotes(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.QuoteHistory)
+  return target;
+}
+
+size_t QuoteHistory::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.QuoteHistory)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated .Serialize.Quote quotes = 1;
+  total_size += 1UL * this->_internal_quotes_size();
+  for (const auto& msg : this->_impl_.quotes_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData QuoteHistory::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    QuoteHistory::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*QuoteHistory::GetClassData() const { return &_class_data_; }
+
+
+void QuoteHistory::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<QuoteHistory*>(&to_msg);
+  auto& from = static_cast<const QuoteHistory&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Serialize.QuoteHistory)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_impl_.quotes_.MergeFrom(from._impl_.quotes_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void QuoteHistory::CopyFrom(const QuoteHistory& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.QuoteHistory)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool QuoteHistory::IsInitialized() const {
+  return true;
+}
+
+void QuoteHistory::InternalSwap(QuoteHistory* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.quotes_.InternalSwap(&other->_impl_.quotes_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata QuoteHistory::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[4]);
+}
+
+// ===================================================================
+
+class Quote::_Internal {
+ public:
+};
+
+Quote::Quote(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Serialize.Quote)
+}
+Quote::Quote(const Quote& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Quote* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.price_){}
+    , decltype(_impl_.timestamp_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&_impl_.price_, &from._impl_.price_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timestamp_) -
+    reinterpret_cast<char*>(&_impl_.price_)) + sizeof(_impl_.timestamp_));
+  // @@protoc_insertion_point(copy_constructor:Serialize.Quote)
+}
+
+inline void Quote::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.price_){0}
+    , decltype(_impl_.timestamp_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+Quote::~Quote() {
+  // @@protoc_insertion_point(destructor:Serialize.Quote)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void Quote::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void Quote::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void Quote::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.Quote)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&_impl_.price_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timestamp_) -
+      reinterpret_cast<char*>(&_impl_.price_)) + sizeof(_impl_.timestamp_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* Quote::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // int32 timestamp = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          _impl_.timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // double price = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.price_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* Quote::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.Quote)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 timestamp = 1;
+  if (this->_internal_timestamp() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_timestamp(), target);
+  }
+
+  // double price = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_price = this->_internal_price();
+  uint64_t raw_price;
+  memcpy(&raw_price, &tmp_price, sizeof(tmp_price));
+  if (raw_price != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_price(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.Quote)
+  return target;
+}
+
+size_t Quote::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.Quote)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // double price = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_price = this->_internal_price();
+  uint64_t raw_price;
+  memcpy(&raw_price, &tmp_price, sizeof(tmp_price));
+  if (raw_price != 0) {
+    total_size += 1 + 8;
+  }
+
+  // int32 timestamp = 1;
+  if (this->_internal_timestamp() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_timestamp());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Quote::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    Quote::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Quote::GetClassData() const { return &_class_data_; }
+
+
+void Quote::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Quote*>(&to_msg);
+  auto& from = static_cast<const Quote&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Serialize.Quote)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_price = from._internal_price();
+  uint64_t raw_price;
+  memcpy(&raw_price, &tmp_price, sizeof(tmp_price));
+  if (raw_price != 0) {
+    _this->_internal_set_price(from._internal_price());
+  }
+  if (from._internal_timestamp() != 0) {
+    _this->_internal_set_timestamp(from._internal_timestamp());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void Quote::CopyFrom(const Quote& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.Quote)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Quote::IsInitialized() const {
+  return true;
+}
+
+void Quote::InternalSwap(Quote* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Quote, _impl_.timestamp_)
+      + sizeof(Quote::_impl_.timestamp_)
+      - PROTOBUF_FIELD_OFFSET(Quote, _impl_.price_)>(
+          reinterpret_cast<char*>(&_impl_.price_),
+          reinterpret_cast<char*>(&other->_impl_.price_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata Quote::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[5]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -667,9 +1824,25 @@ template<> PROTOBUF_NOINLINE ::Serialize::TradeOrder*
 Arena::CreateMaybeMessage< ::Serialize::TradeOrder >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Serialize::TradeOrder >(arena);
 }
+template<> PROTOBUF_NOINLINE ::Serialize::TradeRequest*
+Arena::CreateMaybeMessage< ::Serialize::TradeRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::TradeRequest >(arena);
+}
 template<> PROTOBUF_NOINLINE ::Serialize::TradeResponse*
 Arena::CreateMaybeMessage< ::Serialize::TradeResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Serialize::TradeResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Serialize::AccountBalance*
+Arena::CreateMaybeMessage< ::Serialize::AccountBalance >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::AccountBalance >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Serialize::QuoteHistory*
+Arena::CreateMaybeMessage< ::Serialize::QuoteHistory >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::QuoteHistory >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Serialize::Quote*
+Arena::CreateMaybeMessage< ::Serialize::Quote >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::Quote >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

@@ -1,7 +1,7 @@
 #include "client.hpp"
 
-Client::Client(std::string name, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints) 
-    : name_(name) , socket_(io_context) {
+Client::Client(std::string client_username, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints) 
+    : client_username_(client_username) , socket_(io_context) {
     connect_to_server(endpoints);
 }
 
@@ -22,8 +22,6 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     std::cin >> usd_amount;
     order.set_usd_amount(usd_amount);
 
-    order.set_username(name_);
-
     switch (trade_type) {
         case BUY : {
             order.set_type(Serialize::TradeOrder::BUY);
@@ -35,32 +33,32 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
         }
     }
 
-    spdlog::info("New order formed: user={} cost={} amount={} type={}", 
-                 order.username(), order.usd_cost(), order.usd_amount(), 
-                 (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+    spdlog::info("New order formed: cost={} amount={} type={}", 
+                 order.usd_cost(), order.usd_amount(), 
+                (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
     return order;
 }
 
-void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
-    std::string serialized_order;
-    order.SerializeToString(&serialized_order);
+void Client::send_trade_request_to_stock(const Serialize::TradeRequest& trade_request) {
+    std::string serialized_trade_request;
+    trade_request.SerializeToString(&serialized_trade_request);
 
-    write_data_to_socket(serialized_order);
+    write_data_to_socket(serialized_trade_request);
 
     get_response_from_stock();
 }
 
-void Client::write_data_to_socket(const std::string& serialized_order) {
-    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_order.size()));
+void Client::write_data_to_socket(const std::string& serialized_trade_request) {
+    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_trade_request.size()));
 
     std::vector<boost::asio::const_buffer> buffers = {
         boost::asio::buffer(&msg_length, sizeof(uint32_t)),
-        boost::asio::buffer(serialized_order)
+        boost::asio::buffer(serialized_trade_request)
     };
 
     boost::asio::write(socket_, buffers);
-    spdlog::info("The order has just been sent to the stock");
+    spdlog::info("Request has just been sent to the stock");
 }
 
 void Client::get_response_from_stock() {
@@ -90,10 +88,9 @@ void Client::get_response_from_stock() {
 
 void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
-    case Serialize::TradeResponse::ORDER_SUCCESSFULLY_PLACED :
+    case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED :
         std::cout << "Order succesfully created" << std::endl;
         break;
-    
     default:
         std::cout << "Error response from stock" << std::endl;
         break;
@@ -109,6 +106,10 @@ void Client::manage_server_socket_error(boost::system::error_code& error_code) {
     }
     std::cout << "Stock has closed unexpected" << std::endl;
 }
+
+std::string Client::get_username() {
+    return client_username_;
+};
 
 void Client::close() {
     socket_.close();

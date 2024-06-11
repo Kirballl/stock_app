@@ -63,12 +63,24 @@ try {
                     switch (menu_order_type) {
                     case 1 : {
                         Serialize::TradeOrder order = client.form_order(BUY);
-                        client.send_order_to_stock(order);
+
+                        Serialize::TradeRequest trade_request;
+                        trade_request.set_username(client.get_username());
+                        trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
+                        trade_request.mutable_order()->CopyFrom(order);
+
+                        client.send_trade_request_to_stock(trade_request);
                         break;
                     }
                     case 2 : {
                         Serialize::TradeOrder order = client.form_order(SELL);
-                        client.send_order_to_stock(order);
+
+                        Serialize::TradeRequest trade_request;
+                        trade_request.set_username(client.get_username());
+                        trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
+                        trade_request.mutable_order()->CopyFrom(order);
+
+                        client.send_trade_request_to_stock(trade_request);
                         break;
                     }
                     default:

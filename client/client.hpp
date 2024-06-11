@@ -10,11 +10,12 @@
 
 class Client {
 public:
-   Client(std::string name, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
+   Client(std::string client_username, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
-   void send_order_to_stock(const Serialize::TradeOrder& order);
+   void send_trade_request_to_stock(const Serialize::TradeRequest& trade_request);
 
+   std::string get_username();
    void close();
 
 private:
@@ -26,7 +27,7 @@ private:
 
 private:
    boost::asio::ip::tcp::socket socket_;
-   std::string name_;
+   std::string client_username_;
 
    char data_length_[sizeof(uint32_t)];
 };

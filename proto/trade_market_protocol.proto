@@ -1,5 +1,5 @@
 syntax = "proto3";
-//      naming???
+
 package Serialize;
 
 message TradeOrder {
@@ -8,21 +8,47 @@ message TradeOrder {
         SELL = 1;
     }
     TradeType type = 1;
-    int32 usd_cost = 2;
-    int32 usd_amount = 3;
-
-    string username = 4;
+    double usd_cost = 2;
+    double usd_amount = 3;
 }
+
+message TradeRequest {
+    enum CommandType {
+        MAKE_ORDER = 0;
+        VIEW_ACTIVE_ORDERS = 1;
+        VIEW_CONPLETED_TRADES = 2;
+        VIEW_QUOTE_HISTORY = 3;
+        CANCEL_ACTIVE_ORDERS = 4;
+    }
+    CommandType command = 1;
+    TradeOrder order = 2;
+    string username = 3;
+}
+
+//////////////////////////////////////////////////
 
 message TradeResponse {
     enum status {
-        ORDER_SUCCESSFULLY_PLACED = 0;
+        ORDER_SUCCESSFULLY_CREATED = 0;
         ERROR = 1;
     }
     status response_msg = 1;
-    int32 message_length = 2;
+    AccountBalance account_balance = 2;
+    repeated TradeOrder active_orders = 3;
+    repeated TradeOrder completed_orders = 4;
+    QuoteHistory quote_history = 5;
 }
 
-// message TradeRequest {
-//     repeated TradeOrder orders = 1;
-// }
+message AccountBalance {
+    double usd_balance = 1;
+    double rub_balance = 2;
+}
+
+message QuoteHistory {
+    repeated Quote quotes = 1;
+}
+
+message Quote {
+    int32 timestamp = 1;
+    double price = 2;
+}
