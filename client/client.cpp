@@ -42,28 +42,13 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     return order;
 }
 
-void Client::get_response_from_stock() {
-    boost::asio::streambuf response_buf;
-    boost::system::error_code error;
+void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
+    std::string serialized_order;
+    order.SerializeToString(&serialized_order);
 
-    boost::asio::read(socket_, boost::asio::buffer(data_length_, sizeof(uint32_t)), error);
-    if (error) {
-        std::cerr << "Failed to read response length from socket: " << error.message() << std::endl;
-        return;
-    }
+    write_data_to_socket(serialized_order);
 
-    uint32_t msg_length = ntohl(*reinterpret_cast<uint32_t*>(data_length_));
-    std::vector<char> response_data(msg_length);
-
-    boost::asio::read(socket_, boost::asio::buffer(response_data), error);
-    if (error) {
-        std::cerr << "Failed to read respose message from socket: " << error.message() << std::endl;
-        return;
-    }
-
-    Serialize::TradeResponse response;
-    response.ParseFromArray(response_data.data(), msg_length);
-    std::cout << "Response: " << response.response_msg() << std::endl;
+    get_response_from_stock();
 }
 
 void Client::write_data_to_socket(const std::string& serialized_order) {
@@ -75,17 +60,54 @@ void Client::write_data_to_socket(const std::string& serialized_order) {
     };
 
     boost::asio::write(socket_, buffers);
+    spdlog::info("The order has just been sent to the stock");
 }
 
-void Client::send_order_to_stock(const Serialize::TradeOrder& order) {
-    std::string serialized_order;
-    order.SerializeToString(&serialized_order);
+void Client::get_response_from_stock() {
+    boost::asio::streambuf response_buf;
+    boost::system::error_code error_code;
 
-    std::cout << "write_data_to_socket(serialized_order)" << std::endl;
-    write_data_to_socket(serialized_order);
+    boost::asio::read(socket_, boost::asio::buffer(data_length_, sizeof(uint32_t)), error_code);
+    if (error_code) {
+        manage_server_socket_error(error_code);
+        return;
+    }
 
-    std::cout << "get_response_from_stock()" << std::endl;
-    get_response_from_stock();
+    uint32_t msg_length = ntohl(*reinterpret_cast<uint32_t*>(data_length_));
+    std::vector<char> response_data(msg_length);
+
+    boost::asio::read(socket_, boost::asio::buffer(response_data), error_code);
+    if (error_code) {
+        manage_server_socket_error(error_code);
+        return;
+    }
+
+    Serialize::TradeResponse response;
+    response.ParseFromArray(response_data.data(), msg_length);
+
+    handle_received_response_from_stock(response);
+}
+
+void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
+    switch (response.response_msg()) {
+    case Serialize::TradeResponse::ORDER_SUCCESSFULLY_PLACED :
+        std::cout << "Order succesfully created" << std::endl;
+        break;
+    
+    default:
+        std::cout << "Error response from stock" << std::endl;
+        break;
+    }
+}
+
+void Client::manage_server_socket_error(boost::system::error_code& error_code) {
+    if (error_code == boost::asio::error::eof) {
+        spdlog::warn("Server has closed socket: {}", error_code.message());
+    }
+    if (error_code == boost::asio::error::connection_reset) {
+        spdlog::warn("Connection with server was lost: {}", error_code.message());
+    }
+    std::cout << "Stock has closed unexpected" << std::endl;
 }
 
 void Client::close() {

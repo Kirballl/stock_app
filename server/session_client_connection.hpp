@@ -10,22 +10,27 @@
 
 #include "common.hpp"
 #include "order_queue.hpp"
+#include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
+
+class SessionManager;
 
 // Handle certain client connection 
 class SessionClientConnection : public  std::enable_shared_from_this<SessionClientConnection> {
 public:
    SessionClientConnection(boost::asio::ip::tcp::socket socket, 
-                           std::shared_ptr<OrderQueue> buy_orders_queue,
-                           std::shared_ptr<OrderQueue> sell_orders_queue);
+                           std::shared_ptr<SessionManager> session_manager);
 
    void start();
-   void async_read_data_from_socket();
+   
    std::string get_client_endpoint_info() const;
    bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-   void close();
+   void close_this_session();
 
 private:
+   void async_read_data_from_socket();
+   Serialize::TradeOrder convert_raw_data_to_command(std::size_t length);
+   Serialize::TradeResponse handle_received_command(Serialize::TradeOrder order);
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 
 private:
@@ -33,10 +38,7 @@ private:
    std::vector<char> raw_data_from_socket_;
    char raw_data_length_from_socket_[sizeof(uint32_t)];
 
-   std::shared_ptr<OrderQueue> buy_orders_queue_;
-   std::shared_ptr<OrderQueue> sell_orders_queue_;
-   // trade logic
-   //Core core_; 
+   std::shared_ptr<SessionManager> session_manager_;
 };
 
 #endif // SESSION_CLIENT_CONNECTION

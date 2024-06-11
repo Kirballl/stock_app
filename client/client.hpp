@@ -9,7 +9,7 @@
 #include "common.hpp"
 
 class Client {
- public:
+public:
    Client(std::string name, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
@@ -17,16 +17,17 @@ class Client {
 
    void close();
 
- private:
+private:
    void connect_to_server(const boost::asio::ip::tcp::resolver::results_type& endpoints);
    void get_response_from_stock();
    void write_data_to_socket(const std::string& serialized_order);
+   void handle_received_response_from_stock(const Serialize::TradeResponse& response);
+   void manage_server_socket_error(boost::system::error_code& error_code);
 
- private:
+private:
    boost::asio::ip::tcp::socket socket_;
    std::string name_;
 
-   std::string message_;
    char data_length_[sizeof(uint32_t)];
 };
 
