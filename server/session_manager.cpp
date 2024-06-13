@@ -1,7 +1,11 @@
 #include "session_manager.hpp"
 
 SessionManager::SessionManager() : is_rinning_(true), handle_sessions_mutex_(),
-    buy_orders_queue_(std::make_shared<OrderQueue>()), sell_orders_queue_(std::make_shared<OrderQueue>()) {
+    buy_orders_queue(std::make_shared<OrderQueue>()), sell_orders_queue(std::make_shared<OrderQueue>()) {
+}
+
+bool SessionManager::is_runnig() {
+    return is_rinning_.load(std::memory_order_acquire);
 }
 
 // Here session_manager_thread_ 
@@ -10,15 +14,16 @@ void SessionManager::run() {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // Handle active sessions
-        create_session_client_connection();
+        try_to_create_new_session_client_connection();
     }
 }
 
-void SessionManager::create_session_client_connection() {
+void SessionManager::try_to_create_new_session_client_connection() {
     std::unique_ptr<boost::asio::ip::tcp::socket> new_socket;
     while (new_connections_queue_.try_dequeue(new_socket)) {
         auto new_session_client_connection = std::make_shared<SessionClientConnection>(
             std::move(*new_socket), shared_from_this());
+
         new_session_client_connection->start();
 
         std::lock_guard add_new_session_lock_guard(handle_sessions_mutex_);
@@ -30,12 +35,24 @@ void SessionManager::create_session_client_connection() {
 }
 
 // Avalible only in main server thread
-void SessionManager::add_new_session(boost::asio::ip::tcp::socket new_client_socket) {
+void SessionManager::add_new_connection(boost::asio::ip::tcp::socket new_client_socket) {
     auto new_socket = std::make_unique<boost::asio::ip::tcp::socket>(std::move(new_client_socket));
     if (!new_connections_queue_.enqueue(std::move(new_socket))) {
         std::cerr << "Failed to add new_socket in new_connections_queue_" << std::endl;
         spdlog::error("Failed to add new_socket in new_connections_queue_");
     }
+}
+
+std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username(const std::string& username) {
+    std::lock_guard<std::mutex> get_session_by_username_lock_guard(handle_sessions_mutex_);
+    for (auto& current_session : clients_sessions_) {
+        if (current_session->get_client_username() == username) {
+            return current_session;
+        }
+    }
+
+    spdlog::warn("Try to get session by unknown username {}");
+    return nullptr;
 }
 
 void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info) {
@@ -44,12 +61,19 @@ void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> ses
     spdlog::info("Session removed for client {}", client_endpoint_info);
 }
 
+void SessionManager::notify_order_received() {
+    order_queue_cv.notify_all();
+}
+
 void SessionManager::stop() {
     spdlog::info("Stopping server session namager...");
 
+    is_rinning_.store(false, std::memory_order_release);
+
     std::lock_guard<std::mutex> stop_session_manager_lock_guard(handle_sessions_mutex_);
-    is_rinning_ = false;
     for (auto& current_session : clients_sessions_) {
         current_session->close_this_session();
     }
+
+    order_queue_cv.notify_all();
 }

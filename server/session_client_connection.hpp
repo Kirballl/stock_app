@@ -13,6 +13,7 @@
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
 
+// Forward declaration
 class SessionManager;
 
 // Handle certain client connection 
@@ -24,7 +25,17 @@ public:
    void start();
    
    std::string get_client_endpoint_info() const;
+   std::string get_client_username() const;
+
    bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
+
+   double get_rub_balance() const;
+   double get_usd_balance() const;
+   void increase_rub_balance(double amount);
+   void decrease_rub_balance(double amount);
+   void increase_usd_balance(double amount);
+   void decrease_usd_balance(double amount);
+   
    void close_this_session();
 
 private:
@@ -37,6 +48,10 @@ private:
    boost::asio::ip::tcp::socket socket_;
    std::vector<char> raw_data_from_socket_;
    char raw_data_length_from_socket_[sizeof(uint32_t)];
+
+   std::string username_;
+   double usd_balance_;
+   double rub_balance_;
 
    std::shared_ptr<SessionManager> session_manager_;
 };

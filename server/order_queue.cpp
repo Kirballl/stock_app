@@ -10,3 +10,7 @@ bool OrderQueue::push(const Serialize::TradeOrder& order) {
 bool OrderQueue::pop(Serialize::TradeOrder& order) {
     return concurrent_queue_.try_dequeue(order);
 }
+
+bool OrderQueue::is_empty() const {
+    return concurrent_queue_.size_approx() == 0;
+}

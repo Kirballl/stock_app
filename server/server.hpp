@@ -22,6 +22,8 @@ public:
 
 private:
     void accept_new_connection();
+    void stock_core();
+    void match_orders();
 
 private:
     boost::asio::io_context& io_context_;
@@ -29,6 +31,8 @@ private:
 
     std::shared_ptr<SessionManager> session_manager_;
     std::thread session_manager_thread_;
+
+    std::thread matching_orders_thread_;
 };
 
 #endif // SERVER_HPP

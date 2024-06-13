@@ -62,6 +62,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
     Serialize::TradeResponse response;
     
     switch (trade_request.command()) {
+        // (! условие) ...
     case Serialize::TradeRequest::MAKE_ORDER :
         if (push_received_from_socket_order_to_queue(trade_request.order())) {
             response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED);
@@ -69,7 +70,12 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
             spdlog::info("New order placed: user={} cost={} amount={} type={}", trade_request.username(),
                          trade_request.order().usd_cost(), trade_request.order().usd_amount(), 
                          (trade_request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+
+            session_manager_->notify_order_received();
             } else {
+                spdlog::info("Error to push received from socket order to orders queue : user={} cost={} amount={} type={}", trade_request.username(),
+                         trade_request.order().usd_cost(), trade_request.order().usd_amount(), 
+                         (trade_request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
                 response.set_response_msg(Serialize::TradeResponse::ERROR);
             }
         break;
@@ -95,9 +101,9 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
 bool SessionClientConnection::push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order) {
     switch (order.type()) {
     case Serialize::TradeOrder::BUY :
-        return session_manager_->buy_orders_queue_->push(order); //? session_manager_->push_order_to_orders_queue() 
+        return session_manager_->buy_orders_queue->push(order); //? session_manager_->push_order_to_orders_queue() 
     case Serialize::TradeOrder::SELL :
-        return session_manager_->sell_orders_queue_->push(order);
+        return session_manager_->sell_orders_queue->push(order);
     default:
         return false;
     }
@@ -142,6 +148,34 @@ std::string SessionClientConnection::get_client_endpoint_info() const {
         spdlog::error("Failed to get client endpoint info: {}", error.what());
         return "unknown";
     }
+}
+
+std::string SessionClientConnection::get_client_username() const {
+    return username_;
+}
+
+double SessionClientConnection::get_rub_balance() const {
+    return rub_balance_;
+}
+
+double SessionClientConnection::get_usd_balance() const {
+    return usd_balance_;
+}
+
+void SessionClientConnection::increase_rub_balance(double amount) {
+    rub_balance_ += amount;
+}
+
+void SessionClientConnection::decrease_rub_balance(double amount) {
+    rub_balance_ -= amount;
+}
+
+void SessionClientConnection::increase_usd_balance(double amount) {
+    usd_balance_ += amount;
+}
+
+void SessionClientConnection::decrease_usd_balance(double amount) {
+    usd_balance_ -= amount;
 }
 
 void SessionClientConnection::close_this_session() {

@@ -14,6 +14,7 @@ public:
     OrderQueue();
     bool push(const Serialize::TradeOrder& order);
     bool pop(Serialize::TradeOrder& order);
+    bool is_empty() const;
 
 private:
     moodycamel::ConcurrentQueue<Serialize::TradeOrder> concurrent_queue_;
