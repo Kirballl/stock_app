@@ -42,7 +42,8 @@ public:
     
     void change_client_balance(std::string client_jwt, change_balance_type_t change_balance_type, 
                                 wallet_type_t wallet_type, double amount);
-    double get_client_balance(wallet_type_t wallet_type, std::string client_jwt) const;
+    Serialize::AccountBalance get_client_balance(std::string client_jwt) const;
+    double get_client_balance(std::string client_jwt, wallet_type_t wallet_type) const;
 
     void stop();
 

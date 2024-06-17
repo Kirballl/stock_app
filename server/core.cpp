@@ -116,12 +116,13 @@ void Core::match_orders(Serialize::TradeOrder& sell_order, std::vector<Serialize
     change_clients_balances(sell_order, buy_order_iterator, transaction_amount, transaction_cost);
     std::cout << "clients_balances has changed" << std::endl;
 
-    spdlog::info("Matched orders: BUY {} SELL {} - Amount: {} Cost:",
+    spdlog::info("Matched orders: BUY {} SELL {} - Amount: {} Cost: {}",
                                      buy_order_iterator->user_jwt(), sell_order.user_jwt(), transaction_amount, transaction_cost);
 }
 
 void Core::change_clients_balances(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator,
                                    int32_t transaction_amount, double transaction_cost) {
+    std::lock_guard<std::mutex> change_client_balance_lock_guard(ptr_session_manager_->client_data_mutex);
     ptr_session_manager_->change_client_balance(sell_order.user_jwt(), DECREASE, USD, transaction_amount);
     ptr_session_manager_->change_client_balance(sell_order.user_jwt(), INCREASE, RUB, transaction_cost);
     ptr_session_manager_->change_client_balance(buy_order_iterator->user_jwt(), INCREASE, USD, transaction_amount);

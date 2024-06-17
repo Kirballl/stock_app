@@ -112,10 +112,11 @@ enum TradeRequest_CommandType : int {
   TradeRequest_CommandType_SIGN_UP = 0,
   TradeRequest_CommandType_SIGN_IN = 1,
   TradeRequest_CommandType_MAKE_ORDER = 2,
-  TradeRequest_CommandType_VIEW_ACTIVE_ORDERS = 3,
-  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 4,
-  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 5,
-  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 6,
+  TradeRequest_CommandType_VIEW_BALANCE = 3,
+  TradeRequest_CommandType_VIEW_ACTIVE_ORDERS = 4,
+  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 5,
+  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 6,
+  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 7,
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
@@ -144,13 +145,16 @@ enum TradeResponse_status : int {
   TradeResponse_status_SIGN_IN_SUCCESSFUL = 2,
   TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 3,
   TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 4,
-  TradeResponse_status_ERROR = 5,
+  TradeResponse_status_ERROR_TO_CREATE_ORDER = 5,
+  TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE = 6,
+  TradeResponse_status_ERROR_VIEW_BALANCE = 7,
+  TradeResponse_status_UNKNOWN_ERROR = 8,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeResponse_status_IsValid(int value);
 constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_SIGN_UP_SUCCESSFUL;
-constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_ERROR;
+constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_UNKNOWN_ERROR;
 constexpr int TradeResponse_status_status_ARRAYSIZE = TradeResponse_status_status_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor();
@@ -859,6 +863,8 @@ class TradeRequest final :
     TradeRequest_CommandType_SIGN_IN;
   static constexpr CommandType MAKE_ORDER =
     TradeRequest_CommandType_MAKE_ORDER;
+  static constexpr CommandType VIEW_BALANCE =
+    TradeRequest_CommandType_VIEW_BALANCE;
   static constexpr CommandType VIEW_ACTIVE_ORDERS =
     TradeRequest_CommandType_VIEW_ACTIVE_ORDERS;
   static constexpr CommandType VIEW_COMPLETED_TRADES =
@@ -1143,8 +1149,14 @@ class TradeResponse final :
     TradeResponse_status_INVALID_USERNAME_OR_PASSWORD;
   static constexpr status ORDER_SUCCESSFULLY_CREATED =
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
-  static constexpr status ERROR =
-    TradeResponse_status_ERROR;
+  static constexpr status ERROR_TO_CREATE_ORDER =
+    TradeResponse_status_ERROR_TO_CREATE_ORDER;
+  static constexpr status SUCCES_VIEW_BALANCE_RESPONCE =
+    TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE;
+  static constexpr status ERROR_VIEW_BALANCE =
+    TradeResponse_status_ERROR_VIEW_BALANCE;
+  static constexpr status UNKNOWN_ERROR =
+    TradeResponse_status_UNKNOWN_ERROR;
   static inline bool status_IsValid(int value) {
     return TradeResponse_status_IsValid(value);
   }

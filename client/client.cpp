@@ -42,21 +42,21 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     return order;
 }
 
-void Client::send_trade_request_to_stock(const Serialize::TradeRequest& trade_request) {
-    std::string serialized_trade_request;
-    trade_request.SerializeToString(&serialized_trade_request);
+void Client::send_request_to_stock(const Serialize::TradeRequest& request) {
+    std::string serialized_request;
+    request.SerializeToString(&serialized_request);
 
-    write_data_to_socket(serialized_trade_request);
+    write_data_to_socket(serialized_request);
 
     get_response_from_stock();
 }
 
-void Client::write_data_to_socket(const std::string& serialized_trade_request) {
-    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_trade_request.size()));
+void Client::write_data_to_socket(const std::string& serialized_request) {
+    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_request.size()));
 
     std::vector<boost::asio::const_buffer> buffers = {
         boost::asio::buffer(&msg_length, sizeof(uint32_t)),
-        boost::asio::buffer(serialized_trade_request)
+        boost::asio::buffer(serialized_request)
     };
 
     boost::asio::write(socket_, buffers);
@@ -90,15 +90,25 @@ void Client::get_response_from_stock() {
 
 void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
-    case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED :
-        std::cout << "Order succesfully created" << std::endl;
-        break;
-    case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL :
-        std::cout << "Susccesfull autorization" << std::endl;
-        break;
-    default:
-        std::cout << "Error response from stock" << std::endl;
-        break;
+        case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL : {
+            std::cout << "\nSusccesfull autorization" << std::endl;
+            break;
+        }
+        case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED : {
+            std::cout << "\nOrder succesfully created" << std::endl;
+            break;
+        }
+        case Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE : {
+            std::cout << "\nYour balance: " 
+                      << response.account_balance().rub_balance() << " RUB, "
+                      << response.account_balance().usd_balance() << " USD."
+                      << std::endl;
+            break;
+        }    
+        default: {
+            std::cout << "Error response from stock" << std::endl;
+            break;
+        }
     }
 }
 

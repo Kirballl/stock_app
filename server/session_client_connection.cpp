@@ -45,10 +45,10 @@ void SessionClientConnection::async_read_data_from_socket() {
                         }
                         close_this_session();
                     } else {
-                        Serialize::TradeRequest trade_request = convert_raw_data_to_command(length);
-                        Serialize::TradeResponse trade_response = handle_received_command(trade_request);
+                        Serialize::TradeRequest request = convert_raw_data_to_command(length);
+                        Serialize::TradeResponse response = handle_received_command(request);
 
-                        async_write_data_to_socket(trade_response);
+                        async_write_data_to_socket(response);
                     }
                 });
             }
@@ -56,15 +56,15 @@ void SessionClientConnection::async_read_data_from_socket() {
 }
 
 Serialize::TradeRequest SessionClientConnection::convert_raw_data_to_command(std::size_t length) {
-    Serialize::TradeRequest trade_request; 
-    trade_request.ParseFromArray(raw_data_from_socket_.data(), length);
-    return trade_request;
+    Serialize::TradeRequest request; 
+    request.ParseFromArray(raw_data_from_socket_.data(), length);
+    return request;
 }
 
-Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest trade_request) {
+Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest request) {
     Serialize::TradeResponse response;
     
-    switch (trade_request.command()) {
+    switch (request.command()) {
         case Serialize::TradeRequest::SIGN_UP : {
             //handle_sing_up_command(Serialize::TradeResponse& response, trade_reduest);
             //response.set_response_msg(Serialize::TradeResponse::SIGN_UP_SUCCESSFUL);
@@ -72,17 +72,26 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
         }
 
         case Serialize::TradeRequest::SIGN_IN : {
-            handle_sing_in_command(trade_request); // проверочка 
+            handle_sing_in_command(request); // проверочка 
             response.set_response_msg(Serialize::TradeResponse::SIGN_IN_SUCCESSFUL);
             break;
         }
 
         case Serialize::TradeRequest::MAKE_ORDER : {
-            if(!handle_make_order_comand(trade_request)) {
-                response.set_response_msg(Serialize::TradeResponse::ERROR); 
+            if(!handle_make_order_comand(request)) {
+                response.set_response_msg(Serialize::TradeResponse::ERROR_TO_CREATE_ORDER); 
                 break; 
             }
             response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED);
+            break;
+        }
+
+        case Serialize::TradeRequest::VIEW_BALANCE : {
+            if (!handle_view_balance_comand(request, response)) {
+                response.set_response_msg(Serialize::TradeResponse::ERROR_VIEW_BALANCE);
+                break;
+            } 
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE);
             break;
         }
             
@@ -107,7 +116,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
         }
 
         default: {
-            response.set_response_msg(Serialize::TradeResponse::ERROR); 
+            response.set_response_msg(Serialize::TradeResponse::UNKNOWN_ERROR); 
             break;
         }
     }
@@ -115,37 +124,36 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
     return response;
 }
 
-bool SessionClientConnection::handle_sing_in_command(Serialize::TradeRequest trade_reqest) {
-    std::string username = trade_reqest.username();
+bool SessionClientConnection::handle_sing_in_command(Serialize::TradeRequest request) {
+    std::string username = request.username();
+    // /? lock_guard
     if (session_manager_->client_data.find(username) == session_manager_->client_data.end()) {
         session_manager_->client_data[username] = ClientData{username, 0.0, 0.0, {}, {}};
     }
     return true;
 }
 
-bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest trade_request) {
-    Serialize::TradeOrder order = trade_request.order();
+bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest request) {
+    Serialize::TradeOrder order = request.order();
     order.set_timestamp(get_current_timestamp());
 
     std::cout << "handle_make_order_comand" << std::endl;
 
     if (!push_received_from_socket_order_to_queue(order)) {
         spdlog::info("Error to push received from socket order to orders queue : user={} cost={} amount={} type={}",
-                     trade_request.username(),
+                     request.username(),
                      order.usd_cost(), order.usd_amount(), 
-                     (trade_request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL"); // order vs trade_request
+                     (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL"); // order vs request
         
         return false;
     }
-    spdlog::info("New order placed: user={} cost={} amount={} type={}", trade_request.username(),
-                 trade_request.order().usd_cost(), trade_request.order().usd_amount(), 
-                (trade_request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+    spdlog::info("New order placed: user={} cost={} amount={} type={}", request.username(),
+                 request.order().usd_cost(), request.order().usd_amount(), 
+                (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
     {
-        //std::cout << "try to catch client_data_mutex in handle_make_order_comand" << std::endl;
-        std::lock_guard<std::mutex>  client_data_lock_guard(session_manager_->client_data_mutex);
-        //std::cout << "catched client_data_mutex in handle_make_order_comand" << std::endl;
-        session_manager_->client_data[trade_request.username()].active_orders.push_back(order);
+        std::lock_guard<std::mutex>  push_back_new_order_lock_guard(session_manager_->client_data_mutex);
+        session_manager_->client_data[request.username()].active_orders.push_back(order);
     }
 
     session_manager_->notify_order_received();
@@ -171,6 +179,15 @@ bool SessionClientConnection::push_received_from_socket_order_to_queue(const Ser
         return false;
     }
 }   
+
+bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest request, Serialize::TradeResponse& responce) {
+    std::lock_guard<std::mutex> view_balance_lockguard(session_manager_->client_data_mutex);
+
+    Serialize::AccountBalance account_balance = session_manager_->get_client_balance(request.username());
+    responce.mutable_account_balance()->CopyFrom(account_balance);
+
+    return true;
+}
 
 void SessionClientConnection::async_write_data_to_socket(const Serialize::TradeResponse& responce) {
     auto self_ptr(shared_from_this());

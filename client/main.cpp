@@ -44,10 +44,10 @@ try {
     });
 
     // Sign in
-    Serialize::TradeRequest trade_request;
-    trade_request.set_username(client.get_username());
-    trade_request.set_command(Serialize::TradeRequest::SIGN_IN);
-    client.send_trade_request_to_stock(trade_request);
+    Serialize::TradeRequest request;
+    request.set_username(client.get_username());
+    request.set_command(Serialize::TradeRequest::SIGN_IN);
+    client.send_request_to_stock(request);
 
     std::cout << "\nWelcome to USD exchange!\n"
                      << std::endl;
@@ -55,7 +55,8 @@ try {
     while (true) {
         std::cout << "\nMenu:\n"
                      "1) Make order\n"
-                     "2) Exit\n"
+                     "2) View my balance\n"
+                     "3) Exit\n"
                      << std::endl;
 
         short menu_option_num;
@@ -78,7 +79,7 @@ try {
                         trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
                         trade_request.mutable_order()->CopyFrom(order);
 
-                        client.send_trade_request_to_stock(trade_request);
+                        client.send_request_to_stock(trade_request);
                         break;
                     }
                     case 2 : {
@@ -89,7 +90,7 @@ try {
                         trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
                         trade_request.mutable_order()->CopyFrom(order);
 
-                        client.send_trade_request_to_stock(trade_request);
+                        client.send_request_to_stock(trade_request);
                         break;
                     }
                     default:
@@ -100,6 +101,13 @@ try {
                     break;
                 }
                 case 2: {
+                    Serialize::TradeRequest trade_request;
+                    trade_request.set_username(client.get_username());
+                    trade_request.set_command(Serialize::TradeRequest::VIEW_BALANCE);
+                    client.send_request_to_stock(trade_request);
+                    break;
+                }
+                case 3: {
                     client.close();
                     io_context_thread.join();
                     exit(0);

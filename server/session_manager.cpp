@@ -55,19 +55,34 @@ std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username
     return nullptr;
 }
 
-double SessionManager::get_client_balance(wallet_type_t wallet_type, std::string client_jwt) const {
-    std::lock_guard<std::mutex> get_client_balance_lock_guard(client_data_mutex);
-    auto it = client_data.find(client_jwt);
-    if (it == client_data.end()) {
+double SessionManager::get_client_balance(std::string client_jwt, wallet_type_t wallet_type) const {
+    // std::lock_guard<std::mutex> get_client_balance_lock_guard(client_data_mutex);
+    auto hash_map_iterator = client_data.find(client_jwt);
+    if (hash_map_iterator == client_data.end()) {
         spdlog::error("client with {} in unordered map client_data not found", client_jwt);
         throw std::runtime_error("client not found");
     }
-    return wallet_type == RUB ? it->second.rub_balance : it->second.usd_balance;
+    return wallet_type == RUB ? hash_map_iterator->second.rub_balance : hash_map_iterator->second.usd_balance;
+}
+
+Serialize::AccountBalance SessionManager::get_client_balance(std::string client_jwt) const {
+    // std::lock_guard<std::mutex> get_client_balance_lock_guard(client_data_mutex);
+
+    auto hash_map_iterator = client_data.find(client_jwt);
+    if (hash_map_iterator == client_data.end()) {
+        spdlog::error("client with {} in unordered map client_data not found", client_jwt);
+        throw std::runtime_error("client not found");
+    }
+    Serialize::AccountBalance account_balance;
+    account_balance.set_rub_balance(hash_map_iterator->second.rub_balance);
+    account_balance.set_usd_balance(hash_map_iterator->second.usd_balance);
+
+    return account_balance;
 }
 
 void SessionManager::change_client_balance(std::string client_jwt,
         change_balance_type_t change_balance_type, wallet_type_t wallet_type, double amount) {
-    std::lock_guard<std::mutex> change_client_balance_lock_guard(client_data_mutex);
+
     auto it = client_data.find(client_jwt);
     if (it == client_data.end()) {
         spdlog::error("client with {} in unordered map client_data not found", client_jwt);

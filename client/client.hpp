@@ -13,7 +13,7 @@ public:
    Client(std::string client_username, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
-   void send_trade_request_to_stock(const Serialize::TradeRequest& trade_request);
+   void send_request_to_stock(const Serialize::TradeRequest& request);
 
    std::string get_username();
    void close();
