@@ -90,14 +90,34 @@ void Client::get_response_from_stock() {
 
 void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
+        case Serialize::TradeResponse::SIGN_UP_SUCCESSFUL : {
+            //std::cout << "\nSusccesfull autorization" << std::endl;
+            break;
+        }
+        case Serialize::TradeResponse::USERNAME_ALREADY_TAKEN : {
+            std::cout << "\nUsername already taken" << std::endl;
+            break;
+        }
+
         case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL : {
             std::cout << "\nSusccesfull autorization" << std::endl;
             break;
         }
+        case Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD : {
+            std::cout << "\nInvalid username or password" << std::endl;
+            break;
+        }
+
         case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED : {
             std::cout << "\nOrder succesfully created" << std::endl;
             break;
         }
+        case Serialize::TradeResponse::ERROR_TO_CREATE_ORDER : {
+            std::cout << "\nError to create order" << std::endl;
+            break;
+        }
+
+
         case Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE : {
             std::cout << "\nYour balance: " 
                       << response.account_balance().rub_balance() << " RUB, "
@@ -105,6 +125,11 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
                       << std::endl;
             break;
         }    
+        case Serialize::TradeResponse::ERROR_VIEW_BALANCE : {
+            std::cout << "\nError to view: "  << std::endl;
+            break;
+        }
+
         default: {
             std::cout << "Error response from stock" << std::endl;
             break;

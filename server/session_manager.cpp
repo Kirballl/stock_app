@@ -83,19 +83,39 @@ Serialize::AccountBalance SessionManager::get_client_balance(std::string client_
 void SessionManager::change_client_balance(std::string client_jwt,
         change_balance_type_t change_balance_type, wallet_type_t wallet_type, double amount) {
 
-    auto it = client_data.find(client_jwt);
-    if (it == client_data.end()) {
+    auto iterator = client_data.find(client_jwt);
+    if (iterator == client_data.end()) {
         spdlog::error("client with {} in unordered map client_data not found", client_jwt);
         throw std::runtime_error("client not found");
     }
 
-    ClientData& client_funds = it->second;
+    ClientData& client_funds = iterator->second;
     if (change_balance_type == INCREASE) {
         wallet_type == RUB ? (client_funds.rub_balance += amount) : (client_funds.usd_balance += amount);
     }
     if (change_balance_type == DECREASE) {
         wallet_type == RUB ? (client_funds.rub_balance -= amount) : (client_funds.usd_balance -= amount);
     }
+}
+
+void SessionManager::move_order_from_active_to_completed(const std::string& client_jwt, int64_t timestamp) {
+    auto client_it = client_data.find(client_jwt);
+    if (client_it == client_data.end()) {
+        spdlog::error("client with {} in unordered map client_data not found", client_jwt);
+        throw std::runtime_error("client not found");
+    }
+
+    auto order_it = std::find_if(client_it->second.active_orders.begin(), client_it->second.active_orders.end(),
+        [timestamp](const Serialize::TradeOrder& order) {
+            return order.timestamp() == timestamp;
+        });
+
+    if (order_it == client_it->second.active_orders.end()) {
+        spdlog::error("client {} order with {} timestamp in unordered map client_data not found", client_jwt, timestamp);
+        throw std::runtime_error("client not found");
+    }
+    client_it->second.completed_orders.push_back(*order_it);
+    client_it->second.active_orders.erase(order_it);
 }
 
 void SessionManager::notify_order_received() {

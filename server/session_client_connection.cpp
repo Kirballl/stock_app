@@ -137,8 +137,6 @@ bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest r
     Serialize::TradeOrder order = request.order();
     order.set_timestamp(get_current_timestamp());
 
-    std::cout << "handle_make_order_comand" << std::endl;
-
     if (!push_received_from_socket_order_to_queue(order)) {
         spdlog::info("Error to push received from socket order to orders queue : user={} cost={} amount={} type={}",
                      request.username(),
@@ -147,14 +145,11 @@ bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest r
         
         return false;
     }
-    spdlog::info("New order placed: user={} cost={} amount={} type={}", request.username(),
+        spdlog::info("New order placed: user={} cost={} amount={} type={}", request.username(),
                  request.order().usd_cost(), request.order().usd_amount(), 
                 (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
-    {
-        std::lock_guard<std::mutex>  push_back_new_order_lock_guard(session_manager_->client_data_mutex);
-        session_manager_->client_data[request.username()].active_orders.push_back(order);
-    }
+    push_received_from_socket_order_to_active_orders_vector(order, request);
 
     session_manager_->notify_order_received();
 
@@ -169,10 +164,15 @@ int64_t SessionClientConnection::get_current_timestamp() {
     return timestamp;
 }
 
+void SessionClientConnection::push_received_from_socket_order_to_active_orders_vector(Serialize::TradeOrder& order,  Serialize::TradeRequest request) {
+    std::lock_guard<std::mutex>  push_back_new_order_lock_guard(session_manager_->client_data_mutex);
+    session_manager_->client_data[request.username()].active_orders.push_back(order);
+}
+
 bool SessionClientConnection::push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order) {
     switch (order.type()) {
     case Serialize::TradeOrder::BUY :
-        return session_manager_->buy_orders_queue->push(order); //? session_manager_->push_order_to_orders_queue() 
+        return session_manager_->buy_orders_queue->push(order); //TODO setter session_manager_->push_order_to_orders_queue() 
     case Serialize::TradeOrder::SELL :
         return session_manager_->sell_orders_queue->push(order);
     default:

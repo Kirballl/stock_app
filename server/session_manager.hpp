@@ -40,16 +40,18 @@ public:
 
     std::shared_ptr<SessionClientConnection> get_session_by_username(const std::string& username);
     
+    // core operations
     void change_client_balance(std::string client_jwt, change_balance_type_t change_balance_type, 
-                                wallet_type_t wallet_type, double amount);
+                               wallet_type_t wallet_type, double amount);
+    void move_order_from_active_to_completed(const std::string& username, int64_t timestamp);
     Serialize::AccountBalance get_client_balance(std::string client_jwt) const;
     double get_client_balance(std::string client_jwt, wallet_type_t wallet_type) const;
 
     void stop();
 
 public:
-    mutable std::mutex client_data_mutex;
-    std::unordered_map<std::string, ClientData> client_data;
+    mutable std::mutex client_data_mutex;  // TODO по другому  mutable std::shared_mutex mutex_; ссылку на класс
+    std::unordered_map<std::string, ClientData> client_data; // TODO thread-safe classs
 
     std::condition_variable order_queue_cv;
     std::mutex order_queue_cv_mutex;

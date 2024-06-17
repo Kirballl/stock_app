@@ -41,12 +41,12 @@ message TradeRequest {
     string username = 2;
     string jwt = 3;
 
-    SignUpRequest    sign_up_request = 4;
-    SignInRequest    sing_in_request = 5;
+    SignUpRequest sign_up_request = 4;
+    SignInRequest sing_in_request = 5;
 
     TradeOrder order = 6;
 }
-
+// TODO  OneOf
 //////////////////////////////////////////////////
 
 message TradeResponse {
@@ -61,7 +61,7 @@ message TradeResponse {
         ERROR_VIEW_BALANCE = 7;
         UNKNOWN_ERROR = 8 ;
     }
-    status response_msg = 1;
+    status response_msg = 1; // string error_response
     string jwt = 2;
 
     AccountBalance account_balance = 3;

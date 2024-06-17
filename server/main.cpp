@@ -10,11 +10,11 @@
 #include "common.hpp" 
 #include "server.hpp"
 
-std::shared_ptr<Server> server;
+std::shared_ptr<Server> server; // TODO std::bind
 
 void signal_handler(int signal) {
     server->stop();
-    spdlog::warn("Interrupt signal ({}) received. Shutting down...", signal);
+    spdlog::info("Interrupt signal ({}) received. Shutting down...", signal);
     spdlog::shutdown();
     exit(signal);
 }
@@ -25,6 +25,10 @@ int main() {
         auto rotating_logger = std::make_shared<spdlog::logger>("server_logs",
             std::make_shared<spdlog::sinks::rotating_file_sink_mt>("build/logs/server_logs.log", LOGS_FILE_SIZE, AMOUNT_OF_ARCHIVED_FILES));
         spdlog::set_default_logger(rotating_logger);
+        //уровень логгирования
+        //адреса юзернаемы в дебаг уровень
+        //TODO
+        // gtest - unit tests
 
         Config config = read_config("server_config.ini");
 

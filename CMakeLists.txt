@@ -29,12 +29,15 @@ add_custom_command(
     COMMENT "Running protoc on ${PROTO_FILES}"
 )
 
-# Добавление сгенерированных файлов в библиотеку
+# Добавление сгенерированных файлов в библиотеку 
 add_library(proto_files ${GENERATED_PROTO_DIR}/trade_market_protocol.pb.cc)
+# TODO - переместить в отдельный смакелист
 
-# Указание директорий с заголовочными файлами
+# Указание директорий с заголовочными файлами 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/config ${CMAKE_CURRENT_SOURCE_DIR}/common/include ${GENERATED_PROTO_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third-party/spdlog/include ${CMAKE_CURRENT_SOURCE_DIR}/third-party/moodycamel)
+
+# как добавлять хедер-онли библиотеки через смаке
 
 # Добавление подкаталога 
 add_subdirectory(server)
