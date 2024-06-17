@@ -55,6 +55,12 @@ extern QuoteDefaultTypeInternal _Quote_default_instance_;
 class QuoteHistory;
 struct QuoteHistoryDefaultTypeInternal;
 extern QuoteHistoryDefaultTypeInternal _QuoteHistory_default_instance_;
+class SignInRequest;
+struct SignInRequestDefaultTypeInternal;
+extern SignInRequestDefaultTypeInternal _SignInRequest_default_instance_;
+class SignUpRequest;
+struct SignUpRequestDefaultTypeInternal;
+extern SignUpRequestDefaultTypeInternal _SignUpRequest_default_instance_;
 class TradeOrder;
 struct TradeOrderDefaultTypeInternal;
 extern TradeOrderDefaultTypeInternal _TradeOrder_default_instance_;
@@ -69,6 +75,8 @@ PROTOBUF_NAMESPACE_OPEN
 template<> ::Serialize::AccountBalance* Arena::CreateMaybeMessage<::Serialize::AccountBalance>(Arena*);
 template<> ::Serialize::Quote* Arena::CreateMaybeMessage<::Serialize::Quote>(Arena*);
 template<> ::Serialize::QuoteHistory* Arena::CreateMaybeMessage<::Serialize::QuoteHistory>(Arena*);
+template<> ::Serialize::SignInRequest* Arena::CreateMaybeMessage<::Serialize::SignInRequest>(Arena*);
+template<> ::Serialize::SignUpRequest* Arena::CreateMaybeMessage<::Serialize::SignUpRequest>(Arena*);
 template<> ::Serialize::TradeOrder* Arena::CreateMaybeMessage<::Serialize::TradeOrder>(Arena*);
 template<> ::Serialize::TradeRequest* Arena::CreateMaybeMessage<::Serialize::TradeRequest>(Arena*);
 template<> ::Serialize::TradeResponse* Arena::CreateMaybeMessage<::Serialize::TradeResponse>(Arena*);
@@ -101,16 +109,18 @@ inline bool TradeOrder_TradeType_Parse(
     TradeOrder_TradeType_descriptor(), name, value);
 }
 enum TradeRequest_CommandType : int {
-  TradeRequest_CommandType_MAKE_ORDER = 0,
-  TradeRequest_CommandType_VIEW_ACTIVE_ORDERS = 1,
-  TradeRequest_CommandType_VIEW_CONPLETED_TRADES = 2,
-  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 3,
-  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 4,
+  TradeRequest_CommandType_SIGN_UP = 0,
+  TradeRequest_CommandType_SIGN_IN = 1,
+  TradeRequest_CommandType_MAKE_ORDER = 2,
+  TradeRequest_CommandType_VIEW_ACTIVE_ORDERS = 3,
+  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 4,
+  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 5,
+  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 6,
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeRequest_CommandType_IsValid(int value);
-constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MIN = TradeRequest_CommandType_MAKE_ORDER;
+constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MIN = TradeRequest_CommandType_SIGN_UP;
 constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MAX = TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS;
 constexpr int TradeRequest_CommandType_CommandType_ARRAYSIZE = TradeRequest_CommandType_CommandType_MAX + 1;
 
@@ -129,13 +139,17 @@ inline bool TradeRequest_CommandType_Parse(
     TradeRequest_CommandType_descriptor(), name, value);
 }
 enum TradeResponse_status : int {
-  TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 0,
-  TradeResponse_status_ERROR = 1,
+  TradeResponse_status_SIGN_UP_SUCCESSFUL = 0,
+  TradeResponse_status_USERNAME_ALREADY_TAKEN = 1,
+  TradeResponse_status_SIGN_IN_SUCCESSFUL = 2,
+  TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 3,
+  TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 4,
+  TradeResponse_status_ERROR = 5,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeResponse_status_IsValid(int value);
-constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
+constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_SIGN_UP_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_ERROR;
 constexpr int TradeResponse_status_status_ARRAYSIZE = TradeResponse_status_status_MAX + 1;
 
@@ -154,6 +168,344 @@ inline bool TradeResponse_status_Parse(
     TradeResponse_status_descriptor(), name, value);
 }
 // ===================================================================
+
+class SignUpRequest final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.SignUpRequest) */ {
+ public:
+  inline SignUpRequest() : SignUpRequest(nullptr) {}
+  ~SignUpRequest() override;
+  explicit PROTOBUF_CONSTEXPR SignUpRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  SignUpRequest(const SignUpRequest& from);
+  SignUpRequest(SignUpRequest&& from) noexcept
+    : SignUpRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SignUpRequest& operator=(const SignUpRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SignUpRequest& operator=(SignUpRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SignUpRequest& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SignUpRequest* internal_default_instance() {
+    return reinterpret_cast<const SignUpRequest*>(
+               &_SignUpRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(SignUpRequest& a, SignUpRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SignUpRequest* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SignUpRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SignUpRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SignUpRequest>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const SignUpRequest& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const SignUpRequest& from) {
+    SignUpRequest::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SignUpRequest* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.SignUpRequest";
+  }
+  protected:
+  explicit SignUpRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUsernameFieldNumber = 1,
+    kPasswordFieldNumber = 2,
+  };
+  // string username = 1;
+  void clear_username();
+  const std::string& username() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_username(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_username();
+  PROTOBUF_NODISCARD std::string* release_username();
+  void set_allocated_username(std::string* username);
+  private:
+  const std::string& _internal_username() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_username(const std::string& value);
+  std::string* _internal_mutable_username();
+  public:
+
+  // string password = 2;
+  void clear_password();
+  const std::string& password() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_password(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_password();
+  PROTOBUF_NODISCARD std::string* release_password();
+  void set_allocated_password(std::string* password);
+  private:
+  const std::string& _internal_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_password(const std::string& value);
+  std::string* _internal_mutable_password();
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.SignUpRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_trade_5fmarket_5fprotocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SignInRequest final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.SignInRequest) */ {
+ public:
+  inline SignInRequest() : SignInRequest(nullptr) {}
+  ~SignInRequest() override;
+  explicit PROTOBUF_CONSTEXPR SignInRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  SignInRequest(const SignInRequest& from);
+  SignInRequest(SignInRequest&& from) noexcept
+    : SignInRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SignInRequest& operator=(const SignInRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SignInRequest& operator=(SignInRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SignInRequest& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SignInRequest* internal_default_instance() {
+    return reinterpret_cast<const SignInRequest*>(
+               &_SignInRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(SignInRequest& a, SignInRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SignInRequest* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SignInRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SignInRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SignInRequest>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const SignInRequest& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const SignInRequest& from) {
+    SignInRequest::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SignInRequest* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.SignInRequest";
+  }
+  protected:
+  explicit SignInRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUsernameFieldNumber = 1,
+    kPasswordFieldNumber = 2,
+  };
+  // string username = 1;
+  void clear_username();
+  const std::string& username() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_username(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_username();
+  PROTOBUF_NODISCARD std::string* release_username();
+  void set_allocated_username(std::string* username);
+  private:
+  const std::string& _internal_username() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_username(const std::string& value);
+  std::string* _internal_mutable_username();
+  public:
+
+  // string password = 2;
+  void clear_password();
+  const std::string& password() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_password(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_password();
+  PROTOBUF_NODISCARD std::string* release_password();
+  void set_allocated_password(std::string* password);
+  private:
+  const std::string& _internal_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_password(const std::string& value);
+  std::string* _internal_mutable_password();
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.SignInRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_trade_5fmarket_5fprotocol_2eproto;
+};
+// -------------------------------------------------------------------
 
 class TradeOrder final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.TradeOrder) */ {
@@ -203,7 +555,7 @@ class TradeOrder final :
                &_TradeOrder_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    2;
 
   friend void swap(TradeOrder& a, TradeOrder& b) {
     a.Swap(&b);
@@ -306,10 +658,26 @@ class TradeOrder final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kUserJwtFieldNumber = 5,
     kUsdCostFieldNumber = 2,
-    kUsdAmountFieldNumber = 3,
     kTypeFieldNumber = 1,
+    kUsdAmountFieldNumber = 3,
+    kTimestampFieldNumber = 4,
   };
+  // string user_jwt = 5;
+  void clear_user_jwt();
+  const std::string& user_jwt() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_user_jwt(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_user_jwt();
+  PROTOBUF_NODISCARD std::string* release_user_jwt();
+  void set_allocated_user_jwt(std::string* user_jwt);
+  private:
+  const std::string& _internal_user_jwt() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_jwt(const std::string& value);
+  std::string* _internal_mutable_user_jwt();
+  public:
+
   // double usd_cost = 2;
   void clear_usd_cost();
   double usd_cost() const;
@@ -317,15 +685,6 @@ class TradeOrder final :
   private:
   double _internal_usd_cost() const;
   void _internal_set_usd_cost(double value);
-  public:
-
-  // double usd_amount = 3;
-  void clear_usd_amount();
-  double usd_amount() const;
-  void set_usd_amount(double value);
-  private:
-  double _internal_usd_amount() const;
-  void _internal_set_usd_amount(double value);
   public:
 
   // .Serialize.TradeOrder.TradeType type = 1;
@@ -337,6 +696,24 @@ class TradeOrder final :
   void _internal_set_type(::Serialize::TradeOrder_TradeType value);
   public:
 
+  // int32 usd_amount = 3;
+  void clear_usd_amount();
+  int32_t usd_amount() const;
+  void set_usd_amount(int32_t value);
+  private:
+  int32_t _internal_usd_amount() const;
+  void _internal_set_usd_amount(int32_t value);
+  public:
+
+  // int64 timestamp = 4;
+  void clear_timestamp();
+  int64_t timestamp() const;
+  void set_timestamp(int64_t value);
+  private:
+  int64_t _internal_timestamp() const;
+  void _internal_set_timestamp(int64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Serialize.TradeOrder)
  private:
   class _Internal;
@@ -345,9 +722,11 @@ class TradeOrder final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_jwt_;
     double usd_cost_;
-    double usd_amount_;
     int type_;
+    int32_t usd_amount_;
+    int64_t timestamp_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -403,7 +782,7 @@ class TradeRequest final :
                &_TradeRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    3;
 
   friend void swap(TradeRequest& a, TradeRequest& b) {
     a.Swap(&b);
@@ -474,12 +853,16 @@ class TradeRequest final :
   // nested types ----------------------------------------------------
 
   typedef TradeRequest_CommandType CommandType;
+  static constexpr CommandType SIGN_UP =
+    TradeRequest_CommandType_SIGN_UP;
+  static constexpr CommandType SIGN_IN =
+    TradeRequest_CommandType_SIGN_IN;
   static constexpr CommandType MAKE_ORDER =
     TradeRequest_CommandType_MAKE_ORDER;
   static constexpr CommandType VIEW_ACTIVE_ORDERS =
     TradeRequest_CommandType_VIEW_ACTIVE_ORDERS;
-  static constexpr CommandType VIEW_CONPLETED_TRADES =
-    TradeRequest_CommandType_VIEW_CONPLETED_TRADES;
+  static constexpr CommandType VIEW_COMPLETED_TRADES =
+    TradeRequest_CommandType_VIEW_COMPLETED_TRADES;
   static constexpr CommandType VIEW_QUOTE_HISTORY =
     TradeRequest_CommandType_VIEW_QUOTE_HISTORY;
   static constexpr CommandType CANCEL_ACTIVE_ORDERS =
@@ -512,11 +895,14 @@ class TradeRequest final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kUsernameFieldNumber = 3,
-    kOrderFieldNumber = 2,
+    kUsernameFieldNumber = 2,
+    kJwtFieldNumber = 3,
+    kSignUpRequestFieldNumber = 4,
+    kSingInRequestFieldNumber = 5,
+    kOrderFieldNumber = 6,
     kCommandFieldNumber = 1,
   };
-  // string username = 3;
+  // string username = 2;
   void clear_username();
   const std::string& username() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -530,7 +916,57 @@ class TradeRequest final :
   std::string* _internal_mutable_username();
   public:
 
-  // .Serialize.TradeOrder order = 2;
+  // string jwt = 3;
+  void clear_jwt();
+  const std::string& jwt() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_jwt(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_jwt();
+  PROTOBUF_NODISCARD std::string* release_jwt();
+  void set_allocated_jwt(std::string* jwt);
+  private:
+  const std::string& _internal_jwt() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_jwt(const std::string& value);
+  std::string* _internal_mutable_jwt();
+  public:
+
+  // .Serialize.SignUpRequest sign_up_request = 4;
+  bool has_sign_up_request() const;
+  private:
+  bool _internal_has_sign_up_request() const;
+  public:
+  void clear_sign_up_request();
+  const ::Serialize::SignUpRequest& sign_up_request() const;
+  PROTOBUF_NODISCARD ::Serialize::SignUpRequest* release_sign_up_request();
+  ::Serialize::SignUpRequest* mutable_sign_up_request();
+  void set_allocated_sign_up_request(::Serialize::SignUpRequest* sign_up_request);
+  private:
+  const ::Serialize::SignUpRequest& _internal_sign_up_request() const;
+  ::Serialize::SignUpRequest* _internal_mutable_sign_up_request();
+  public:
+  void unsafe_arena_set_allocated_sign_up_request(
+      ::Serialize::SignUpRequest* sign_up_request);
+  ::Serialize::SignUpRequest* unsafe_arena_release_sign_up_request();
+
+  // .Serialize.SignInRequest sing_in_request = 5;
+  bool has_sing_in_request() const;
+  private:
+  bool _internal_has_sing_in_request() const;
+  public:
+  void clear_sing_in_request();
+  const ::Serialize::SignInRequest& sing_in_request() const;
+  PROTOBUF_NODISCARD ::Serialize::SignInRequest* release_sing_in_request();
+  ::Serialize::SignInRequest* mutable_sing_in_request();
+  void set_allocated_sing_in_request(::Serialize::SignInRequest* sing_in_request);
+  private:
+  const ::Serialize::SignInRequest& _internal_sing_in_request() const;
+  ::Serialize::SignInRequest* _internal_mutable_sing_in_request();
+  public:
+  void unsafe_arena_set_allocated_sing_in_request(
+      ::Serialize::SignInRequest* sing_in_request);
+  ::Serialize::SignInRequest* unsafe_arena_release_sing_in_request();
+
+  // .Serialize.TradeOrder order = 6;
   bool has_order() const;
   private:
   bool _internal_has_order() const;
@@ -566,6 +1002,9 @@ class TradeRequest final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr jwt_;
+    ::Serialize::SignUpRequest* sign_up_request_;
+    ::Serialize::SignInRequest* sing_in_request_;
     ::Serialize::TradeOrder* order_;
     int command_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -623,7 +1062,7 @@ class TradeResponse final :
                &_TradeResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(TradeResponse& a, TradeResponse& b) {
     a.Swap(&b);
@@ -694,6 +1133,14 @@ class TradeResponse final :
   // nested types ----------------------------------------------------
 
   typedef TradeResponse_status status;
+  static constexpr status SIGN_UP_SUCCESSFUL =
+    TradeResponse_status_SIGN_UP_SUCCESSFUL;
+  static constexpr status USERNAME_ALREADY_TAKEN =
+    TradeResponse_status_USERNAME_ALREADY_TAKEN;
+  static constexpr status SIGN_IN_SUCCESSFUL =
+    TradeResponse_status_SIGN_IN_SUCCESSFUL;
+  static constexpr status INVALID_USERNAME_OR_PASSWORD =
+    TradeResponse_status_INVALID_USERNAME_OR_PASSWORD;
   static constexpr status ORDER_SUCCESSFULLY_CREATED =
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
   static constexpr status ERROR =
@@ -726,13 +1173,14 @@ class TradeResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kActiveOrdersFieldNumber = 3,
-    kCompletedOrdersFieldNumber = 4,
-    kAccountBalanceFieldNumber = 2,
-    kQuoteHistoryFieldNumber = 5,
+    kActiveOrdersFieldNumber = 4,
+    kCompletedOrdersFieldNumber = 5,
+    kJwtFieldNumber = 2,
+    kAccountBalanceFieldNumber = 3,
+    kQuoteHistoryFieldNumber = 6,
     kResponseMsgFieldNumber = 1,
   };
-  // repeated .Serialize.TradeOrder active_orders = 3;
+  // repeated .Serialize.TradeOrder active_orders = 4;
   int active_orders_size() const;
   private:
   int _internal_active_orders_size() const;
@@ -750,7 +1198,7 @@ class TradeResponse final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
       active_orders() const;
 
-  // repeated .Serialize.TradeOrder completed_orders = 4;
+  // repeated .Serialize.TradeOrder completed_orders = 5;
   int completed_orders_size() const;
   private:
   int _internal_completed_orders_size() const;
@@ -768,7 +1216,21 @@ class TradeResponse final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
       completed_orders() const;
 
-  // .Serialize.AccountBalance account_balance = 2;
+  // string jwt = 2;
+  void clear_jwt();
+  const std::string& jwt() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_jwt(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_jwt();
+  PROTOBUF_NODISCARD std::string* release_jwt();
+  void set_allocated_jwt(std::string* jwt);
+  private:
+  const std::string& _internal_jwt() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_jwt(const std::string& value);
+  std::string* _internal_mutable_jwt();
+  public:
+
+  // .Serialize.AccountBalance account_balance = 3;
   bool has_account_balance() const;
   private:
   bool _internal_has_account_balance() const;
@@ -786,7 +1248,7 @@ class TradeResponse final :
       ::Serialize::AccountBalance* account_balance);
   ::Serialize::AccountBalance* unsafe_arena_release_account_balance();
 
-  // .Serialize.QuoteHistory quote_history = 5;
+  // .Serialize.QuoteHistory quote_history = 6;
   bool has_quote_history() const;
   private:
   bool _internal_has_quote_history() const;
@@ -823,6 +1285,7 @@ class TradeResponse final :
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > active_orders_;
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > completed_orders_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr jwt_;
     ::Serialize::AccountBalance* account_balance_;
     ::Serialize::QuoteHistory* quote_history_;
     int response_msg_;
@@ -881,7 +1344,7 @@ class AccountBalance final :
                &_AccountBalance_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(AccountBalance& a, AccountBalance& b) {
     a.Swap(&b);
@@ -1040,7 +1503,7 @@ class QuoteHistory final :
                &_QuoteHistory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(QuoteHistory& a, QuoteHistory& b) {
     a.Swap(&b);
@@ -1197,7 +1660,7 @@ class Quote final :
                &_Quote_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(Quote& a, Quote& b) {
     a.Swap(&b);
@@ -1315,6 +1778,214 @@ class Quote final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// SignUpRequest
+
+// string username = 1;
+inline void SignUpRequest::clear_username() {
+  _impl_.username_.ClearToEmpty();
+}
+inline const std::string& SignUpRequest::username() const {
+  // @@protoc_insertion_point(field_get:Serialize.SignUpRequest.username)
+  return _internal_username();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SignUpRequest::set_username(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.username_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.SignUpRequest.username)
+}
+inline std::string* SignUpRequest::mutable_username() {
+  std::string* _s = _internal_mutable_username();
+  // @@protoc_insertion_point(field_mutable:Serialize.SignUpRequest.username)
+  return _s;
+}
+inline const std::string& SignUpRequest::_internal_username() const {
+  return _impl_.username_.Get();
+}
+inline void SignUpRequest::_internal_set_username(const std::string& value) {
+  
+  _impl_.username_.Set(value, GetArenaForAllocation());
+}
+inline std::string* SignUpRequest::_internal_mutable_username() {
+  
+  return _impl_.username_.Mutable(GetArenaForAllocation());
+}
+inline std::string* SignUpRequest::release_username() {
+  // @@protoc_insertion_point(field_release:Serialize.SignUpRequest.username)
+  return _impl_.username_.Release();
+}
+inline void SignUpRequest::set_allocated_username(std::string* username) {
+  if (username != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.username_.SetAllocated(username, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.username_.IsDefault()) {
+    _impl_.username_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.SignUpRequest.username)
+}
+
+// string password = 2;
+inline void SignUpRequest::clear_password() {
+  _impl_.password_.ClearToEmpty();
+}
+inline const std::string& SignUpRequest::password() const {
+  // @@protoc_insertion_point(field_get:Serialize.SignUpRequest.password)
+  return _internal_password();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SignUpRequest::set_password(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.password_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.SignUpRequest.password)
+}
+inline std::string* SignUpRequest::mutable_password() {
+  std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:Serialize.SignUpRequest.password)
+  return _s;
+}
+inline const std::string& SignUpRequest::_internal_password() const {
+  return _impl_.password_.Get();
+}
+inline void SignUpRequest::_internal_set_password(const std::string& value) {
+  
+  _impl_.password_.Set(value, GetArenaForAllocation());
+}
+inline std::string* SignUpRequest::_internal_mutable_password() {
+  
+  return _impl_.password_.Mutable(GetArenaForAllocation());
+}
+inline std::string* SignUpRequest::release_password() {
+  // @@protoc_insertion_point(field_release:Serialize.SignUpRequest.password)
+  return _impl_.password_.Release();
+}
+inline void SignUpRequest::set_allocated_password(std::string* password) {
+  if (password != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.password_.SetAllocated(password, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.password_.IsDefault()) {
+    _impl_.password_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.SignUpRequest.password)
+}
+
+// -------------------------------------------------------------------
+
+// SignInRequest
+
+// string username = 1;
+inline void SignInRequest::clear_username() {
+  _impl_.username_.ClearToEmpty();
+}
+inline const std::string& SignInRequest::username() const {
+  // @@protoc_insertion_point(field_get:Serialize.SignInRequest.username)
+  return _internal_username();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SignInRequest::set_username(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.username_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.SignInRequest.username)
+}
+inline std::string* SignInRequest::mutable_username() {
+  std::string* _s = _internal_mutable_username();
+  // @@protoc_insertion_point(field_mutable:Serialize.SignInRequest.username)
+  return _s;
+}
+inline const std::string& SignInRequest::_internal_username() const {
+  return _impl_.username_.Get();
+}
+inline void SignInRequest::_internal_set_username(const std::string& value) {
+  
+  _impl_.username_.Set(value, GetArenaForAllocation());
+}
+inline std::string* SignInRequest::_internal_mutable_username() {
+  
+  return _impl_.username_.Mutable(GetArenaForAllocation());
+}
+inline std::string* SignInRequest::release_username() {
+  // @@protoc_insertion_point(field_release:Serialize.SignInRequest.username)
+  return _impl_.username_.Release();
+}
+inline void SignInRequest::set_allocated_username(std::string* username) {
+  if (username != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.username_.SetAllocated(username, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.username_.IsDefault()) {
+    _impl_.username_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.SignInRequest.username)
+}
+
+// string password = 2;
+inline void SignInRequest::clear_password() {
+  _impl_.password_.ClearToEmpty();
+}
+inline const std::string& SignInRequest::password() const {
+  // @@protoc_insertion_point(field_get:Serialize.SignInRequest.password)
+  return _internal_password();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SignInRequest::set_password(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.password_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.SignInRequest.password)
+}
+inline std::string* SignInRequest::mutable_password() {
+  std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:Serialize.SignInRequest.password)
+  return _s;
+}
+inline const std::string& SignInRequest::_internal_password() const {
+  return _impl_.password_.Get();
+}
+inline void SignInRequest::_internal_set_password(const std::string& value) {
+  
+  _impl_.password_.Set(value, GetArenaForAllocation());
+}
+inline std::string* SignInRequest::_internal_mutable_password() {
+  
+  return _impl_.password_.Mutable(GetArenaForAllocation());
+}
+inline std::string* SignInRequest::release_password() {
+  // @@protoc_insertion_point(field_release:Serialize.SignInRequest.password)
+  return _impl_.password_.Release();
+}
+inline void SignInRequest::set_allocated_password(std::string* password) {
+  if (password != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.password_.SetAllocated(password, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.password_.IsDefault()) {
+    _impl_.password_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.SignInRequest.password)
+}
+
+// -------------------------------------------------------------------
+
 // TradeOrder
 
 // .Serialize.TradeOrder.TradeType type = 1;
@@ -1357,24 +2028,94 @@ inline void TradeOrder::set_usd_cost(double value) {
   // @@protoc_insertion_point(field_set:Serialize.TradeOrder.usd_cost)
 }
 
-// double usd_amount = 3;
+// int32 usd_amount = 3;
 inline void TradeOrder::clear_usd_amount() {
   _impl_.usd_amount_ = 0;
 }
-inline double TradeOrder::_internal_usd_amount() const {
+inline int32_t TradeOrder::_internal_usd_amount() const {
   return _impl_.usd_amount_;
 }
-inline double TradeOrder::usd_amount() const {
+inline int32_t TradeOrder::usd_amount() const {
   // @@protoc_insertion_point(field_get:Serialize.TradeOrder.usd_amount)
   return _internal_usd_amount();
 }
-inline void TradeOrder::_internal_set_usd_amount(double value) {
+inline void TradeOrder::_internal_set_usd_amount(int32_t value) {
   
   _impl_.usd_amount_ = value;
 }
-inline void TradeOrder::set_usd_amount(double value) {
+inline void TradeOrder::set_usd_amount(int32_t value) {
   _internal_set_usd_amount(value);
   // @@protoc_insertion_point(field_set:Serialize.TradeOrder.usd_amount)
+}
+
+// int64 timestamp = 4;
+inline void TradeOrder::clear_timestamp() {
+  _impl_.timestamp_ = int64_t{0};
+}
+inline int64_t TradeOrder::_internal_timestamp() const {
+  return _impl_.timestamp_;
+}
+inline int64_t TradeOrder::timestamp() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeOrder.timestamp)
+  return _internal_timestamp();
+}
+inline void TradeOrder::_internal_set_timestamp(int64_t value) {
+  
+  _impl_.timestamp_ = value;
+}
+inline void TradeOrder::set_timestamp(int64_t value) {
+  _internal_set_timestamp(value);
+  // @@protoc_insertion_point(field_set:Serialize.TradeOrder.timestamp)
+}
+
+// string user_jwt = 5;
+inline void TradeOrder::clear_user_jwt() {
+  _impl_.user_jwt_.ClearToEmpty();
+}
+inline const std::string& TradeOrder::user_jwt() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeOrder.user_jwt)
+  return _internal_user_jwt();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TradeOrder::set_user_jwt(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.user_jwt_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.TradeOrder.user_jwt)
+}
+inline std::string* TradeOrder::mutable_user_jwt() {
+  std::string* _s = _internal_mutable_user_jwt();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeOrder.user_jwt)
+  return _s;
+}
+inline const std::string& TradeOrder::_internal_user_jwt() const {
+  return _impl_.user_jwt_.Get();
+}
+inline void TradeOrder::_internal_set_user_jwt(const std::string& value) {
+  
+  _impl_.user_jwt_.Set(value, GetArenaForAllocation());
+}
+inline std::string* TradeOrder::_internal_mutable_user_jwt() {
+  
+  return _impl_.user_jwt_.Mutable(GetArenaForAllocation());
+}
+inline std::string* TradeOrder::release_user_jwt() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeOrder.user_jwt)
+  return _impl_.user_jwt_.Release();
+}
+inline void TradeOrder::set_allocated_user_jwt(std::string* user_jwt) {
+  if (user_jwt != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.user_jwt_.SetAllocated(user_jwt, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.user_jwt_.IsDefault()) {
+    _impl_.user_jwt_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeOrder.user_jwt)
 }
 
 // -------------------------------------------------------------------
@@ -1401,7 +2142,287 @@ inline void TradeRequest::set_command(::Serialize::TradeRequest_CommandType valu
   // @@protoc_insertion_point(field_set:Serialize.TradeRequest.command)
 }
 
-// .Serialize.TradeOrder order = 2;
+// string username = 2;
+inline void TradeRequest::clear_username() {
+  _impl_.username_.ClearToEmpty();
+}
+inline const std::string& TradeRequest::username() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.username)
+  return _internal_username();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TradeRequest::set_username(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.username_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.TradeRequest.username)
+}
+inline std::string* TradeRequest::mutable_username() {
+  std::string* _s = _internal_mutable_username();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.username)
+  return _s;
+}
+inline const std::string& TradeRequest::_internal_username() const {
+  return _impl_.username_.Get();
+}
+inline void TradeRequest::_internal_set_username(const std::string& value) {
+  
+  _impl_.username_.Set(value, GetArenaForAllocation());
+}
+inline std::string* TradeRequest::_internal_mutable_username() {
+  
+  return _impl_.username_.Mutable(GetArenaForAllocation());
+}
+inline std::string* TradeRequest::release_username() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.username)
+  return _impl_.username_.Release();
+}
+inline void TradeRequest::set_allocated_username(std::string* username) {
+  if (username != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.username_.SetAllocated(username, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.username_.IsDefault()) {
+    _impl_.username_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.username)
+}
+
+// string jwt = 3;
+inline void TradeRequest::clear_jwt() {
+  _impl_.jwt_.ClearToEmpty();
+}
+inline const std::string& TradeRequest::jwt() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.jwt)
+  return _internal_jwt();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TradeRequest::set_jwt(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.jwt_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.TradeRequest.jwt)
+}
+inline std::string* TradeRequest::mutable_jwt() {
+  std::string* _s = _internal_mutable_jwt();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.jwt)
+  return _s;
+}
+inline const std::string& TradeRequest::_internal_jwt() const {
+  return _impl_.jwt_.Get();
+}
+inline void TradeRequest::_internal_set_jwt(const std::string& value) {
+  
+  _impl_.jwt_.Set(value, GetArenaForAllocation());
+}
+inline std::string* TradeRequest::_internal_mutable_jwt() {
+  
+  return _impl_.jwt_.Mutable(GetArenaForAllocation());
+}
+inline std::string* TradeRequest::release_jwt() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.jwt)
+  return _impl_.jwt_.Release();
+}
+inline void TradeRequest::set_allocated_jwt(std::string* jwt) {
+  if (jwt != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.jwt_.SetAllocated(jwt, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.jwt_.IsDefault()) {
+    _impl_.jwt_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.jwt)
+}
+
+// .Serialize.SignUpRequest sign_up_request = 4;
+inline bool TradeRequest::_internal_has_sign_up_request() const {
+  return this != internal_default_instance() && _impl_.sign_up_request_ != nullptr;
+}
+inline bool TradeRequest::has_sign_up_request() const {
+  return _internal_has_sign_up_request();
+}
+inline void TradeRequest::clear_sign_up_request() {
+  if (GetArenaForAllocation() == nullptr && _impl_.sign_up_request_ != nullptr) {
+    delete _impl_.sign_up_request_;
+  }
+  _impl_.sign_up_request_ = nullptr;
+}
+inline const ::Serialize::SignUpRequest& TradeRequest::_internal_sign_up_request() const {
+  const ::Serialize::SignUpRequest* p = _impl_.sign_up_request_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Serialize::SignUpRequest&>(
+      ::Serialize::_SignUpRequest_default_instance_);
+}
+inline const ::Serialize::SignUpRequest& TradeRequest::sign_up_request() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.sign_up_request)
+  return _internal_sign_up_request();
+}
+inline void TradeRequest::unsafe_arena_set_allocated_sign_up_request(
+    ::Serialize::SignUpRequest* sign_up_request) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.sign_up_request_);
+  }
+  _impl_.sign_up_request_ = sign_up_request;
+  if (sign_up_request) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.TradeRequest.sign_up_request)
+}
+inline ::Serialize::SignUpRequest* TradeRequest::release_sign_up_request() {
+  
+  ::Serialize::SignUpRequest* temp = _impl_.sign_up_request_;
+  _impl_.sign_up_request_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::Serialize::SignUpRequest* TradeRequest::unsafe_arena_release_sign_up_request() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.sign_up_request)
+  
+  ::Serialize::SignUpRequest* temp = _impl_.sign_up_request_;
+  _impl_.sign_up_request_ = nullptr;
+  return temp;
+}
+inline ::Serialize::SignUpRequest* TradeRequest::_internal_mutable_sign_up_request() {
+  
+  if (_impl_.sign_up_request_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Serialize::SignUpRequest>(GetArenaForAllocation());
+    _impl_.sign_up_request_ = p;
+  }
+  return _impl_.sign_up_request_;
+}
+inline ::Serialize::SignUpRequest* TradeRequest::mutable_sign_up_request() {
+  ::Serialize::SignUpRequest* _msg = _internal_mutable_sign_up_request();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.sign_up_request)
+  return _msg;
+}
+inline void TradeRequest::set_allocated_sign_up_request(::Serialize::SignUpRequest* sign_up_request) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.sign_up_request_;
+  }
+  if (sign_up_request) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(sign_up_request);
+    if (message_arena != submessage_arena) {
+      sign_up_request = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, sign_up_request, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.sign_up_request_ = sign_up_request;
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.sign_up_request)
+}
+
+// .Serialize.SignInRequest sing_in_request = 5;
+inline bool TradeRequest::_internal_has_sing_in_request() const {
+  return this != internal_default_instance() && _impl_.sing_in_request_ != nullptr;
+}
+inline bool TradeRequest::has_sing_in_request() const {
+  return _internal_has_sing_in_request();
+}
+inline void TradeRequest::clear_sing_in_request() {
+  if (GetArenaForAllocation() == nullptr && _impl_.sing_in_request_ != nullptr) {
+    delete _impl_.sing_in_request_;
+  }
+  _impl_.sing_in_request_ = nullptr;
+}
+inline const ::Serialize::SignInRequest& TradeRequest::_internal_sing_in_request() const {
+  const ::Serialize::SignInRequest* p = _impl_.sing_in_request_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Serialize::SignInRequest&>(
+      ::Serialize::_SignInRequest_default_instance_);
+}
+inline const ::Serialize::SignInRequest& TradeRequest::sing_in_request() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.sing_in_request)
+  return _internal_sing_in_request();
+}
+inline void TradeRequest::unsafe_arena_set_allocated_sing_in_request(
+    ::Serialize::SignInRequest* sing_in_request) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.sing_in_request_);
+  }
+  _impl_.sing_in_request_ = sing_in_request;
+  if (sing_in_request) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.TradeRequest.sing_in_request)
+}
+inline ::Serialize::SignInRequest* TradeRequest::release_sing_in_request() {
+  
+  ::Serialize::SignInRequest* temp = _impl_.sing_in_request_;
+  _impl_.sing_in_request_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::Serialize::SignInRequest* TradeRequest::unsafe_arena_release_sing_in_request() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.sing_in_request)
+  
+  ::Serialize::SignInRequest* temp = _impl_.sing_in_request_;
+  _impl_.sing_in_request_ = nullptr;
+  return temp;
+}
+inline ::Serialize::SignInRequest* TradeRequest::_internal_mutable_sing_in_request() {
+  
+  if (_impl_.sing_in_request_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Serialize::SignInRequest>(GetArenaForAllocation());
+    _impl_.sing_in_request_ = p;
+  }
+  return _impl_.sing_in_request_;
+}
+inline ::Serialize::SignInRequest* TradeRequest::mutable_sing_in_request() {
+  ::Serialize::SignInRequest* _msg = _internal_mutable_sing_in_request();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.sing_in_request)
+  return _msg;
+}
+inline void TradeRequest::set_allocated_sing_in_request(::Serialize::SignInRequest* sing_in_request) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.sing_in_request_;
+  }
+  if (sing_in_request) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(sing_in_request);
+    if (message_arena != submessage_arena) {
+      sing_in_request = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, sing_in_request, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.sing_in_request_ = sing_in_request;
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.sing_in_request)
+}
+
+// .Serialize.TradeOrder order = 6;
 inline bool TradeRequest::_internal_has_order() const {
   return this != internal_default_instance() && _impl_.order_ != nullptr;
 }
@@ -1491,56 +2512,6 @@ inline void TradeRequest::set_allocated_order(::Serialize::TradeOrder* order) {
   // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.order)
 }
 
-// string username = 3;
-inline void TradeRequest::clear_username() {
-  _impl_.username_.ClearToEmpty();
-}
-inline const std::string& TradeRequest::username() const {
-  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.username)
-  return _internal_username();
-}
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void TradeRequest::set_username(ArgT0&& arg0, ArgT... args) {
- 
- _impl_.username_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:Serialize.TradeRequest.username)
-}
-inline std::string* TradeRequest::mutable_username() {
-  std::string* _s = _internal_mutable_username();
-  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.username)
-  return _s;
-}
-inline const std::string& TradeRequest::_internal_username() const {
-  return _impl_.username_.Get();
-}
-inline void TradeRequest::_internal_set_username(const std::string& value) {
-  
-  _impl_.username_.Set(value, GetArenaForAllocation());
-}
-inline std::string* TradeRequest::_internal_mutable_username() {
-  
-  return _impl_.username_.Mutable(GetArenaForAllocation());
-}
-inline std::string* TradeRequest::release_username() {
-  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.username)
-  return _impl_.username_.Release();
-}
-inline void TradeRequest::set_allocated_username(std::string* username) {
-  if (username != nullptr) {
-    
-  } else {
-    
-  }
-  _impl_.username_.SetAllocated(username, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (_impl_.username_.IsDefault()) {
-    _impl_.username_.Set("", GetArenaForAllocation());
-  }
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.username)
-}
-
 // -------------------------------------------------------------------
 
 // TradeResponse
@@ -1565,7 +2536,57 @@ inline void TradeResponse::set_response_msg(::Serialize::TradeResponse_status va
   // @@protoc_insertion_point(field_set:Serialize.TradeResponse.response_msg)
 }
 
-// .Serialize.AccountBalance account_balance = 2;
+// string jwt = 2;
+inline void TradeResponse::clear_jwt() {
+  _impl_.jwt_.ClearToEmpty();
+}
+inline const std::string& TradeResponse::jwt() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeResponse.jwt)
+  return _internal_jwt();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TradeResponse::set_jwt(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.jwt_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.TradeResponse.jwt)
+}
+inline std::string* TradeResponse::mutable_jwt() {
+  std::string* _s = _internal_mutable_jwt();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeResponse.jwt)
+  return _s;
+}
+inline const std::string& TradeResponse::_internal_jwt() const {
+  return _impl_.jwt_.Get();
+}
+inline void TradeResponse::_internal_set_jwt(const std::string& value) {
+  
+  _impl_.jwt_.Set(value, GetArenaForAllocation());
+}
+inline std::string* TradeResponse::_internal_mutable_jwt() {
+  
+  return _impl_.jwt_.Mutable(GetArenaForAllocation());
+}
+inline std::string* TradeResponse::release_jwt() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeResponse.jwt)
+  return _impl_.jwt_.Release();
+}
+inline void TradeResponse::set_allocated_jwt(std::string* jwt) {
+  if (jwt != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.jwt_.SetAllocated(jwt, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.jwt_.IsDefault()) {
+    _impl_.jwt_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeResponse.jwt)
+}
+
+// .Serialize.AccountBalance account_balance = 3;
 inline bool TradeResponse::_internal_has_account_balance() const {
   return this != internal_default_instance() && _impl_.account_balance_ != nullptr;
 }
@@ -1655,7 +2676,7 @@ inline void TradeResponse::set_allocated_account_balance(::Serialize::AccountBal
   // @@protoc_insertion_point(field_set_allocated:Serialize.TradeResponse.account_balance)
 }
 
-// repeated .Serialize.TradeOrder active_orders = 3;
+// repeated .Serialize.TradeOrder active_orders = 4;
 inline int TradeResponse::_internal_active_orders_size() const {
   return _impl_.active_orders_.size();
 }
@@ -1695,7 +2716,7 @@ TradeResponse::active_orders() const {
   return _impl_.active_orders_;
 }
 
-// repeated .Serialize.TradeOrder completed_orders = 4;
+// repeated .Serialize.TradeOrder completed_orders = 5;
 inline int TradeResponse::_internal_completed_orders_size() const {
   return _impl_.completed_orders_.size();
 }
@@ -1735,7 +2756,7 @@ TradeResponse::completed_orders() const {
   return _impl_.completed_orders_;
 }
 
-// .Serialize.QuoteHistory quote_history = 5;
+// .Serialize.QuoteHistory quote_history = 6;
 inline bool TradeResponse::_internal_has_quote_history() const {
   return this != internal_default_instance() && _impl_.quote_history_ != nullptr;
 }
@@ -1960,6 +2981,10 @@ inline void Quote::set_price(double value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -1,16 +1,16 @@
 #include "session_manager.hpp"
 
-SessionManager::SessionManager() : is_rinning_(true), handle_sessions_mutex_(),
+SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
     buy_orders_queue(std::make_shared<OrderQueue>()), sell_orders_queue(std::make_shared<OrderQueue>()) {
 }
 
 bool SessionManager::is_runnig() {
-    return is_rinning_.load(std::memory_order_acquire);
+    return is_running_.load(std::memory_order_acquire);
 }
 
 // Here session_manager_thread_ 
 void SessionManager::run() {
-    while (is_rinning_) {
+    while (is_running_) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // Handle active sessions
@@ -55,20 +55,48 @@ std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username
     return nullptr;
 }
 
-void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info) {
-    std::lock_guard<std::mutex> remove_session_lock_guard(handle_sessions_mutex_);
-    clients_sessions_.erase(std::remove(clients_sessions_.begin(), clients_sessions_.end(), session), clients_sessions_.end());
-    spdlog::info("Session removed for client {}", client_endpoint_info);
+double SessionManager::get_client_balance(wallet_type_t wallet_type, std::string client_jwt) const {
+    std::lock_guard<std::mutex> get_client_balance_lock_guard(client_data_mutex);
+    auto it = client_data.find(client_jwt);
+    if (it == client_data.end()) {
+        spdlog::error("client with {} in unordered map client_data not found", client_jwt);
+        throw std::runtime_error("client not found");
+    }
+    return wallet_type == RUB ? it->second.rub_balance : it->second.usd_balance;
+}
+
+void SessionManager::change_client_balance(std::string client_jwt,
+        change_balance_type_t change_balance_type, wallet_type_t wallet_type, double amount) {
+    std::lock_guard<std::mutex> change_client_balance_lock_guard(client_data_mutex);
+    auto it = client_data.find(client_jwt);
+    if (it == client_data.end()) {
+        spdlog::error("client with {} in unordered map client_data not found", client_jwt);
+        throw std::runtime_error("client not found");
+    }
+
+    ClientData& client_funds = it->second;
+    if (change_balance_type == INCREASE) {
+        wallet_type == RUB ? (client_funds.rub_balance += amount) : (client_funds.usd_balance += amount);
+    }
+    if (change_balance_type == DECREASE) {
+        wallet_type == RUB ? (client_funds.rub_balance -= amount) : (client_funds.usd_balance -= amount);
+    }
 }
 
 void SessionManager::notify_order_received() {
     order_queue_cv.notify_all();
 }
 
+void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info) {
+    std::lock_guard<std::mutex> remove_session_lock_guard(handle_sessions_mutex_);
+    clients_sessions_.erase(std::remove(clients_sessions_.begin(), clients_sessions_.end(), session), clients_sessions_.end());
+    spdlog::info("Session removed for client {}", client_endpoint_info);
+}
+
 void SessionManager::stop() {
     spdlog::info("Stopping server session namager...");
 
-    is_rinning_.store(false, std::memory_order_release);
+    is_running_.store(false, std::memory_order_release);
 
     std::lock_guard<std::mutex> stop_session_manager_lock_guard(handle_sessions_mutex_);
     for (auto& current_session : clients_sessions_) {

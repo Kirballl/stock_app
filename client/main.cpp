@@ -31,7 +31,7 @@ try {
     boost::asio::ip::tcp::resolver resolver(io_context);
     auto endpoints = resolver.resolve(config.host, std::to_string(config.port));
 
-    std::cout << "Enter Your name:\n" << std::endl;
+    std::cout << "Enter Your username:\n" << std::endl;
     std::string client_name;
     std::cin >> client_name;
 
@@ -43,8 +43,17 @@ try {
         io_context.run();
     });
 
+    // Sign in
+    Serialize::TradeRequest trade_request;
+    trade_request.set_username(client.get_username());
+    trade_request.set_command(Serialize::TradeRequest::SIGN_IN);
+    client.send_trade_request_to_stock(trade_request);
+
+    std::cout << "\nWelcome to USD exchange!\n"
+                     << std::endl;
+
     while (true) {
-        std::cout << "Menu:\n"
+        std::cout << "\nMenu:\n"
                      "1) Make order\n"
                      "2) Exit\n"
                      << std::endl;

@@ -3,7 +3,8 @@
 Server::Server(boost::asio::io_context& io_context, const Config& config) :
         io_context_(io_context),
         acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), config.port)),
-        session_manager_(std::make_shared<SessionManager>()) {
+        session_manager_(std::make_shared<SessionManager>()), 
+        core_(std::make_shared<Core>(session_manager_)) {
     spdlog::info("Server launched! Listen  {} : {}", config.host, config.port);
 
     std::cout << "Server launched! Listen " << config.host << ":" << config.port << std::endl;
@@ -12,7 +13,7 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
 
 void Server::start() {
     session_manager_thread_ = std::thread(&SessionManager::run, session_manager_);
-    matching_orders_thread_ = std::thread(&Server::stock_core, this);
+    core_thread_ = std::thread(&Core::stock_loop, core_);
     
     accept_new_connection();
 }
@@ -31,35 +32,6 @@ void Server::accept_new_connection() {
         });
 }
 
-// matching orders thread
-void Server::stock_core() {
-    while (session_manager_->is_runnig()) {
-        std::unique_lock<std::mutex> order_queue_unique_lock(session_manager_->order_queue_cv_mutex);
-
-        // Wait order from order queue 
-        session_manager_->order_queue_cv.wait(order_queue_unique_lock, [this] {
-            return !session_manager_->buy_orders_queue->is_empty()  ||
-                   !session_manager_->sell_orders_queue->is_empty() ||
-                   !session_manager_->is_runnig();
-        });
-
-        
-        if (!session_manager_->is_runnig()) {
-            break;
-        }
-
-
-        match_orders();
-    }
-}
-
-void Server::match_orders() {
-    while (!session_manager_->buy_orders_queue->is_empty() &&
-           !session_manager_->sell_orders_queue->is_empty()) {
-    }
-
-    //spdlog::info("Trying to match orders");
-}
 
 void Server::stop() {
     spdlog::info("Stopping server...");
@@ -71,8 +43,8 @@ void Server::stop() {
     if (session_manager_thread_.joinable()) {
         session_manager_thread_.join();
     }
-    if (matching_orders_thread_.joinable()) {
-        matching_orders_thread_.join();
+    if (core_thread_.joinable()) {
+        core_thread_.join();
     }
 
     spdlog::info("Server stopped");

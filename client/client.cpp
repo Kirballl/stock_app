@@ -22,6 +22,8 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     std::cin >> usd_amount;
     order.set_usd_amount(usd_amount);
 
+    order.set_user_jwt(get_username());
+
     switch (trade_type) {
         case BUY : {
             order.set_type(Serialize::TradeOrder::BUY);
@@ -90,6 +92,9 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
     switch (response.response_msg()) {
     case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED :
         std::cout << "Order succesfully created" << std::endl;
+        break;
+    case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL :
+        std::cout << "Susccesfull autorization" << std::endl;
         break;
     default:
         std::cout << "Error response from stock" << std::endl;

@@ -11,4 +11,14 @@ enum trade_type_t {
     SELL
 };
 
+enum wallet_type_t {
+    RUB,
+    USD
+};
+
+enum change_balance_type_t {
+    INCREASE,
+    DECREASE
+};
+
 #endif //CLIENSERVERECN_COMMON_HPP

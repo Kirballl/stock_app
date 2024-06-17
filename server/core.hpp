@@ -1,24 +1,35 @@
-#ifndef ORDER_HANDLER_HPP
-#define ORDER_HANDLER_HPP
+#ifndef CORE_HPP
+#define CORE_HPP
 
 #include <vector>
+#include <algorithm>
 
+#include "common.hpp"
+#include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
 
-class Core {
- public:
-  Core() = default;
+class Core : public std::enable_shared_from_this<Core> {
+public:
+  Core(std::shared_ptr<SessionManager> session_manager);
 
-  Serialize::TradeResponse handle_order(const Serialize::TradeOrder& order);
-  //Serialize::TradeResponse process_oreders(const Serialize::TradeRequest& request);
+   void stock_loop();
+   
 
- private:
+private:
   //void save_order_to_db();
-  //void match_orders(); 
+  void place_order_to_sorted_vector(const Serialize::TradeOrder& order);
+  void process_orders(); 
+  void match_orders(Serialize::TradeOrder& sell_order, 
+                    std::vector<Serialize::TradeOrder>::iterator buy_order_iterator); 
+  void change_clients_balances(Serialize::TradeOrder& sell_order, 
+                    std::vector<Serialize::TradeOrder>::iterator buy_order_iterator,
+                    int32_t transaction_amount, double transaction_cost); 
 
- private:
-  std::vector<Serialize::TradeOrder> buy_orders_;
-  std::vector<Serialize::TradeOrder> sell_orders_;
+private:
+  std::vector<Serialize::TradeOrder> buy_orders_book_; // Buy
+  std::vector<Serialize::TradeOrder> sell_orders_book_; // Sell
+
+  std::shared_ptr<SessionManager> ptr_session_manager_;
 };
 
-#endif // ORDER_HANDLER_HPP
+#endif // CORE_HPP

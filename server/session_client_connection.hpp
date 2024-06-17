@@ -5,6 +5,7 @@
 #include <boost/bind/bind.hpp>
 #include <boost/asio.hpp>
 #include <memory>
+#include <chrono>
 #include <vector>
 #include <string>
 
@@ -23,25 +24,23 @@ public:
                            std::shared_ptr<SessionManager> session_manager);
 
    void start();
-   
+
    std::string get_client_endpoint_info() const;
    std::string get_client_username() const;
-
-   bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-
-   double get_rub_balance() const;
-   double get_usd_balance() const;
-   void increase_rub_balance(double amount);
-   void decrease_rub_balance(double amount);
-   void increase_usd_balance(double amount);
-   void decrease_usd_balance(double amount);
    
    void close_this_session();
 
 private:
    void async_read_data_from_socket();
+
    Serialize::TradeRequest convert_raw_data_to_command(std::size_t length);
    Serialize::TradeResponse handle_received_command(Serialize::TradeRequest trade_request);
+   // bool handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest trade_reqest);
+   bool handle_sing_in_command(Serialize::TradeRequest trade_reqest);
+   bool handle_make_order_comand(Serialize::TradeRequest trade_reqest);
+   int64_t get_current_timestamp();
+   bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
+
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 
 private:
@@ -50,8 +49,6 @@ private:
    char raw_data_length_from_socket_[sizeof(uint32_t)];
 
    std::string username_;
-   double usd_balance_;
-   double rub_balance_;
 
    std::shared_ptr<SessionManager> session_manager_;
 };
