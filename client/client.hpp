@@ -1,9 +1,11 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include <boost/asio.hpp>
 #include <iostream>
 #include <memory>
+
+#include <boost/asio.hpp>
+#include <spdlog/spdlog.h> 
 
 #include "trade_market_protocol.pb.h"
 #include "common.hpp"

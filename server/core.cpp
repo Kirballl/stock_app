@@ -1,5 +1,4 @@
 #include "core.hpp"
-#include "common.hpp"
 
 Core::Core(std::shared_ptr<SessionManager> session_manager) : ptr_session_manager_(session_manager) {
 }

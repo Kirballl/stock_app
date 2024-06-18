@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "spdlog/spdlog.h"
+
 #include "common.hpp"
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
@@ -16,7 +18,7 @@ public:
    
 
 private:
-   //TODO void save_order_to_db();
+   //TODO    void save_order_to_db();
    void place_order_to_sorted_vector(const Serialize::TradeOrder& order);
    void process_orders(); 
    void match_orders(Serialize::TradeOrder& sell_order, 
