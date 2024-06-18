@@ -11,6 +11,7 @@
 #include "server.hpp"
 
 std::shared_ptr<Server> server; // TODO std::bind
+//TODO gtest - unit tests
 
 void signal_handler(int signal) {
     server->stop();
@@ -19,18 +20,15 @@ void signal_handler(int signal) {
     exit(signal);
 }
 
+
 int main() {
     try {
-        // Using spglog logger
+        Config config = read_config("server_config.ini");
+
         auto rotating_logger = std::make_shared<spdlog::logger>("server_logs",
             std::make_shared<spdlog::sinks::rotating_file_sink_mt>("build/logs/server_logs.log", LOGS_FILE_SIZE, AMOUNT_OF_ARCHIVED_FILES));
         spdlog::set_default_logger(rotating_logger);
-        //уровень логгирования
-        //адреса юзернаемы в дебаг уровень
-        //TODO
-        // gtest - unit tests
-
-        Config config = read_config("server_config.ini");
+        spdlog::set_level(set_logging_level(config));
 
         boost::asio::io_context io_context;
         

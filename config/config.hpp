@@ -8,6 +8,8 @@
 struct Config {
     std::string host;
     short port;
+
+    std::string log_level;
 };
 
 Config read_config(const std::string& filename);

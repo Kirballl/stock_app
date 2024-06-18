@@ -18,13 +18,14 @@ void signal_handler(int signal) {
 
 int main () {
 try {
+    Config config = read_config("server_config.ini");
+
     auto rotating_logger = std::make_shared<spdlog::logger>("client_logs", 
         std::make_shared<spdlog::sinks::rotating_file_sink_mt>("build/logs/client_logs.log", LOGS_FILE_SIZE, AMOUNT_OF_ARCHIVED_FILES));
     spdlog::set_default_logger(rotating_logger);
+    spdlog::set_level(set_logging_level(config));
 
     signal(SIGINT, signal_handler);
-
-    Config config = read_config("server_config.ini");
 
     boost::asio::io_context io_context;
 

@@ -5,6 +5,7 @@ set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/session_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/session_client_connection.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/config.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated/trade_market_protocol.pb.cc
 )

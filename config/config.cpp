@@ -7,6 +7,7 @@ Config read_config(const std::string& filename) {
     Config config;
     config.host = pt.get<std::string>("server.host");
     config.port = pt.get<short>("server.port");
+    config.log_level = pt.get<std::string>("server.log_level");
 
     return config;
 }
