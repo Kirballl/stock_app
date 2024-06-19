@@ -21,7 +21,8 @@ message TradeOrder {
     double usd_cost = 2;
     int32 usd_amount = 3;
     int64 timestamp = 4;
-    string user_jwt = 5;
+    int32 order_id = 5;
+    string username = 6; // user_jwt ->- username
 }
 
 message TradeRequest {
@@ -35,18 +36,18 @@ message TradeRequest {
         VIEW_QUOTE_HISTORY = 6;
         CANCEL_ACTIVE_ORDERS = 7;
     }
-
     CommandType command = 1;
 
     string username = 2;
     string jwt = 3;
 
-    SignUpRequest sign_up_request = 4;
-    SignInRequest sing_in_request = 5;
-
-    TradeOrder order = 6;
+    oneof RequestData{
+        SignUpRequest sign_up_request = 4;
+        SignInRequest sing_in_request = 5;
+        TradeOrder order = 6;
+    }
 }
-// TODO  OneOf
+
 //////////////////////////////////////////////////
 
 message TradeResponse {
@@ -56,23 +57,33 @@ message TradeResponse {
         SIGN_IN_SUCCESSFUL = 2;
         INVALID_USERNAME_OR_PASSWORD = 3;
         ORDER_SUCCESSFULLY_CREATED = 4;
-        ERROR_TO_CREATE_ORDER = 5;
-        SUCCES_VIEW_BALANCE_RESPONCE = 6;
-        ERROR_VIEW_BALANCE = 7;
-        UNKNOWN_ERROR = 8 ;
+        SUCCES_VIEW_BALANCE_RESPONCE = 5;
+        ERROR = 6;
     }
-    status response_msg = 1; // string error_response
+    status response_msg = 1; // 
+
     string jwt = 2;
 
-    AccountBalance account_balance = 3;
-    repeated TradeOrder active_orders = 4;
-    repeated TradeOrder completed_orders = 5;
-    QuoteHistory quote_history = 6;
+    oneof RequestData {
+        AccountBalance account_balance = 3;
+        ActiveOrders active_orders = 4;
+        CompletedOredrs completed_orders = 5;
+        QuoteHistory quote_history = 6;
+        string error_response = 7;
+    }
 }
 
 message AccountBalance {
     double usd_balance = 1;
     double rub_balance = 2;
+}
+
+message ActiveOrders {
+    repeated TradeOrder active_orders = 1;
+}
+
+message CompletedOredrs {
+    repeated TradeOrder completed_orders = 1;
 }
 
 message QuoteHistory {

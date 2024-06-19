@@ -2,12 +2,15 @@
 #define SESSION_CLIENT_CONNECTION
 
 #include <iostream>
-#include <boost/bind/bind.hpp>
-#include <boost/asio.hpp>
 #include <memory>
 #include <chrono>
 #include <vector>
 #include <string>
+
+#include <boost/bind/bind.hpp>
+#include <boost/asio.hpp>
+#include <spdlog/spdlog.h>
+#include <fmt/core.h>
 
 #include "common.hpp"
 #include "order_queue.hpp"

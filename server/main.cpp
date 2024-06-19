@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <csignal>
+#include <functional>
 
 #include <boost/asio.hpp>
 #include <spdlog/spdlog.h> 
@@ -10,16 +11,16 @@
 #include "common.hpp" 
 #include "server.hpp"
 
-std::shared_ptr<Server> server; // TODO std::bind
 //TODO gtest - unit tests
 
-void signal_handler(int signal) {
-    server->stop();
-    spdlog::info("Interrupt signal ({}) received. Shutting down...", signal);
-    spdlog::shutdown();
-    exit(signal);
+void signal_handler(const boost::system::error_code& error, int signal, std::shared_ptr<Server> server) {
+    if (!error) {
+        server->stop();
+        spdlog::info("Interrupt signal ({}) received. Shutting down...", signal);
+        spdlog::shutdown();
+        exit(signal);
+    }
 }
-
 
 int main() {
     try {
@@ -32,9 +33,12 @@ int main() {
 
         boost::asio::io_context io_context;
         
-        server = std::make_shared<Server>(io_context, config);
+        std::shared_ptr<Server> server = std::make_shared<Server>(io_context, config);
 
-        signal(SIGINT, signal_handler);
+        boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+        signals.async_wait([&server](const boost::system::error_code& error, int signal) {
+            signal_handler(error, signal, server);
+        });
 
         io_context.run();
     }

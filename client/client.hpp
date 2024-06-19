@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <boost/asio.hpp>
 #include <spdlog/spdlog.h> 
@@ -12,12 +13,14 @@
 
 class Client {
 public:
-   Client(std::string client_username, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
+   Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
    void send_request_to_stock(const Serialize::TradeRequest& request);
 
-   std::string get_username();
+   std::string get_username() const;
+   void set_username(std::string username);
+
    void close();
 
 private:

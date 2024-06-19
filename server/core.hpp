@@ -15,7 +15,6 @@ public:
    Core(std::shared_ptr<SessionManager> session_manager);
 
    void stock_loop();
-   
 
 private:
    //TODO    void save_order_to_db();

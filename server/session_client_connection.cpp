@@ -19,12 +19,12 @@ void SessionClientConnection::async_read_data_from_socket() {
     boost::asio::async_read(socket_,boost::asio::buffer(raw_data_length_from_socket_, sizeof(uint32_t)),
         [this, self_ptr](boost::system::error_code error_code, std::size_t length) {
             if (error_code) {
-                spdlog::warn("Failed to read message length from socket: {}", error_code.message());
+                 spdlog::info("Failed to read message length from socket: {}", error_code.message());
                 if (error_code == boost::asio::error::eof) {
-                    spdlog::warn("Client {} has closed socket", get_client_endpoint_info());
+                    spdlog::info("Client {} has closed socket", get_client_endpoint_info());
                 }
                 if (error_code == boost::asio::error::connection_reset) {
-                    spdlog::warn("Connection with client {} was lost", get_client_endpoint_info());
+                    spdlog::info("Connection with client {} was lost", get_client_endpoint_info());
                 }
                 close_this_session();
             } else {
@@ -66,7 +66,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
     
     switch (request.command()) {
         case Serialize::TradeRequest::SIGN_UP : {
-            //handle_sing_up_command(Serialize::TradeResponse& response, trade_reduest);
+            //handle_sing_up_command(response, request);
             //response.set_response_msg(Serialize::TradeResponse::SIGN_UP_SUCCESSFUL);
             break;
         }
@@ -79,7 +79,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
 
         case Serialize::TradeRequest::MAKE_ORDER : {
             if(!handle_make_order_comand(request)) {
-                response.set_response_msg(Serialize::TradeResponse::ERROR_TO_CREATE_ORDER); 
+                response.set_response_msg(Serialize::TradeResponse::ERROR); 
                 break; 
             }
             response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED);
@@ -88,7 +88,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
 
         case Serialize::TradeRequest::VIEW_BALANCE : {
             if (!handle_view_balance_comand(request, response)) {
-                response.set_response_msg(Serialize::TradeResponse::ERROR_VIEW_BALANCE);
+                response.set_response_msg(Serialize::TradeResponse::ERROR);
                 break;
             } 
             response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE);
@@ -116,7 +116,7 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
         }
 
         default: {
-            response.set_response_msg(Serialize::TradeResponse::UNKNOWN_ERROR); 
+            response.set_response_msg(Serialize::TradeResponse::ERROR); 
             break;
         }
     }

@@ -1,7 +1,8 @@
 #include "client.hpp"
 
-Client::Client(std::string client_username, boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints) 
-    : client_username_(client_username) , socket_(io_context) {
+Client::Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints) 
+    : socket_(io_context) {
+
     connect_to_server(endpoints);
 }
 
@@ -22,7 +23,7 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     std::cin >> usd_amount;
     order.set_usd_amount(usd_amount);
 
-    order.set_user_jwt(get_username());
+    order.set_username(get_username());
 
     switch (trade_type) {
         case BUY : {
@@ -91,7 +92,7 @@ void Client::get_response_from_stock() {
 void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
         case Serialize::TradeResponse::SIGN_UP_SUCCESSFUL : {
-            //std::cout << "\nSusccesfull autorization" << std::endl;
+            std::cout << "\nSusccesfull autorization" << std::endl;
             break;
         }
         case Serialize::TradeResponse::USERNAME_ALREADY_TAKEN : {
@@ -112,11 +113,6 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             std::cout << "\nOrder succesfully created" << std::endl;
             break;
         }
-        case Serialize::TradeResponse::ERROR_TO_CREATE_ORDER : {
-            std::cout << "\nError to create order" << std::endl;
-            break;
-        }
-
 
         case Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE : {
             std::cout << "\nYour balance: " 
@@ -124,9 +120,10 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
                       << response.account_balance().usd_balance() << " USD."
                       << std::endl;
             break;
-        }    
-        case Serialize::TradeResponse::ERROR_VIEW_BALANCE : {
-            std::cout << "\nError to view: "  << std::endl;
+        }   
+
+        case Serialize::TradeResponse::ERROR : {
+            std::cout << "\nError  msmsmmsmsmsmmsmssmmsggg" << std::endl;
             break;
         }
 
@@ -139,17 +136,21 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
 
 void Client::manage_server_socket_error(boost::system::error_code& error_code) {
     if (error_code == boost::asio::error::eof) {
-        spdlog::warn("Server has closed socket: {}", error_code.message());
+        spdlog::info("Server has closed socket: {}", error_code.message());
     }
     if (error_code == boost::asio::error::connection_reset) {
-        spdlog::warn("Connection with server was lost: {}", error_code.message());
+        spdlog::info("Connection with server was lost: {}", error_code.message());
     }
-    std::cout << "Stock has closed unexpected" << std::endl;
+    std::cout << "Stock has closed unexpectedly" << std::endl;
 }
 
-std::string Client::get_username() {
+std::string Client::get_username() const {
     return client_username_;
 };
+
+void Client::set_username(std::string username) {
+    client_username_ = username;
+}
 
 void Client::close() {
     socket_.close();

@@ -1,6 +1,7 @@
 set(CLIENT_SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/client.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/user_interface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/config.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated/trade_market_protocol.pb.cc
