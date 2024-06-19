@@ -22,7 +22,7 @@ message TradeOrder {
     int32 usd_amount = 3;
     int64 timestamp = 4;
     int32 order_id = 5;
-    string username = 6; // user_jwt ->- username
+    string username = 6;
 }
 
 message TradeRequest {

@@ -1,32 +1,27 @@
 #include "core.hpp"
 
-Core::Core(std::shared_ptr<SessionManager> session_manager) : ptr_session_manager_(session_manager) {
+Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
 }
 
 // matching orders thread
 void Core::stock_loop() {
-    while (ptr_session_manager_->is_runnig()) {
-        std::unique_lock<std::mutex> order_queue_unique_lock(ptr_session_manager_->order_queue_cv_mutex);
+    while (session_manager_->is_runnig()) {
 
-        // Wait order from order queue 
-        ptr_session_manager_->order_queue_cv.wait(order_queue_unique_lock, [this] {
-            return !ptr_session_manager_->buy_orders_queue->is_empty()  ||
-                   !ptr_session_manager_->sell_orders_queue->is_empty() ||
-                   !ptr_session_manager_->is_runnig();
-        });
+        auto client_data_manager = session_manager_->get_client_data_manager();
+        client_data_manager->stock_loop_wait_for_orders(session_manager_);
 
-        if (!ptr_session_manager_->is_runnig()) {
+        if (!session_manager_->is_runnig()) { 
             break;
         }
 
-        while(!ptr_session_manager_->buy_orders_queue->is_empty()) {
+        while(!client_data_manager->is_empty_order_queue(BUY)) {
             Serialize::TradeOrder buy_order;
-            ptr_session_manager_->buy_orders_queue->pop(buy_order);
+            client_data_manager->pop_order_from_order_queue(BUY, buy_order);
             place_order_to_sorted_vector(buy_order);
         }
-        while (!ptr_session_manager_->sell_orders_queue->is_empty()) {
+        while (!client_data_manager->is_empty_order_queue(SELL)) {
             Serialize::TradeOrder sell_order;
-            ptr_session_manager_->sell_orders_queue->pop(sell_order);
+            client_data_manager->pop_order_from_order_queue(SELL, sell_order);
             place_order_to_sorted_vector(sell_order);
         }
 
@@ -68,15 +63,25 @@ void Core::process_orders() {
 
             if (buy_order_iterator->usd_cost() > sell_order.usd_cost() || std::fabs(buy_order_iterator->usd_cost() - sell_order.usd_cost()) < EPSILON) {
 
-                match_orders(sell_order, buy_order_iterator);
+                if (!match_orders(sell_order, buy_order_iterator)) {
+                    spdlog::error("Error to match orders: BUY {} SELL {}",
+                                    buy_order_iterator->username(), sell_order.username());
+                }
 
                 if(buy_order_iterator->usd_amount() == 0) {
-                    move_order_to_completed_oreders(*buy_order_iterator);
+                    if (!move_order_to_completed_oreders(*buy_order_iterator)) {
+                        spdlog::error("Error move order to completed: BUY {}",
+                                                buy_order_iterator->username());
+                    }
+                    
                     buy_order_iterator = buy_orders_book_.erase(buy_order_iterator);
                 }
 
                 if (sell_order.usd_amount() == 0) {
-                    move_order_to_completed_oreders(sell_order);
+                    if (!move_order_to_completed_oreders(sell_order)) {
+                        spdlog::error("Error move order to completed: SELL {}",
+                                                sell_order.username());
+                    }
                     break;
                 }
             }
@@ -93,7 +98,7 @@ void Core::process_orders() {
     }
 }
 
-void Core::match_orders(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator) {
+bool Core::match_orders(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator) {
     std::cout << "match_orders" << std::endl;
 
     int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order_iterator->usd_amount());
@@ -103,24 +108,27 @@ void Core::match_orders(Serialize::TradeOrder& sell_order, std::vector<Serialize
     sell_order.set_usd_amount(sell_order.usd_amount() - transaction_amount);
     buy_order_iterator->set_usd_amount(buy_order_iterator->usd_amount() - transaction_amount);
 
-    change_clients_balances(sell_order, buy_order_iterator, transaction_amount, transaction_cost);
+    if (!change_clients_balances(sell_order, buy_order_iterator, transaction_amount, transaction_cost)) {
+        spdlog::error("Error to change clients balances: BUY {} SELL {} - Amount: {} Cost: {}",
+                        buy_order_iterator->username(), sell_order.username(), transaction_amount, transaction_cost);
+        return false;
+    }
 
     spdlog::info("Matched orders: BUY {} SELL {} - Amount: {} Cost: {}",
-                                     buy_order_iterator->username(), sell_order.username(), transaction_amount, transaction_cost);
+                        buy_order_iterator->username(), sell_order.username(), transaction_amount, transaction_cost);
+    return true;
 }
 
-void Core::change_clients_balances(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator,
+bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator,
                                    int32_t transaction_amount, double transaction_cost) {
-    std::lock_guard<std::mutex> change_client_balance_lock_guard(ptr_session_manager_->client_data_mutex);
-    ptr_session_manager_->change_client_balance(sell_order.username(), DECREASE, USD, transaction_amount);
-    ptr_session_manager_->change_client_balance(sell_order.username(), INCREASE, RUB, transaction_cost);
-    ptr_session_manager_->change_client_balance(buy_order_iterator->username(), INCREASE, USD, transaction_amount);
-    ptr_session_manager_->change_client_balance(buy_order_iterator->username(), DECREASE, RUB, transaction_cost);
+
+    auto client_data_manager = session_manager_->get_client_data_manager();
+    return client_data_manager->change_client_balances_according_match(sell_order.username(), buy_order_iterator->username(),
+                                                                            transaction_amount, transaction_cost);
 }
 
 template<typename OrderType>
-void Core::move_order_to_completed_oreders(OrderType& order) {
-    std::lock_guard<std::mutex> move_to_completed_orders_lock_guard(ptr_session_manager_->client_data_mutex);
-    ptr_session_manager_->move_order_from_active_to_completed(order.username(), order.timestamp());
+bool Core::move_order_to_completed_oreders(OrderType& order) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
+    return client_data_manager->move_order_from_active_to_completed(order.username(), order.timestamp());
 }
-// TODO концепты

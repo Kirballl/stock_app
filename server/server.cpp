@@ -36,16 +36,24 @@ void Server::accept_new_connection() {
 void Server::stop() {
     spdlog::info("Stopping server...");
 
+    std::cout << "Stopping server..." << std::endl;
+
     session_manager_->stop();
 
+    std::cout << "session_manager_ stopped..." << std::endl;
+
     io_context_.stop();
+
+    std::cout << "io_context_ stopped..." << std::endl;
 
     if (session_manager_thread_.joinable()) {
         session_manager_thread_.join();
     }
+    std::cout << "session_manager_thread_ joined" << std::endl;
     if (core_thread_.joinable()) {
         core_thread_.join();
     }
+    std::cout << "core_thread_ joined" << std::endl;
 
     spdlog::info("Server stopped");
 }

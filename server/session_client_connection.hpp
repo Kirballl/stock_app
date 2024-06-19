@@ -44,7 +44,7 @@ private:
    bool handle_make_order_comand(Serialize::TradeRequest reqest);
    int64_t get_current_timestamp();
    bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-   void push_received_from_socket_order_to_active_orders_vector(Serialize::TradeOrder& order, Serialize::TradeRequest request);
+   bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest request);
    bool handle_view_balance_comand(Serialize::TradeRequest request, Serialize::TradeResponse& responce);
 
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
