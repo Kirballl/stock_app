@@ -47,7 +47,6 @@ try {
         spdlog::error("Exception: {}", e.what());
         std::cerr << "Exeption: " << e.what() << std::endl;
     }
-    // gracefull
 
     return 0;
 }

@@ -28,7 +28,7 @@ private:
    void get_response_from_stock();
    void write_data_to_socket(const std::string& serialized_order);
    void handle_received_response_from_stock(const Serialize::TradeResponse& response);
-   void manage_server_socket_error(boost::system::error_code& error_code);
+   void manage_server_socket_error(const boost::system::error_code& error_code);
 
 private:
    boost::asio::ip::tcp::socket socket_;

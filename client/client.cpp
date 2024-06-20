@@ -7,7 +7,12 @@ Client::Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::
 }
 
 void Client::connect_to_server(const boost::asio::ip::tcp::resolver::results_type& endpoints) {
-    boost::asio::connect(socket_, endpoints);
+    try {
+        boost::asio::connect(socket_, endpoints);
+    } catch (boost::system::system_error& system_error) {
+        std::cout << "Stock is currently closed." << std::endl;
+        exit(0);
+    }
 }
 
 Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
@@ -134,7 +139,7 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
     }
 }
 
-void Client::manage_server_socket_error(boost::system::error_code& error_code) {
+void Client::manage_server_socket_error(const boost::system::error_code& error_code) {
     if (error_code == boost::asio::error::eof) {
         spdlog::info("Server has closed socket: {}", error_code.message());
     }
