@@ -7,9 +7,16 @@ find_package(Boost 1.40 COMPONENTS system REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(PostgreSQL REQUIRED)
+find_package(PQXX REQUIRED)
+
+find_library(BCRYPT_LIB bcrypt)
+
 include_directories(${Boost_INCLUDE_DIR} 
                     ${Protobuf_INCLUDE_DIRS} 
-                    ${PQXX_INCLUDE_DIRS})
+                    ${PQXX_INCLUDE_DIRS}
+                    ${PostgreSQL_INCLUDE_DIRS})
 
 set(TARGET_LOGGER spdlog)
 
@@ -20,3 +27,4 @@ add_subdirectory(common)
 add_subdirectory(proto)
 add_subdirectory(third-party/spdlog)
 add_subdirectory(third-party/moodycamel)
+add_subdirectory(third-party/jwt-cpp)

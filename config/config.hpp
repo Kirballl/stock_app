@@ -10,6 +10,12 @@ struct Config {
     short port;
 
     std::string log_level;
+
+    std::string dbname;
+    std::string dbuser;
+    std::string dbpassword;
+    std::string dbhost;
+    short dbport;
 };
 
 Config read_config(const std::string& filename);

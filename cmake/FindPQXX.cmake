@@ -1,0 +1,12 @@
+find_path(PQXX_INCLUDE_DIR NAMES pqxx/pqxx)
+find_library(PQXX_LIBRARY NAMES pqxx)
+
+if(PQXX_INCLUDE_DIR AND PQXX_LIBRARY)
+    set(PQXX_FOUND TRUE)
+    set(PQXX_LIBRARIES ${PQXX_LIBRARY})
+    set(PQXX_INCLUDE_DIRS ${PQXX_INCLUDE_DIR})
+else()
+    set(PQXX_FOUND FALSE)
+endif()
+
+mark_as_advanced(PQXX_INCLUDE_DIR PQXX_LIBRARY)
