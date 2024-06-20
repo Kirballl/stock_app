@@ -26,6 +26,7 @@ public:
     void run();
     bool is_runnig();
 
+    bool allowed_to_create_new_connection();
     void add_new_connection(boost::asio::ip::tcp::socket new_client_socket);
     void try_to_create_new_session_client_connection();
     void remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info);
@@ -35,11 +36,13 @@ public:
 
     void stop();
     void stop_all_sessions();
+    void stop_accepting_new_sessions();
 
 private:
+    bool stop_new_sessions_ = false;
     std::atomic<bool> is_running_;  // atomic to avalible to stop with other thread
 
-    std::vector<std::shared_ptr<SessionClientConnection>> clients_sessions_; // hashtable with jwt
+    std::vector<std::shared_ptr<SessionClientConnection>> clients_sessions_;
     std::mutex handle_sessions_mutex_;
 
     std::shared_ptr<ClientDataManager> client_data_manager_;

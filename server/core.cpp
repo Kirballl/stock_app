@@ -7,123 +7,159 @@ Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(s
 void Core::stock_loop() {
     while (session_manager_->is_runnig()) {
 
+//                                       //
+ std::cout << ">stock_loop_wait_for_orders" << std::endl;
+//                                       //
+
+
         auto client_data_manager = session_manager_->get_client_data_manager();
         client_data_manager->stock_loop_wait_for_orders(session_manager_);
+//                                       //
+ std::cout << "stock_loop" << std::endl;
+//                                       //
 
         if (!session_manager_->is_runnig()) { 
             break;
         }
 
-        while(!client_data_manager->is_empty_order_queue(BUY)) {
-            Serialize::TradeOrder buy_order;
-            client_data_manager->pop_order_from_order_queue(BUY, buy_order);
-            place_order_to_sorted_vector(buy_order);
-        }
-        while (!client_data_manager->is_empty_order_queue(SELL)) {
-            Serialize::TradeOrder sell_order;
-            client_data_manager->pop_order_from_order_queue(SELL, sell_order);
-            place_order_to_sorted_vector(sell_order);
-        }
+        complement_order_books(client_data_manager);
+        
+
+//                                       //
+
+        print_orders_book();
+//                                       //
 
         process_orders();
     }
 }
 
-void Core::place_order_to_sorted_vector(const Serialize::TradeOrder& order) {
-    std::vector<Serialize::TradeOrder>& target_vector = 
-         (order.type() == Serialize::TradeOrder::BUY) ? buy_orders_book_ : sell_orders_book_;
 
-    constexpr double EPSILON = 1e-6;
-    auto compare_oreders_functor = [EPSILON, &order](const Serialize::TradeOrder&placed_order, const Serialize::TradeOrder&inserting_order) {
-        if (order.type() == Serialize::TradeOrder::SELL) {
-            if (std::fabs(placed_order.usd_cost() - inserting_order.usd_cost()) < EPSILON) {
-                return placed_order.timestamp() < inserting_order.timestamp();       
-            }
-            return placed_order.usd_cost() < inserting_order.usd_cost();
+//DEBUG
+void Core::print_orders_book() {
+    std::cout << "Buy Orders Book:" << std::endl;
+    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, BuyOrderComparator> temp_buy_queue = buy_orders_book_;
+    while (!temp_buy_queue.empty()) {
+        const Serialize::TradeOrder& order = temp_buy_queue.top();
+        std::cout << "Type: " << (order.type() == Serialize::TradeOrder::BUY ? "BUY" : "SELL")
+                << ", USD Cost: " << order.usd_cost()
+                << ", USD Amount: " << order.usd_amount()
+                << ", Timestamp: " << timestamp_to_readable(order.timestamp())
+                << ", Order ID: " << order.order_id()
+                << ", Username: " << order.username()
+                << std::endl;
+        temp_buy_queue.pop();
+    }
+    std::cout << "Sell Orders Book:" << std::endl;
+    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, SellOrderComparator> temp_sell_queue = sell_orders_book_;
+    while (!temp_sell_queue.empty()) {
+        const Serialize::TradeOrder& order = temp_sell_queue.top();
+        std::cout << "Type: " << (order.type() == Serialize::TradeOrder::BUY ? "BUY" : "SELL")
+                << ", USD Cost: " << order.usd_cost()
+                << ", USD Amount: " << order.usd_amount()
+                << ", Timestamp: " <<  timestamp_to_readable(order.timestamp())
+                << ", Order ID: " << order.order_id()
+                << ", Username: " << order.username()
+                << std::endl;
+        temp_sell_queue.pop();
+    }
+}
+std::string Core::timestamp_to_readable(int64_t timestamp) {
+    auto millis = std::chrono::milliseconds(timestamp);
+    auto secs = std::chrono::duration_cast<std::chrono::seconds>(millis);
+    std::time_t time = secs.count();
+    std::tm* tm = std::localtime(&time);
+
+    std::stringstream ss;
+    ss << std::put_time(tm, "%Y-%m-%d %H:%M:%S");
+    ss << '.' << std::setw(3) << std::setfill('0') << (millis.count() % 1000);
+    return ss.str();
+}
+//////////////////////////////////////
+
+void Core::complement_order_books(std::shared_ptr<ClientDataManager> client_data_manager) {
+    while(!client_data_manager->is_empty_order_queue(BUY)) {
+            Serialize::TradeOrder buy_order;
+            client_data_manager->pop_order_from_order_queue(BUY, buy_order);
+
+            place_order_to_priority_queue(buy_order);
         }
-        else {
-            if (std::fabs(placed_order.usd_cost() - inserting_order.usd_cost()) < EPSILON) {
-                return placed_order.timestamp() < inserting_order.timestamp();       
-            }
-            return placed_order.usd_cost() > inserting_order.usd_cost();
+        while (!client_data_manager->is_empty_order_queue(SELL)) {
+            Serialize::TradeOrder sell_order;
+            client_data_manager->pop_order_from_order_queue(SELL, sell_order);
+
+            place_order_to_priority_queue(sell_order);
         }
-    };
+}
 
-    auto iterator = std::lower_bound(target_vector.begin(), target_vector.end(), order, compare_oreders_functor);
-
-    target_vector.insert(iterator, order);
+void Core::place_order_to_priority_queue(const Serialize::TradeOrder& order) {
+    if (order.type() == Serialize::TradeOrder::BUY) {
+        buy_orders_book_.push(order);
+    } else {
+        sell_orders_book_.push(order);
+    }
 }
 
 void Core::process_orders() {
-    constexpr double EPSILON = 1e-6;
+    std::cout << "process_orders() started" << std::endl; //DEBUG
 
-    for (auto& sell_order : sell_orders_book_) {
-        while (!buy_orders_book_.empty()) {
-            auto buy_order_iterator = buy_orders_book_.begin();
+    while (!buy_orders_book_.empty() && !sell_orders_book_.empty()) {
+        Serialize::TradeOrder buy_order = buy_orders_book_.top();
+        buy_orders_book_.pop(); 
+        Serialize::TradeOrder sell_order = sell_orders_book_.top();
+        sell_orders_book_.pop();
 
-            if (buy_order_iterator->usd_cost() > sell_order.usd_cost() || std::fabs(buy_order_iterator->usd_cost() - sell_order.usd_cost()) < EPSILON) {
+        if (buy_order.usd_cost() > sell_order.usd_cost() || std::fabs(buy_order.usd_cost() - sell_order.usd_cost()) < EPSILON) {
 
-                if (!match_orders(sell_order, buy_order_iterator)) {
-                    spdlog::error("Error to match orders: BUY {} SELL {}",
-                                    buy_order_iterator->username(), sell_order.username());
-                }
-
-                if(buy_order_iterator->usd_amount() == 0) {
-                    if (!move_order_to_completed_oreders(*buy_order_iterator)) {
-                        spdlog::error("Error move order to completed: BUY {}",
-                                                buy_order_iterator->username());
-                    }
-                    
-                    buy_order_iterator = buy_orders_book_.erase(buy_order_iterator);
-                }
-
-                if (sell_order.usd_amount() == 0) {
-                    if (!move_order_to_completed_oreders(sell_order)) {
-                        spdlog::error("Error move order to completed: SELL {}",
-                                                sell_order.username());
-                    }
-                    break;
-                }
+            if (!match_orders(sell_order, buy_order)) {
+                             spdlog::error("Error to match orders: BUY {} SELL {}",
+                                            buy_order.username(), sell_order.username());
             }
-        }
-    }
-    
-    auto iterator = sell_orders_book_.begin();
-    while (iterator != sell_orders_book_.end()) {
-        if (iterator->usd_amount() == 0) {
-            iterator = sell_orders_book_.erase(iterator);
+
+            if (buy_order.usd_amount() > 0) {
+                buy_orders_book_.push(buy_order);
+            }
+            if (sell_order.usd_amount() > 0) {
+                sell_orders_book_.push(sell_order);
+            }
+
+
         } else {
-            ++iterator;
+            buy_orders_book_.push(buy_order);
+            sell_orders_book_.push(sell_order);
+
+            break;
         }
     }
 }
 
-bool Core::match_orders(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator) {
-    std::cout << "match_orders" << std::endl;
+bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order) {
+    //                                       //
+    std::cout << "match_orders   !!! " << std::endl;
+    //                                       //
+    int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order.usd_amount());
+    double transaction_cost = transaction_amount * buy_order.usd_cost(); // RUB
 
-    int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order_iterator->usd_amount());
-    double transaction_cost = transaction_amount * buy_order_iterator->usd_cost(); // RUB
-
-    // Update oreders in vector 
+    //INFO Update oreders in vector 
     sell_order.set_usd_amount(sell_order.usd_amount() - transaction_amount);
-    buy_order_iterator->set_usd_amount(buy_order_iterator->usd_amount() - transaction_amount);
+    buy_order.set_usd_amount(buy_order.usd_amount() - transaction_amount);
 
-    if (!change_clients_balances(sell_order, buy_order_iterator, transaction_amount, transaction_cost)) {
+    if (!change_clients_balances(sell_order, buy_order, transaction_amount, transaction_cost)) {
         spdlog::error("Error to change clients balances: BUY {} SELL {} - Amount: {} Cost: {}",
-                        buy_order_iterator->username(), sell_order.username(), transaction_amount, transaction_cost);
+                        buy_order.username(), sell_order.username(), transaction_amount, transaction_cost);
         return false;
     }
 
     spdlog::info("Matched orders: BUY {} SELL {} - Amount: {} Cost: {}",
-                        buy_order_iterator->username(), sell_order.username(), transaction_amount, transaction_cost);
+                        buy_order.username(), sell_order.username(), transaction_amount, transaction_cost);
     return true;
 }
 
-bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, std::vector<Serialize::TradeOrder>::iterator buy_order_iterator,
+bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order,
                                    int32_t transaction_amount, double transaction_cost) {
 
     auto client_data_manager = session_manager_->get_client_data_manager();
-    return client_data_manager->change_client_balances_according_match(sell_order.username(), buy_order_iterator->username(),
+    return client_data_manager->change_client_balances_according_match(sell_order.username(), buy_order.username(),
                                                                             transaction_amount, transaction_cost);
 }
 
