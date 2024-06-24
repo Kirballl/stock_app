@@ -121,10 +121,11 @@ enum TradeRequest_CommandType : int {
   TradeRequest_CommandType_SIGN_IN = 1,
   TradeRequest_CommandType_MAKE_ORDER = 2,
   TradeRequest_CommandType_VIEW_BALANCE = 3,
-  TradeRequest_CommandType_VIEW_ACTIVE_ORDERS = 4,
-  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 5,
-  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 6,
-  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 7,
+  TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS = 4,
+  TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS = 5,
+  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 6,
+  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 7,
+  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 8,
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
@@ -154,7 +155,8 @@ enum TradeResponse_status : int {
   TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 3,
   TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 4,
   TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE = 5,
-  TradeResponse_status_ERROR = 6,
+  TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS = 6,
+  TradeResponse_status_ERROR = 7,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
@@ -889,8 +891,10 @@ class TradeRequest final :
     TradeRequest_CommandType_MAKE_ORDER;
   static constexpr CommandType VIEW_BALANCE =
     TradeRequest_CommandType_VIEW_BALANCE;
-  static constexpr CommandType VIEW_ACTIVE_ORDERS =
-    TradeRequest_CommandType_VIEW_ACTIVE_ORDERS;
+  static constexpr CommandType VIEW_ALL_ACTIVE_ORDERS =
+    TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS;
+  static constexpr CommandType VIEW_MY_ACTIVE_ORDERS =
+    TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS;
   static constexpr CommandType VIEW_COMPLETED_TRADES =
     TradeRequest_CommandType_VIEW_COMPLETED_TRADES;
   static constexpr CommandType VIEW_QUOTE_HISTORY =
@@ -1198,6 +1202,8 @@ class TradeResponse final :
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
   static constexpr status SUCCES_VIEW_BALANCE_RESPONCE =
     TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE;
+  static constexpr status SUCCES_VIEW_ALL_ACTIVE_ORDERS =
+    TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
   static constexpr status ERROR =
     TradeResponse_status_ERROR;
   static inline bool status_IsValid(int value) {
@@ -1667,25 +1673,44 @@ class ActiveOrders final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kActiveOrdersFieldNumber = 1,
+    kActiveBuyOrdersFieldNumber = 1,
+    kActiveSellOrdersFieldNumber = 2,
   };
-  // repeated .Serialize.TradeOrder active_orders = 1;
-  int active_orders_size() const;
+  // repeated .Serialize.TradeOrder active_buy_orders = 1;
+  int active_buy_orders_size() const;
   private:
-  int _internal_active_orders_size() const;
+  int _internal_active_buy_orders_size() const;
   public:
-  void clear_active_orders();
-  ::Serialize::TradeOrder* mutable_active_orders(int index);
+  void clear_active_buy_orders();
+  ::Serialize::TradeOrder* mutable_active_buy_orders(int index);
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
-      mutable_active_orders();
+      mutable_active_buy_orders();
   private:
-  const ::Serialize::TradeOrder& _internal_active_orders(int index) const;
-  ::Serialize::TradeOrder* _internal_add_active_orders();
+  const ::Serialize::TradeOrder& _internal_active_buy_orders(int index) const;
+  ::Serialize::TradeOrder* _internal_add_active_buy_orders();
   public:
-  const ::Serialize::TradeOrder& active_orders(int index) const;
-  ::Serialize::TradeOrder* add_active_orders();
+  const ::Serialize::TradeOrder& active_buy_orders(int index) const;
+  ::Serialize::TradeOrder* add_active_buy_orders();
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
-      active_orders() const;
+      active_buy_orders() const;
+
+  // repeated .Serialize.TradeOrder active_sell_orders = 2;
+  int active_sell_orders_size() const;
+  private:
+  int _internal_active_sell_orders_size() const;
+  public:
+  void clear_active_sell_orders();
+  ::Serialize::TradeOrder* mutable_active_sell_orders(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
+      mutable_active_sell_orders();
+  private:
+  const ::Serialize::TradeOrder& _internal_active_sell_orders(int index) const;
+  ::Serialize::TradeOrder* _internal_add_active_sell_orders();
+  public:
+  const ::Serialize::TradeOrder& active_sell_orders(int index) const;
+  ::Serialize::TradeOrder* add_active_sell_orders();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
+      active_sell_orders() const;
 
   // @@protoc_insertion_point(class_scope:Serialize.ActiveOrders)
  private:
@@ -1695,7 +1720,8 @@ class ActiveOrders final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > active_orders_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > active_buy_orders_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > active_sell_orders_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1824,25 +1850,44 @@ class CompletedOredrs final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kCompletedOrdersFieldNumber = 1,
+    kCompletedBuyOrdersFieldNumber = 1,
+    kCompletedSellOrdersFieldNumber = 2,
   };
-  // repeated .Serialize.TradeOrder completed_orders = 1;
-  int completed_orders_size() const;
+  // repeated .Serialize.TradeOrder completed_buy_orders = 1;
+  int completed_buy_orders_size() const;
   private:
-  int _internal_completed_orders_size() const;
+  int _internal_completed_buy_orders_size() const;
   public:
-  void clear_completed_orders();
-  ::Serialize::TradeOrder* mutable_completed_orders(int index);
+  void clear_completed_buy_orders();
+  ::Serialize::TradeOrder* mutable_completed_buy_orders(int index);
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
-      mutable_completed_orders();
+      mutable_completed_buy_orders();
   private:
-  const ::Serialize::TradeOrder& _internal_completed_orders(int index) const;
-  ::Serialize::TradeOrder* _internal_add_completed_orders();
+  const ::Serialize::TradeOrder& _internal_completed_buy_orders(int index) const;
+  ::Serialize::TradeOrder* _internal_add_completed_buy_orders();
   public:
-  const ::Serialize::TradeOrder& completed_orders(int index) const;
-  ::Serialize::TradeOrder* add_completed_orders();
+  const ::Serialize::TradeOrder& completed_buy_orders(int index) const;
+  ::Serialize::TradeOrder* add_completed_buy_orders();
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
-      completed_orders() const;
+      completed_buy_orders() const;
+
+  // repeated .Serialize.TradeOrder completed_sell_orders = 2;
+  int completed_sell_orders_size() const;
+  private:
+  int _internal_completed_sell_orders_size() const;
+  public:
+  void clear_completed_sell_orders();
+  ::Serialize::TradeOrder* mutable_completed_sell_orders(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
+      mutable_completed_sell_orders();
+  private:
+  const ::Serialize::TradeOrder& _internal_completed_sell_orders(int index) const;
+  ::Serialize::TradeOrder* _internal_add_completed_sell_orders();
+  public:
+  const ::Serialize::TradeOrder& completed_sell_orders(int index) const;
+  ::Serialize::TradeOrder* add_completed_sell_orders();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
+      completed_sell_orders() const;
 
   // @@protoc_insertion_point(class_scope:Serialize.CompletedOredrs)
  private:
@@ -1852,7 +1897,8 @@ class CompletedOredrs final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > completed_orders_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > completed_buy_orders_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder > completed_sell_orders_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -3402,88 +3448,168 @@ inline void AccountBalance::set_rub_balance(double value) {
 
 // ActiveOrders
 
-// repeated .Serialize.TradeOrder active_orders = 1;
-inline int ActiveOrders::_internal_active_orders_size() const {
-  return _impl_.active_orders_.size();
+// repeated .Serialize.TradeOrder active_buy_orders = 1;
+inline int ActiveOrders::_internal_active_buy_orders_size() const {
+  return _impl_.active_buy_orders_.size();
 }
-inline int ActiveOrders::active_orders_size() const {
-  return _internal_active_orders_size();
+inline int ActiveOrders::active_buy_orders_size() const {
+  return _internal_active_buy_orders_size();
 }
-inline void ActiveOrders::clear_active_orders() {
-  _impl_.active_orders_.Clear();
+inline void ActiveOrders::clear_active_buy_orders() {
+  _impl_.active_buy_orders_.Clear();
 }
-inline ::Serialize::TradeOrder* ActiveOrders::mutable_active_orders(int index) {
-  // @@protoc_insertion_point(field_mutable:Serialize.ActiveOrders.active_orders)
-  return _impl_.active_orders_.Mutable(index);
+inline ::Serialize::TradeOrder* ActiveOrders::mutable_active_buy_orders(int index) {
+  // @@protoc_insertion_point(field_mutable:Serialize.ActiveOrders.active_buy_orders)
+  return _impl_.active_buy_orders_.Mutable(index);
 }
 inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
-ActiveOrders::mutable_active_orders() {
-  // @@protoc_insertion_point(field_mutable_list:Serialize.ActiveOrders.active_orders)
-  return &_impl_.active_orders_;
+ActiveOrders::mutable_active_buy_orders() {
+  // @@protoc_insertion_point(field_mutable_list:Serialize.ActiveOrders.active_buy_orders)
+  return &_impl_.active_buy_orders_;
 }
-inline const ::Serialize::TradeOrder& ActiveOrders::_internal_active_orders(int index) const {
-  return _impl_.active_orders_.Get(index);
+inline const ::Serialize::TradeOrder& ActiveOrders::_internal_active_buy_orders(int index) const {
+  return _impl_.active_buy_orders_.Get(index);
 }
-inline const ::Serialize::TradeOrder& ActiveOrders::active_orders(int index) const {
-  // @@protoc_insertion_point(field_get:Serialize.ActiveOrders.active_orders)
-  return _internal_active_orders(index);
+inline const ::Serialize::TradeOrder& ActiveOrders::active_buy_orders(int index) const {
+  // @@protoc_insertion_point(field_get:Serialize.ActiveOrders.active_buy_orders)
+  return _internal_active_buy_orders(index);
 }
-inline ::Serialize::TradeOrder* ActiveOrders::_internal_add_active_orders() {
-  return _impl_.active_orders_.Add();
+inline ::Serialize::TradeOrder* ActiveOrders::_internal_add_active_buy_orders() {
+  return _impl_.active_buy_orders_.Add();
 }
-inline ::Serialize::TradeOrder* ActiveOrders::add_active_orders() {
-  ::Serialize::TradeOrder* _add = _internal_add_active_orders();
-  // @@protoc_insertion_point(field_add:Serialize.ActiveOrders.active_orders)
+inline ::Serialize::TradeOrder* ActiveOrders::add_active_buy_orders() {
+  ::Serialize::TradeOrder* _add = _internal_add_active_buy_orders();
+  // @@protoc_insertion_point(field_add:Serialize.ActiveOrders.active_buy_orders)
   return _add;
 }
 inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
-ActiveOrders::active_orders() const {
-  // @@protoc_insertion_point(field_list:Serialize.ActiveOrders.active_orders)
-  return _impl_.active_orders_;
+ActiveOrders::active_buy_orders() const {
+  // @@protoc_insertion_point(field_list:Serialize.ActiveOrders.active_buy_orders)
+  return _impl_.active_buy_orders_;
+}
+
+// repeated .Serialize.TradeOrder active_sell_orders = 2;
+inline int ActiveOrders::_internal_active_sell_orders_size() const {
+  return _impl_.active_sell_orders_.size();
+}
+inline int ActiveOrders::active_sell_orders_size() const {
+  return _internal_active_sell_orders_size();
+}
+inline void ActiveOrders::clear_active_sell_orders() {
+  _impl_.active_sell_orders_.Clear();
+}
+inline ::Serialize::TradeOrder* ActiveOrders::mutable_active_sell_orders(int index) {
+  // @@protoc_insertion_point(field_mutable:Serialize.ActiveOrders.active_sell_orders)
+  return _impl_.active_sell_orders_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
+ActiveOrders::mutable_active_sell_orders() {
+  // @@protoc_insertion_point(field_mutable_list:Serialize.ActiveOrders.active_sell_orders)
+  return &_impl_.active_sell_orders_;
+}
+inline const ::Serialize::TradeOrder& ActiveOrders::_internal_active_sell_orders(int index) const {
+  return _impl_.active_sell_orders_.Get(index);
+}
+inline const ::Serialize::TradeOrder& ActiveOrders::active_sell_orders(int index) const {
+  // @@protoc_insertion_point(field_get:Serialize.ActiveOrders.active_sell_orders)
+  return _internal_active_sell_orders(index);
+}
+inline ::Serialize::TradeOrder* ActiveOrders::_internal_add_active_sell_orders() {
+  return _impl_.active_sell_orders_.Add();
+}
+inline ::Serialize::TradeOrder* ActiveOrders::add_active_sell_orders() {
+  ::Serialize::TradeOrder* _add = _internal_add_active_sell_orders();
+  // @@protoc_insertion_point(field_add:Serialize.ActiveOrders.active_sell_orders)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
+ActiveOrders::active_sell_orders() const {
+  // @@protoc_insertion_point(field_list:Serialize.ActiveOrders.active_sell_orders)
+  return _impl_.active_sell_orders_;
 }
 
 // -------------------------------------------------------------------
 
 // CompletedOredrs
 
-// repeated .Serialize.TradeOrder completed_orders = 1;
-inline int CompletedOredrs::_internal_completed_orders_size() const {
-  return _impl_.completed_orders_.size();
+// repeated .Serialize.TradeOrder completed_buy_orders = 1;
+inline int CompletedOredrs::_internal_completed_buy_orders_size() const {
+  return _impl_.completed_buy_orders_.size();
 }
-inline int CompletedOredrs::completed_orders_size() const {
-  return _internal_completed_orders_size();
+inline int CompletedOredrs::completed_buy_orders_size() const {
+  return _internal_completed_buy_orders_size();
 }
-inline void CompletedOredrs::clear_completed_orders() {
-  _impl_.completed_orders_.Clear();
+inline void CompletedOredrs::clear_completed_buy_orders() {
+  _impl_.completed_buy_orders_.Clear();
 }
-inline ::Serialize::TradeOrder* CompletedOredrs::mutable_completed_orders(int index) {
-  // @@protoc_insertion_point(field_mutable:Serialize.CompletedOredrs.completed_orders)
-  return _impl_.completed_orders_.Mutable(index);
+inline ::Serialize::TradeOrder* CompletedOredrs::mutable_completed_buy_orders(int index) {
+  // @@protoc_insertion_point(field_mutable:Serialize.CompletedOredrs.completed_buy_orders)
+  return _impl_.completed_buy_orders_.Mutable(index);
 }
 inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
-CompletedOredrs::mutable_completed_orders() {
-  // @@protoc_insertion_point(field_mutable_list:Serialize.CompletedOredrs.completed_orders)
-  return &_impl_.completed_orders_;
+CompletedOredrs::mutable_completed_buy_orders() {
+  // @@protoc_insertion_point(field_mutable_list:Serialize.CompletedOredrs.completed_buy_orders)
+  return &_impl_.completed_buy_orders_;
 }
-inline const ::Serialize::TradeOrder& CompletedOredrs::_internal_completed_orders(int index) const {
-  return _impl_.completed_orders_.Get(index);
+inline const ::Serialize::TradeOrder& CompletedOredrs::_internal_completed_buy_orders(int index) const {
+  return _impl_.completed_buy_orders_.Get(index);
 }
-inline const ::Serialize::TradeOrder& CompletedOredrs::completed_orders(int index) const {
-  // @@protoc_insertion_point(field_get:Serialize.CompletedOredrs.completed_orders)
-  return _internal_completed_orders(index);
+inline const ::Serialize::TradeOrder& CompletedOredrs::completed_buy_orders(int index) const {
+  // @@protoc_insertion_point(field_get:Serialize.CompletedOredrs.completed_buy_orders)
+  return _internal_completed_buy_orders(index);
 }
-inline ::Serialize::TradeOrder* CompletedOredrs::_internal_add_completed_orders() {
-  return _impl_.completed_orders_.Add();
+inline ::Serialize::TradeOrder* CompletedOredrs::_internal_add_completed_buy_orders() {
+  return _impl_.completed_buy_orders_.Add();
 }
-inline ::Serialize::TradeOrder* CompletedOredrs::add_completed_orders() {
-  ::Serialize::TradeOrder* _add = _internal_add_completed_orders();
-  // @@protoc_insertion_point(field_add:Serialize.CompletedOredrs.completed_orders)
+inline ::Serialize::TradeOrder* CompletedOredrs::add_completed_buy_orders() {
+  ::Serialize::TradeOrder* _add = _internal_add_completed_buy_orders();
+  // @@protoc_insertion_point(field_add:Serialize.CompletedOredrs.completed_buy_orders)
   return _add;
 }
 inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
-CompletedOredrs::completed_orders() const {
-  // @@protoc_insertion_point(field_list:Serialize.CompletedOredrs.completed_orders)
-  return _impl_.completed_orders_;
+CompletedOredrs::completed_buy_orders() const {
+  // @@protoc_insertion_point(field_list:Serialize.CompletedOredrs.completed_buy_orders)
+  return _impl_.completed_buy_orders_;
+}
+
+// repeated .Serialize.TradeOrder completed_sell_orders = 2;
+inline int CompletedOredrs::_internal_completed_sell_orders_size() const {
+  return _impl_.completed_sell_orders_.size();
+}
+inline int CompletedOredrs::completed_sell_orders_size() const {
+  return _internal_completed_sell_orders_size();
+}
+inline void CompletedOredrs::clear_completed_sell_orders() {
+  _impl_.completed_sell_orders_.Clear();
+}
+inline ::Serialize::TradeOrder* CompletedOredrs::mutable_completed_sell_orders(int index) {
+  // @@protoc_insertion_point(field_mutable:Serialize.CompletedOredrs.completed_sell_orders)
+  return _impl_.completed_sell_orders_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >*
+CompletedOredrs::mutable_completed_sell_orders() {
+  // @@protoc_insertion_point(field_mutable_list:Serialize.CompletedOredrs.completed_sell_orders)
+  return &_impl_.completed_sell_orders_;
+}
+inline const ::Serialize::TradeOrder& CompletedOredrs::_internal_completed_sell_orders(int index) const {
+  return _impl_.completed_sell_orders_.Get(index);
+}
+inline const ::Serialize::TradeOrder& CompletedOredrs::completed_sell_orders(int index) const {
+  // @@protoc_insertion_point(field_get:Serialize.CompletedOredrs.completed_sell_orders)
+  return _internal_completed_sell_orders(index);
+}
+inline ::Serialize::TradeOrder* CompletedOredrs::_internal_add_completed_sell_orders() {
+  return _impl_.completed_sell_orders_.Add();
+}
+inline ::Serialize::TradeOrder* CompletedOredrs::add_completed_sell_orders() {
+  ::Serialize::TradeOrder* _add = _internal_add_completed_sell_orders();
+  // @@protoc_insertion_point(field_add:Serialize.CompletedOredrs.completed_sell_orders)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Serialize::TradeOrder >&
+CompletedOredrs::completed_sell_orders() const {
+  // @@protoc_insertion_point(field_list:Serialize.CompletedOredrs.completed_sell_orders)
+  return _impl_.completed_sell_orders_;
 }
 
 // -------------------------------------------------------------------

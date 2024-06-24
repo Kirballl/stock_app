@@ -31,10 +31,11 @@ message TradeRequest {
         SIGN_IN = 1;
         MAKE_ORDER = 2;
         VIEW_BALANCE = 3;
-        VIEW_ACTIVE_ORDERS = 4;
-        VIEW_COMPLETED_TRADES = 5;
-        VIEW_QUOTE_HISTORY = 6;
-        CANCEL_ACTIVE_ORDERS = 7;
+        VIEW_ALL_ACTIVE_ORDERS = 4;
+        VIEW_MY_ACTIVE_ORDERS = 5;
+        VIEW_COMPLETED_TRADES = 6;
+        VIEW_QUOTE_HISTORY = 7;
+        CANCEL_ACTIVE_ORDERS = 8;
     }
     CommandType command = 1;
 
@@ -48,7 +49,7 @@ message TradeRequest {
     }
 }
 
-//////////////////////////////////////////////////
+///////////////////////////////////////////////// 
 
 message TradeResponse {
     enum status {
@@ -58,7 +59,8 @@ message TradeResponse {
         INVALID_USERNAME_OR_PASSWORD = 3;
         ORDER_SUCCESSFULLY_CREATED = 4;
         SUCCES_VIEW_BALANCE_RESPONCE = 5;
-        ERROR = 6;
+        SUCCES_VIEW_ALL_ACTIVE_ORDERS = 6;
+        ERROR = 7;
     }
     status response_msg = 1; // 
 
@@ -79,11 +81,13 @@ message AccountBalance {
 }
 
 message ActiveOrders {
-    repeated TradeOrder active_orders = 1;
+    repeated TradeOrder active_buy_orders = 1;
+    repeated TradeOrder active_sell_orders = 2;
 }
 
 message CompletedOredrs {
-    repeated TradeOrder completed_orders = 1;
+    repeated TradeOrder completed_buy_orders = 1;
+    repeated TradeOrder completed_sell_orders = 2;
 }
 
 message QuoteHistory {

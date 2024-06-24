@@ -18,7 +18,7 @@
 #include "database.hpp"
 #include "config.hpp"
 
-// Forward declaration
+//*INFO: Forward declaration
 class SessionClientConnection;
 class ClientDataManager;
 
@@ -44,7 +44,7 @@ public:
 
 private:
     bool stop_new_sessions_ = false;
-    std::atomic<bool> is_running_;  // atomic to avalible to stop with other thread
+    std::atomic<bool> is_running_;  ///*INFO: atomic to avalible to stop with other thread
 
     std::vector<std::shared_ptr<SessionClientConnection>> clients_sessions_;
     std::mutex handle_sessions_mutex_;

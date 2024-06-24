@@ -18,7 +18,7 @@ void Server::start() {
     accept_new_connection();
 }
 
-//INFO Accept new connection thread
+//*INFO Accept new connection thread
 void Server::accept_new_connection() {
     acceptor_.async_accept(
         [this](boost::system::error_code ec, boost::asio::ip::tcp::socket new_connectoin_socket) {

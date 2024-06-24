@@ -95,8 +95,15 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
             break;
         }
             
-        case Serialize::TradeRequest::VIEW_ACTIVE_ORDERS : {
-            /* code */
+        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS : {
+            handle_view_all_active_oreders_command(request, response);
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
+            break;
+        }
+
+        case Serialize::TradeRequest::VIEW_MY_ACTIVE_ORDERS : {
+            
+            
             break;
         }
             
@@ -192,6 +199,7 @@ bool SessionClientConnection::push_received_from_socket_order_to_queue(const Ser
 
 bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest request, Serialize::TradeResponse& responce) {
     auto client_data_manager = session_manager_->get_client_data_manager();
+
     try {
         Serialize::AccountBalance account_balance = client_data_manager->get_client_balance(request.username());
         responce.mutable_account_balance()->CopyFrom(account_balance);  
@@ -200,6 +208,13 @@ bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest
         spdlog::error("Failed to get client balance: {}", account_balance_error.what());
         return false;
     }
+}
+
+void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeRequest request, Serialize::TradeResponse& responce) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
+
+    Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders();
+    responce.mutable_active_orders()->CopyFrom(all_active_orders);
 }
 
 void SessionClientConnection::async_write_data_to_socket(const Serialize::TradeResponse& responce) {

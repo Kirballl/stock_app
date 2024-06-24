@@ -3,7 +3,7 @@
 Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
 }
 
-// matching orders thread
+//*INFO matching orders thread
 void Core::stock_loop() {
     while (session_manager_->is_runnig()) {
 
@@ -100,6 +100,7 @@ void Core::place_order_to_priority_queue(const Serialize::TradeOrder& order) {
     }
 }
 
+//*INFO: Matching engine
 void Core::process_orders() {
     std::cout << "process_orders() started" << std::endl; //DEBUG
 
@@ -116,13 +117,19 @@ void Core::process_orders() {
                                             buy_order.username(), sell_order.username());
             }
 
+            if (buy_order.usd_amount() == 0) {
+                move_order_to_completed_oreders(buy_order);
+            }
+            if (sell_order.usd_amount() == 0) {
+                move_order_to_completed_oreders(sell_order);
+            }
+
             if (buy_order.usd_amount() > 0) {
                 buy_orders_book_.push(buy_order);
             }
             if (sell_order.usd_amount() > 0) {
                 sell_orders_book_.push(sell_order);
             }
-
 
         } else {
             buy_orders_book_.push(buy_order);
@@ -138,9 +145,8 @@ bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder
     std::cout << "match_orders   !!! " << std::endl;
     //                                       //
     int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order.usd_amount());
-    double transaction_cost = transaction_amount * buy_order.usd_cost(); // RUB
+    double transaction_cost = transaction_amount * buy_order.usd_cost(); //*INFO: RUB
 
-    //INFO Update oreders in vector 
     sell_order.set_usd_amount(sell_order.usd_amount() - transaction_amount);
     buy_order.set_usd_amount(buy_order.usd_amount() - transaction_amount);
 
@@ -163,8 +169,7 @@ bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize:
                                                                             transaction_amount, transaction_cost);
 }
 
-template<typename OrderType>
-bool Core::move_order_to_completed_oreders(OrderType& order) {
+bool Core::move_order_to_completed_oreders(Serialize::TradeOrder& order) {
     auto client_data_manager = session_manager_->get_client_data_manager();
     return client_data_manager->move_order_from_active_to_completed(order.username(), order.timestamp());
 }

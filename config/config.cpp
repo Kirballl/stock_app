@@ -16,5 +16,7 @@ Config read_config(const std::string& filename) {
     config.dbhost = pt.get<std::string>("database.host");
     config.dbport = pt.get<short>("database.port");
 
+    config.jwt_secret_key = pt.get<std::string>("jwt.secret_key");
+
     return config;
 }

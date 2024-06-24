@@ -14,7 +14,6 @@
 #include "session_manager.hpp"
 #include "session_client_connection.hpp"
 
-// Only accept new connections
 class Server {
 public:
     Server(boost::asio::io_context& io_context, const Config& config);

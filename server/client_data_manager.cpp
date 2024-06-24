@@ -119,6 +119,42 @@ void ClientDataManager::create_new_client_data(std::string new_key) {
     client_data_[new_key] = ClientData{new_key, 0.0, 0.0, {}, {}};
 }
 
+Serialize::ActiveOrders ClientDataManager::get_all_active_oreders() {
+    Serialize::ActiveOrders all_active_orders;
+    std::shared_lock<std::shared_mutex> get_all_active_oreders_shared_lock(client_data_mutex_);
+
+    for (const auto& client_pair : client_data_) {
+        const auto& client_active_orders = client_pair.second.active_orders;
+        for (const auto& active_order : client_active_orders) {
+            if (active_order.type() == Serialize::TradeOrder::BUY) {
+                *all_active_orders.add_active_buy_orders() = active_order;
+            } else if (active_order.type() == Serialize::TradeOrder::SELL) {
+                *all_active_orders.add_active_sell_orders() = active_order;
+            }
+        }
+    }
+
+    return all_active_orders;
+}
+
+Serialize::CompletedOredrs ClientDataManager::get_all_completed_oreders() {
+    Serialize::CompletedOredrs all_completed_oreders;
+    std::shared_lock<std::shared_mutex> get_all_completed_oreders_shared_lock(client_data_mutex_);
+
+    for (const auto& client_pair : client_data_) {
+        const auto& client_completed_orders = client_pair.second.completed_orders;
+        for (const auto& completed_order : client_completed_orders) {
+            if (completed_order.type() == Serialize::TradeOrder::BUY) {
+                *all_completed_oreders.add_completed_buy_orders() = completed_order;
+            } else if (completed_order.type() == Serialize::TradeOrder::SELL) {
+                *all_completed_oreders.add_completed_sell_orders() = completed_order;
+            }
+        }
+    }
+
+    return all_completed_oreders;
+}
+
 bool ClientDataManager::is_empty_order_queue(trade_type_t trade_type) {
     if (trade_type == BUY) {
         return buy_orders_queue_->is_empty();
@@ -154,10 +190,9 @@ void ClientDataManager::notify_to_stop_matching_orders() {
 void ClientDataManager::stock_loop_wait_for_orders(std::shared_ptr<SessionManager> session_manager_ptr) {
     std::unique_lock<std::mutex> order_queue_unique_lock(order_queue_cv_mutex_);
 
-    // Wait order from order queue 
+    //*INFO: Wait order from order queue 
     order_queue_cv_.wait(order_queue_unique_lock, [this, session_manager_ptr] {
         return !is_empty_order_queue(BUY)  || !is_empty_order_queue(SELL) ||
                 !session_manager_ptr->is_runnig();
     });
 }
-

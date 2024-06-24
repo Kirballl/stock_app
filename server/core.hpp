@@ -53,8 +53,7 @@ private:
    bool change_clients_balances(Serialize::TradeOrder& sell_order, 
                                 Serialize::TradeOrder& buy_order_iterator,
                                  int32_t transaction_amount, double transaction_cost); 
-   template<typename OrderType>
-   bool move_order_to_completed_oreders(OrderType& order);
+   bool move_order_to_completed_oreders(Serialize::TradeOrder& order);
 
 
 // DEBUG //

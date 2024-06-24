@@ -15,12 +15,12 @@ bool SessionManager::is_runnig() {
     return is_running_.load(std::memory_order_acquire);
 }
 
-// Here session_manager_thread_ 
+//*INFO: Here session_manager_thread_ 
 void SessionManager::run() {
     while (is_running_) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        // Handle active sessions
+        //*INFO: Handle active sessions
         try_to_create_new_session_client_connection();
     }
 }
@@ -54,7 +54,7 @@ void SessionManager::try_to_create_new_session_client_connection() {
     }
 }
 
-// Avalible only in main server thread
+//*INFO Avalible only in main server thread
 void SessionManager::add_new_connection(boost::asio::ip::tcp::socket new_client_socket) {
     auto new_socket = std::make_unique<boost::asio::ip::tcp::socket>(std::move(new_client_socket));
     if (!new_connections_queue_.enqueue(std::move(new_socket))) {

@@ -16,6 +16,8 @@ struct Config {
     std::string dbpassword;
     std::string dbhost;
     short dbport;
+
+    std::string jwt_secret_key;
 };
 
 Config read_config(const std::string& filename);

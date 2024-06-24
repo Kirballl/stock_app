@@ -116,7 +116,8 @@ struct AccountBalanceDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AccountBalanceDefaultTypeInternal _AccountBalance_default_instance_;
 PROTOBUF_CONSTEXPR ActiveOrders::ActiveOrders(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.active_orders_)*/{}
+    /*decltype(_impl_.active_buy_orders_)*/{}
+  , /*decltype(_impl_.active_sell_orders_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct ActiveOrdersDefaultTypeInternal {
   PROTOBUF_CONSTEXPR ActiveOrdersDefaultTypeInternal()
@@ -129,7 +130,8 @@ struct ActiveOrdersDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ActiveOrdersDefaultTypeInternal _ActiveOrders_default_instance_;
 PROTOBUF_CONSTEXPR CompletedOredrs::CompletedOredrs(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.completed_orders_)*/{}
+    /*decltype(_impl_.completed_buy_orders_)*/{}
+  , /*decltype(_impl_.completed_sell_orders_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CompletedOredrsDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CompletedOredrsDefaultTypeInternal()
@@ -242,14 +244,16 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::Serialize::ActiveOrders, _impl_.active_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::ActiveOrders, _impl_.active_buy_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::ActiveOrders, _impl_.active_sell_orders_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::CompletedOredrs, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::Serialize::CompletedOredrs, _impl_.completed_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::CompletedOredrs, _impl_.completed_buy_orders_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::CompletedOredrs, _impl_.completed_sell_orders_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::QuoteHistory, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -274,9 +278,9 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 41, -1, -1, sizeof(::Serialize::TradeResponse)},
   { 55, -1, -1, sizeof(::Serialize::AccountBalance)},
   { 63, -1, -1, sizeof(::Serialize::ActiveOrders)},
-  { 70, -1, -1, sizeof(::Serialize::CompletedOredrs)},
-  { 77, -1, -1, sizeof(::Serialize::QuoteHistory)},
-  { 84, -1, -1, sizeof(::Serialize::Quote)},
+  { 71, -1, -1, sizeof(::Serialize::CompletedOredrs)},
+  { 79, -1, -1, sizeof(::Serialize::QuoteHistory)},
+  { 86, -1, -1, sizeof(::Serialize::Quote)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -301,42 +305,47 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "radeType\022\020\n\010usd_cost\030\002 \001(\001\022\022\n\nusd_amount"
   "\030\003 \001(\005\022\021\n\ttimestamp\030\004 \001(\003\022\020\n\010order_id\030\005 "
   "\001(\005\022\020\n\010username\030\006 \001(\t\"\036\n\tTradeType\022\007\n\003BU"
-  "Y\020\000\022\010\n\004SELL\020\001\"\265\003\n\014TradeRequest\0224\n\007comman"
+  "Y\020\000\022\010\n\004SELL\020\001\"\324\003\n\014TradeRequest\0224\n\007comman"
   "d\030\001 \001(\0162#.Serialize.TradeRequest.Command"
   "Type\022\020\n\010username\030\002 \001(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017s"
   "ign_up_request\030\004 \001(\0132\030.Serialize.SignUpR"
   "equestH\000\0223\n\017sing_in_request\030\005 \001(\0132\030.Seri"
   "alize.SignInRequestH\000\022&\n\005order\030\006 \001(\0132\025.S"
-  "erialize.TradeOrderH\000\"\256\001\n\013CommandType\022\013\n"
+  "erialize.TradeOrderH\000\"\315\001\n\013CommandType\022\013\n"
   "\007SIGN_UP\020\000\022\013\n\007SIGN_IN\020\001\022\016\n\nMAKE_ORDER\020\002\022"
-  "\020\n\014VIEW_BALANCE\020\003\022\026\n\022VIEW_ACTIVE_ORDERS\020"
-  "\004\022\031\n\025VIEW_COMPLETED_TRADES\020\005\022\026\n\022VIEW_QUO"
-  "TE_HISTORY\020\006\022\030\n\024CANCEL_ACTIVE_ORDERS\020\007B\r"
-  "\n\013RequestData\"\224\004\n\rTradeResponse\0225\n\014respo"
-  "nse_msg\030\001 \001(\0162\037.Serialize.TradeResponse."
-  "status\022\013\n\003jwt\030\002 \001(\t\0224\n\017account_balance\030\003"
-  " \001(\0132\031.Serialize.AccountBalanceH\000\0220\n\ract"
-  "ive_orders\030\004 \001(\0132\027.Serialize.ActiveOrder"
-  "sH\000\0226\n\020completed_orders\030\005 \001(\0132\032.Serializ"
-  "e.CompletedOredrsH\000\0220\n\rquote_history\030\006 \001"
-  "(\0132\027.Serialize.QuoteHistoryH\000\022\030\n\016error_r"
-  "esponse\030\007 \001(\tH\000\"\303\001\n\006status\022\026\n\022SIGN_UP_SU"
-  "CCESSFUL\020\000\022\032\n\026USERNAME_ALREADY_TAKEN\020\001\022\026"
-  "\n\022SIGN_IN_SUCCESSFUL\020\002\022 \n\034INVALID_USERNA"
-  "ME_OR_PASSWORD\020\003\022\036\n\032ORDER_SUCCESSFULLY_C"
-  "REATED\020\004\022 \n\034SUCCES_VIEW_BALANCE_RESPONCE"
-  "\020\005\022\t\n\005ERROR\020\006B\r\n\013RequestData\":\n\016AccountB"
-  "alance\022\023\n\013usd_balance\030\001 \001(\001\022\023\n\013rub_balan"
-  "ce\030\002 \001(\001\"<\n\014ActiveOrders\022,\n\ractive_order"
-  "s\030\001 \003(\0132\025.Serialize.TradeOrder\"B\n\017Comple"
-  "tedOredrs\022/\n\020completed_orders\030\001 \003(\0132\025.Se"
-  "rialize.TradeOrder\"0\n\014QuoteHistory\022 \n\006qu"
-  "otes\030\001 \003(\0132\020.Serialize.Quote\")\n\005Quote\022\021\n"
-  "\ttimestamp\030\001 \001(\005\022\r\n\005price\030\002 \001(\001b\006proto3"
+  "\020\n\014VIEW_BALANCE\020\003\022\032\n\026VIEW_ALL_ACTIVE_ORD"
+  "ERS\020\004\022\031\n\025VIEW_MY_ACTIVE_ORDERS\020\005\022\031\n\025VIEW"
+  "_COMPLETED_TRADES\020\006\022\026\n\022VIEW_QUOTE_HISTOR"
+  "Y\020\007\022\030\n\024CANCEL_ACTIVE_ORDERS\020\010B\r\n\013Request"
+  "Data\"\267\004\n\rTradeResponse\0225\n\014response_msg\030\001"
+  " \001(\0162\037.Serialize.TradeResponse.status\022\013\n"
+  "\003jwt\030\002 \001(\t\0224\n\017account_balance\030\003 \001(\0132\031.Se"
+  "rialize.AccountBalanceH\000\0220\n\ractive_order"
+  "s\030\004 \001(\0132\027.Serialize.ActiveOrdersH\000\0226\n\020co"
+  "mpleted_orders\030\005 \001(\0132\032.Serialize.Complet"
+  "edOredrsH\000\0220\n\rquote_history\030\006 \001(\0132\027.Seri"
+  "alize.QuoteHistoryH\000\022\030\n\016error_response\030\007"
+  " \001(\tH\000\"\346\001\n\006status\022\026\n\022SIGN_UP_SUCCESSFUL\020"
+  "\000\022\032\n\026USERNAME_ALREADY_TAKEN\020\001\022\026\n\022SIGN_IN"
+  "_SUCCESSFUL\020\002\022 \n\034INVALID_USERNAME_OR_PAS"
+  "SWORD\020\003\022\036\n\032ORDER_SUCCESSFULLY_CREATED\020\004\022"
+  " \n\034SUCCES_VIEW_BALANCE_RESPONCE\020\005\022!\n\035SUC"
+  "CES_VIEW_ALL_ACTIVE_ORDERS\020\006\022\t\n\005ERROR\020\007B"
+  "\r\n\013RequestData\":\n\016AccountBalance\022\023\n\013usd_"
+  "balance\030\001 \001(\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014Ac"
+  "tiveOrders\0220\n\021active_buy_orders\030\001 \003(\0132\025."
+  "Serialize.TradeOrder\0221\n\022active_sell_orde"
+  "rs\030\002 \003(\0132\025.Serialize.TradeOrder\"|\n\017Compl"
+  "etedOredrs\0223\n\024completed_buy_orders\030\001 \003(\013"
+  "2\025.Serialize.TradeOrder\0224\n\025completed_sel"
+  "l_orders\030\002 \003(\0132\025.Serialize.TradeOrder\"0\n"
+  "\014QuoteHistory\022 \n\006quotes\030\001 \003(\0132\020.Serializ"
+  "e.Quote\")\n\005Quote\022\021\n\ttimestamp\030\001 \001(\005\022\r\n\005p"
+  "rice\030\002 \001(\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 1599, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 1778, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
     &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 10,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
@@ -385,6 +394,7 @@ bool TradeRequest_CommandType_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
       return true;
     default:
       return false;
@@ -396,7 +406,8 @@ constexpr TradeRequest_CommandType TradeRequest::SIGN_UP;
 constexpr TradeRequest_CommandType TradeRequest::SIGN_IN;
 constexpr TradeRequest_CommandType TradeRequest::MAKE_ORDER;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_BALANCE;
-constexpr TradeRequest_CommandType TradeRequest::VIEW_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_ALL_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_MY_ACTIVE_ORDERS;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_COMPLETED_TRADES;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_QUOTE_HISTORY;
 constexpr TradeRequest_CommandType TradeRequest::CANCEL_ACTIVE_ORDERS;
@@ -417,6 +428,7 @@ bool TradeResponse_status_IsValid(int value) {
     case 4:
     case 5:
     case 6:
+    case 7:
       return true;
     default:
       return false;
@@ -430,6 +442,7 @@ constexpr TradeResponse_status TradeResponse::SIGN_IN_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse::INVALID_USERNAME_OR_PASSWORD;
 constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_CREATED;
 constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE;
+constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS;
 constexpr TradeResponse_status TradeResponse::ERROR;
 constexpr TradeResponse_status TradeResponse::status_MIN;
 constexpr TradeResponse_status TradeResponse::status_MAX;
@@ -2580,7 +2593,8 @@ ActiveOrders::ActiveOrders(const ActiveOrders& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   ActiveOrders* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.active_orders_){from._impl_.active_orders_}
+      decltype(_impl_.active_buy_orders_){from._impl_.active_buy_orders_}
+    , decltype(_impl_.active_sell_orders_){from._impl_.active_sell_orders_}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -2592,7 +2606,8 @@ inline void ActiveOrders::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.active_orders_){arena}
+      decltype(_impl_.active_buy_orders_){arena}
+    , decltype(_impl_.active_sell_orders_){arena}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -2608,7 +2623,8 @@ ActiveOrders::~ActiveOrders() {
 
 inline void ActiveOrders::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.active_orders_.~RepeatedPtrField();
+  _impl_.active_buy_orders_.~RepeatedPtrField();
+  _impl_.active_sell_orders_.~RepeatedPtrField();
 }
 
 void ActiveOrders::SetCachedSize(int size) const {
@@ -2621,7 +2637,8 @@ void ActiveOrders::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.active_orders_.Clear();
+  _impl_.active_buy_orders_.Clear();
+  _impl_.active_sell_orders_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2631,16 +2648,29 @@ const char* ActiveOrders::_InternalParse(const char* ptr, ::_pbi::ParseContext* 
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated .Serialize.TradeOrder active_orders = 1;
+      // repeated .Serialize.TradeOrder active_buy_orders = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_active_orders(), ptr);
+            ptr = ctx->ParseMessage(_internal_add_active_buy_orders(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated .Serialize.TradeOrder active_sell_orders = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_active_sell_orders(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
         } else
           goto handle_unusual;
         continue;
@@ -2673,12 +2703,20 @@ uint8_t* ActiveOrders::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .Serialize.TradeOrder active_orders = 1;
+  // repeated .Serialize.TradeOrder active_buy_orders = 1;
   for (unsigned i = 0,
-      n = static_cast<unsigned>(this->_internal_active_orders_size()); i < n; i++) {
-    const auto& repfield = this->_internal_active_orders(i);
+      n = static_cast<unsigned>(this->_internal_active_buy_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_active_buy_orders(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
         InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // repeated .Serialize.TradeOrder active_sell_orders = 2;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_active_sell_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_active_sell_orders(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2697,9 +2735,16 @@ size_t ActiveOrders::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .Serialize.TradeOrder active_orders = 1;
-  total_size += 1UL * this->_internal_active_orders_size();
-  for (const auto& msg : this->_impl_.active_orders_) {
+  // repeated .Serialize.TradeOrder active_buy_orders = 1;
+  total_size += 1UL * this->_internal_active_buy_orders_size();
+  for (const auto& msg : this->_impl_.active_buy_orders_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // repeated .Serialize.TradeOrder active_sell_orders = 2;
+  total_size += 1UL * this->_internal_active_sell_orders_size();
+  for (const auto& msg : this->_impl_.active_sell_orders_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
@@ -2722,7 +2767,8 @@ void ActiveOrders::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::P
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  _this->_impl_.active_orders_.MergeFrom(from._impl_.active_orders_);
+  _this->_impl_.active_buy_orders_.MergeFrom(from._impl_.active_buy_orders_);
+  _this->_impl_.active_sell_orders_.MergeFrom(from._impl_.active_sell_orders_);
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -2740,7 +2786,8 @@ bool ActiveOrders::IsInitialized() const {
 void ActiveOrders::InternalSwap(ActiveOrders* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.active_orders_.InternalSwap(&other->_impl_.active_orders_);
+  _impl_.active_buy_orders_.InternalSwap(&other->_impl_.active_buy_orders_);
+  _impl_.active_sell_orders_.InternalSwap(&other->_impl_.active_sell_orders_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ActiveOrders::GetMetadata() const {
@@ -2765,7 +2812,8 @@ CompletedOredrs::CompletedOredrs(const CompletedOredrs& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   CompletedOredrs* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.completed_orders_){from._impl_.completed_orders_}
+      decltype(_impl_.completed_buy_orders_){from._impl_.completed_buy_orders_}
+    , decltype(_impl_.completed_sell_orders_){from._impl_.completed_sell_orders_}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -2777,7 +2825,8 @@ inline void CompletedOredrs::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.completed_orders_){arena}
+      decltype(_impl_.completed_buy_orders_){arena}
+    , decltype(_impl_.completed_sell_orders_){arena}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -2793,7 +2842,8 @@ CompletedOredrs::~CompletedOredrs() {
 
 inline void CompletedOredrs::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.completed_orders_.~RepeatedPtrField();
+  _impl_.completed_buy_orders_.~RepeatedPtrField();
+  _impl_.completed_sell_orders_.~RepeatedPtrField();
 }
 
 void CompletedOredrs::SetCachedSize(int size) const {
@@ -2806,7 +2856,8 @@ void CompletedOredrs::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.completed_orders_.Clear();
+  _impl_.completed_buy_orders_.Clear();
+  _impl_.completed_sell_orders_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2816,16 +2867,29 @@ const char* CompletedOredrs::_InternalParse(const char* ptr, ::_pbi::ParseContex
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated .Serialize.TradeOrder completed_orders = 1;
+      // repeated .Serialize.TradeOrder completed_buy_orders = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_completed_orders(), ptr);
+            ptr = ctx->ParseMessage(_internal_add_completed_buy_orders(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated .Serialize.TradeOrder completed_sell_orders = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_completed_sell_orders(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
         } else
           goto handle_unusual;
         continue;
@@ -2858,12 +2922,20 @@ uint8_t* CompletedOredrs::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .Serialize.TradeOrder completed_orders = 1;
+  // repeated .Serialize.TradeOrder completed_buy_orders = 1;
   for (unsigned i = 0,
-      n = static_cast<unsigned>(this->_internal_completed_orders_size()); i < n; i++) {
-    const auto& repfield = this->_internal_completed_orders(i);
+      n = static_cast<unsigned>(this->_internal_completed_buy_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_completed_buy_orders(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
         InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // repeated .Serialize.TradeOrder completed_sell_orders = 2;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_completed_sell_orders_size()); i < n; i++) {
+    const auto& repfield = this->_internal_completed_sell_orders(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2882,9 +2954,16 @@ size_t CompletedOredrs::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .Serialize.TradeOrder completed_orders = 1;
-  total_size += 1UL * this->_internal_completed_orders_size();
-  for (const auto& msg : this->_impl_.completed_orders_) {
+  // repeated .Serialize.TradeOrder completed_buy_orders = 1;
+  total_size += 1UL * this->_internal_completed_buy_orders_size();
+  for (const auto& msg : this->_impl_.completed_buy_orders_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // repeated .Serialize.TradeOrder completed_sell_orders = 2;
+  total_size += 1UL * this->_internal_completed_sell_orders_size();
+  for (const auto& msg : this->_impl_.completed_sell_orders_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
@@ -2907,7 +2986,8 @@ void CompletedOredrs::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const 
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  _this->_impl_.completed_orders_.MergeFrom(from._impl_.completed_orders_);
+  _this->_impl_.completed_buy_orders_.MergeFrom(from._impl_.completed_buy_orders_);
+  _this->_impl_.completed_sell_orders_.MergeFrom(from._impl_.completed_sell_orders_);
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -2925,7 +3005,8 @@ bool CompletedOredrs::IsInitialized() const {
 void CompletedOredrs::InternalSwap(CompletedOredrs* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.completed_orders_.InternalSwap(&other->_impl_.completed_orders_);
+  _impl_.completed_buy_orders_.InternalSwap(&other->_impl_.completed_buy_orders_);
+  _impl_.completed_sell_orders_.InternalSwap(&other->_impl_.completed_sell_orders_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CompletedOredrs::GetMetadata() const {
