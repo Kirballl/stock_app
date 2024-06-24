@@ -6,6 +6,7 @@
 #include <atomic>
 #include <mutex>
 #include <vector>
+#include <string>
 
 #include <boost/asio.hpp>
 #include <spdlog/spdlog.h>
@@ -14,6 +15,8 @@
 #include "client_data_manager.hpp"
 #include "session_client_connection.hpp"
 #include "trade_market_protocol.pb.h"
+#include "database.hpp"
+#include "config.hpp"
 
 // Forward declaration
 class SessionClientConnection;
@@ -32,7 +35,8 @@ public:
     void remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info);
     std::shared_ptr<SessionClientConnection> get_session_by_username(const std::string& username);
     
-    std::shared_ptr<ClientDataManager> get_client_data_manager();
+    std::shared_ptr<ClientDataManager> get_client_data_manager() const;
+    std::shared_ptr<Database> get_database() const;
 
     void stop();
     void stop_all_sessions();
@@ -46,6 +50,7 @@ private:
     std::mutex handle_sessions_mutex_;
 
     std::shared_ptr<ClientDataManager> client_data_manager_;
+    std::shared_ptr<Database> database_;
     
     moodycamel::ConcurrentQueue<std::unique_ptr<boost::asio::ip::tcp::socket>> new_connections_queue_;
 };

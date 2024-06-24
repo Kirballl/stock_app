@@ -2,6 +2,13 @@
 
 SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
                                    client_data_manager_(std::make_shared<ClientDataManager>()) {
+    Config config = read_config("server_config.ini");
+    std::string config_info = "dbname=" + config.dbname +
+                            " user=" + config.dbuser +
+                            " password=" + config.dbpassword +
+                            " host=" + config.dbhost +
+                            " port=" + std::to_string(config.dbport);
+    database_ = std::make_shared<Database>(config_info);
 }
 
 bool SessionManager::is_runnig() {
@@ -56,8 +63,12 @@ void SessionManager::add_new_connection(boost::asio::ip::tcp::socket new_client_
     }
 }
 
-std::shared_ptr<ClientDataManager> SessionManager::get_client_data_manager() {
+std::shared_ptr<ClientDataManager> SessionManager::get_client_data_manager() const {
     return client_data_manager_;
+}
+
+std::shared_ptr<Database> SessionManager::get_database() const {
+    return database_;
 }
 
 std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username(const std::string& username) {

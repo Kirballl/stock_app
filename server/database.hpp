@@ -5,10 +5,13 @@
 #include <string>
 #include <vector>
 
+#include <jwt-cpp/jwt.h>
+#include "bcrypt.h"
+
 class Database {
 public:
     Database(const std::string& connection_info);
-    ~Database();
+    //~Database();
 
     void add_user(const std::string& username, const std::string& password);
     bool authenticate_user(const std::string& username, const std::string& password);

@@ -4,3 +4,6 @@
 [submodule "third-party/jwt-cpp/include/jwt-cpp"]
 	path = third-party/jwt-cpp/include/jwt-cpp
 	url = https://github.com/Thalhammer/jwt-cpp
+[submodule "third-party/bcrypt"]
+	path = third-party/bcrypt
+	url = https://github.com/rg3/bcrypt.git

@@ -11,12 +11,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(PostgreSQL REQUIRED)
 find_package(PQXX REQUIRED)
 
-find_library(BCRYPT_LIB bcrypt)
-
 include_directories(${Boost_INCLUDE_DIR} 
                     ${Protobuf_INCLUDE_DIRS} 
                     ${PQXX_INCLUDE_DIRS}
-                    ${PostgreSQL_INCLUDE_DIRS})
+                    ${PostgreSQL_INCLUDE_DIRS}
+                    ${OPENSSL_INCLUDE_DIR}
+                    third-party/jwt-cpp)
 
 set(TARGET_LOGGER spdlog)
 
@@ -28,3 +28,4 @@ add_subdirectory(proto)
 add_subdirectory(third-party/spdlog)
 add_subdirectory(third-party/moodycamel)
 add_subdirectory(third-party/jwt-cpp)
+add_subdirectory(third-party/bcrypt)
