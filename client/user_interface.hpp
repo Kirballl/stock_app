@@ -10,6 +10,7 @@ public:
     UserInterface(Client& client, std::thread& io_context_thread);
 
     void run();
+    void auth_menu();
 
 private:
     Client& client_;

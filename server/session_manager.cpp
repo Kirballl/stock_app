@@ -3,12 +3,21 @@
 SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
                                    client_data_manager_(std::make_shared<ClientDataManager>()) {
     Config config = read_config("server_config.ini");
-    std::string config_info = "dbname=" + config.dbname +
+
+    std::string db_config_info = "dbname=" + config.dbname +
                             " user=" + config.dbuser +
                             " password=" + config.dbpassword +
                             " host=" + config.dbhost +
                             " port=" + std::to_string(config.dbport);
-    database_ = std::make_shared<Database>(config_info);
+
+    try {
+        database_ = std::make_shared<Database>(db_config_info);
+    } catch (const std::exception& e) {
+        std::cerr << "Error creating database: " << e.what() << std::endl;
+        spdlog::error("Error creating database: exception: {}", e.what());
+    }
+
+    auth_ = std::make_shared<Auth>(config.jwt_secret_key);
 }
 
 bool SessionManager::is_runnig() {
@@ -69,6 +78,10 @@ std::shared_ptr<ClientDataManager> SessionManager::get_client_data_manager() con
 
 std::shared_ptr<Database> SessionManager::get_database() const {
     return database_;
+}
+
+std::shared_ptr<Auth> SessionManager::get_auth() const {
+    return auth_;
 }
 
 std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username(const std::string& username) {

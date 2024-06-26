@@ -48,13 +48,13 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     return order;
 }
 
-void Client::send_request_to_stock(const Serialize::TradeRequest& request) {
+bool Client::send_request_to_stock(const Serialize::TradeRequest& request) {
     std::string serialized_request;
     request.SerializeToString(&serialized_request);
 
     write_data_to_socket(serialized_request);
 
-    get_response_from_stock();
+    return get_response_from_stock();
 }
 
 void Client::write_data_to_socket(const std::string& serialized_request) {
@@ -69,14 +69,14 @@ void Client::write_data_to_socket(const std::string& serialized_request) {
     spdlog::info("Request has just been sent to the stock");
 }
 
-void Client::get_response_from_stock() {
+bool Client::get_response_from_stock() {
     boost::asio::streambuf response_buf;
     boost::system::error_code error_code;
 
     boost::asio::read(socket_, boost::asio::buffer(data_length_, sizeof(uint32_t)), error_code);
     if (error_code) {
         manage_server_socket_error(error_code);
-        return;
+        return false;
     }
 
     uint32_t msg_length = ntohl(*reinterpret_cast<uint32_t*>(data_length_));
@@ -85,38 +85,38 @@ void Client::get_response_from_stock() {
     boost::asio::read(socket_, boost::asio::buffer(response_data), error_code);
     if (error_code) {
         manage_server_socket_error(error_code);
-        return;
+        return false;
     }
 
     Serialize::TradeResponse response;
     response.ParseFromArray(response_data.data(), msg_length);
 
-    handle_received_response_from_stock(response);
+    return handle_received_response_from_stock(response);
 }
 
-void Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
+bool Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
         case Serialize::TradeResponse::SIGN_UP_SUCCESSFUL : {
-            std::cout << "\nSusccesfull autorization" << std::endl;
-            break;
+            std::cout << "\nAccount created" << std::endl;
+            return true;
         }
         case Serialize::TradeResponse::USERNAME_ALREADY_TAKEN : {
             std::cout << "\nUsername already taken" << std::endl;
-            break;
+            return false;
         }
 
         case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL : {
             std::cout << "\nSusccesfull autorization" << std::endl;
-            break;
+            return true;
         }
         case Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD : {
             std::cout << "\nInvalid username or password" << std::endl;
-            break;
+            return false;
         }
 
         case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED : {
             std::cout << "\nOrder succesfully created" << std::endl;
-            break;
+            return true;
         }
 
         case Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE : {
@@ -124,17 +124,17 @@ void Client::handle_received_response_from_stock(const Serialize::TradeResponse&
                       << response.account_balance().rub_balance() << " RUB, "
                       << response.account_balance().usd_balance() << " USD."
                       << std::endl;
-            break;
+            return true;
         }   
 
         case Serialize::TradeResponse::ERROR : {
-            std::cout << "\nError  msmsmmsmsmsmmsmssmmsggg" << std::endl;
-            break;
+            std::cout << "\nUnkown error" << std::endl;
+            return true;
         }
 
         default: {
             std::cout << "Error response from stock" << std::endl;
-            break;
+            return false;
         }
     }
 }

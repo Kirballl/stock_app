@@ -6,17 +6,7 @@ UserInterface::UserInterface(Client& client, std::thread& io_context_thread) :
 
 void UserInterface::run() {
 
-    std::cout << "Enter Your username:\n" << std::endl;
-    std::string client_name;
-    std::cin >> client_name;
-    // TODO safety cin client name
-    client_.set_username(client_name);
-
-    Serialize::TradeRequest request;
-    request.set_username(client_.get_username());
-    request.set_command(Serialize::TradeRequest::SIGN_IN);
-    request.mutable_sing_in_request()->set_username(client_.get_username());
-    client_.send_request_to_stock(request);
+    auth_menu();
 
     std::cout << "\nWelcome to USD exchange!\n"
                      << std::endl;
@@ -28,9 +18,9 @@ void UserInterface::run() {
                      "3) Exit\n"
                      << std::endl;
 
-        short menu_option_num;
-        std::cin >> menu_option_num;
-        switch (menu_option_num) {
+        short main_menu_option_num;
+        std::cin >> main_menu_option_num;
+        switch (main_menu_option_num) {
                 case 1: {
                     std::cout << "Enter order type:\n"
                         "1) buy $\n"
@@ -87,5 +77,82 @@ void UserInterface::run() {
                     std::cout << "Unknown menu option\n" << std::endl;
                 }
             }
+    }
+}
+
+void UserInterface::auth_menu() {
+    while (true) {
+        std::cout << "\nNTPro:\n"
+                     "1) Sing up\n"
+                     "2) Sing in\n"
+                     "3) Exit\n"
+                     << std::endl;
+        short auth_menu_option_num;
+        std::cin >> auth_menu_option_num;
+        switch (auth_menu_option_num) {
+            case 1 : {
+                std::cout << "Registration:" << std::endl;
+                std::cout << "Enter Your username:" << std::endl;
+                std::string client_name;
+                std::cin >> client_name;
+
+                std::cout << "\nEnter Your password:" << std::endl;
+                std::string client_password;
+                std::cin >> client_password;
+                // TODO safety cin client name
+
+                Serialize::TradeRequest sing_up_request;
+                sing_up_request.set_command(Serialize::TradeRequest::SIGN_UP);
+                sing_up_request.mutable_sign_up_request()->set_username(client_name);
+                sing_up_request.mutable_sign_up_request()->set_password(client_password);
+
+                if (client_.send_request_to_stock(sing_up_request)) {
+
+                    client_.set_username(client_name);
+
+                    Serialize::TradeRequest sing_in_request;
+                    sing_in_request.set_command(Serialize::TradeRequest::SIGN_IN);
+                    sing_in_request.mutable_sign_in_request()->set_username(client_name);
+                    sing_in_request.mutable_sign_in_request()->set_password(client_password);
+    
+                    if (client_.send_request_to_stock(sing_in_request)) {
+                        return;
+                    }
+                }
+                break;
+            }
+            case 2 : { 
+                std::cout << "Authorization:" << std::endl;
+                std::cout << "Enter Your username:" << std::endl;
+                std::string client_name;
+                std::cin >> client_name;
+
+                std::cout << "\nEnter Your password:" << std::endl;
+                std::string client_password;
+                std::cin >> client_password;
+                // TODO safety cin client name
+                Serialize::TradeRequest sing_in_request;
+                sing_in_request.set_command(Serialize::TradeRequest::SIGN_IN);
+                sing_in_request.mutable_sign_in_request()->set_username(client_name);
+                sing_in_request.mutable_sign_in_request()->set_password(client_password);
+                if (client_.send_request_to_stock(sing_in_request)) {
+                    client_.set_username(client_name);
+                    return;
+                }
+                break;
+            }
+            case 3 : {
+                client_.close();
+                if (io_context_thread_.joinable()) {
+                    io_context_thread_.join();
+                }
+                spdlog::shutdown();
+                exit(0);
+            }
+            default : {
+                std::cout << "Unknown menu option\n" << std::endl;
+                break;
+            }
+        }
     }
 }

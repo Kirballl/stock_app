@@ -7,3 +7,6 @@
 [submodule "third-party/bcrypt"]
 	path = third-party/bcrypt
 	url = https://github.com/rg3/bcrypt.git
+[submodule "third-party/bcrypt/include/Bcrypt.cpp"]
+	path = third-party/bcrypt/include/Bcrypt.cpp
+	url = git@github.com:hilch/Bcrypt.cpp.git

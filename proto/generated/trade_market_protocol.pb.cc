@@ -309,7 +309,7 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "d\030\001 \001(\0162#.Serialize.TradeRequest.Command"
   "Type\022\020\n\010username\030\002 \001(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017s"
   "ign_up_request\030\004 \001(\0132\030.Serialize.SignUpR"
-  "equestH\000\0223\n\017sing_in_request\030\005 \001(\0132\030.Seri"
+  "equestH\000\0223\n\017sign_in_request\030\005 \001(\0132\030.Seri"
   "alize.SignInRequestH\000\022&\n\005order\030\006 \001(\0132\025.S"
   "erialize.TradeOrderH\000\"\315\001\n\013CommandType\022\013\n"
   "\007SIGN_UP\020\000\022\013\n\007SIGN_IN\020\001\022\016\n\nMAKE_ORDER\020\002\022"
@@ -1310,7 +1310,7 @@ void TradeOrder::InternalSwap(TradeOrder* other) {
 class TradeRequest::_Internal {
  public:
   static const ::Serialize::SignUpRequest& sign_up_request(const TradeRequest* msg);
-  static const ::Serialize::SignInRequest& sing_in_request(const TradeRequest* msg);
+  static const ::Serialize::SignInRequest& sign_in_request(const TradeRequest* msg);
   static const ::Serialize::TradeOrder& order(const TradeRequest* msg);
 };
 
@@ -1319,8 +1319,8 @@ TradeRequest::_Internal::sign_up_request(const TradeRequest* msg) {
   return *msg->_impl_.RequestData_.sign_up_request_;
 }
 const ::Serialize::SignInRequest&
-TradeRequest::_Internal::sing_in_request(const TradeRequest* msg) {
-  return *msg->_impl_.RequestData_.sing_in_request_;
+TradeRequest::_Internal::sign_in_request(const TradeRequest* msg) {
+  return *msg->_impl_.RequestData_.sign_in_request_;
 }
 const ::Serialize::TradeOrder&
 TradeRequest::_Internal::order(const TradeRequest* msg) {
@@ -1341,20 +1341,20 @@ void TradeRequest::set_allocated_sign_up_request(::Serialize::SignUpRequest* sig
   }
   // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.sign_up_request)
 }
-void TradeRequest::set_allocated_sing_in_request(::Serialize::SignInRequest* sing_in_request) {
+void TradeRequest::set_allocated_sign_in_request(::Serialize::SignInRequest* sign_in_request) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_RequestData();
-  if (sing_in_request) {
+  if (sign_in_request) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(sing_in_request);
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(sign_in_request);
     if (message_arena != submessage_arena) {
-      sing_in_request = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, sing_in_request, submessage_arena);
+      sign_in_request = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, sign_in_request, submessage_arena);
     }
-    set_has_sing_in_request();
-    _impl_.RequestData_.sing_in_request_ = sing_in_request;
+    set_has_sign_in_request();
+    _impl_.RequestData_.sign_in_request_ = sign_in_request;
   }
-  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.sing_in_request)
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.sign_in_request)
 }
 void TradeRequest::set_allocated_order(::Serialize::TradeOrder* order) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -1413,9 +1413,9 @@ TradeRequest::TradeRequest(const TradeRequest& from)
           from._internal_sign_up_request());
       break;
     }
-    case kSingInRequest: {
-      _this->_internal_mutable_sing_in_request()->::Serialize::SignInRequest::MergeFrom(
-          from._internal_sing_in_request());
+    case kSignInRequest: {
+      _this->_internal_mutable_sign_in_request()->::Serialize::SignInRequest::MergeFrom(
+          from._internal_sign_in_request());
       break;
     }
     case kOrder: {
@@ -1484,9 +1484,9 @@ void TradeRequest::clear_RequestData() {
       }
       break;
     }
-    case kSingInRequest: {
+    case kSignInRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete _impl_.RequestData_.sing_in_request_;
+        delete _impl_.RequestData_.sign_in_request_;
       }
       break;
     }
@@ -1560,10 +1560,10 @@ const char* TradeRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* 
         } else
           goto handle_unusual;
         continue;
-      // .Serialize.SignInRequest sing_in_request = 5;
+      // .Serialize.SignInRequest sign_in_request = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
-          ptr = ctx->ParseMessage(_internal_mutable_sing_in_request(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_sign_in_request(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1639,11 +1639,11 @@ uint8_t* TradeRequest::_InternalSerialize(
         _Internal::sign_up_request(this).GetCachedSize(), target, stream);
   }
 
-  // .Serialize.SignInRequest sing_in_request = 5;
-  if (_internal_has_sing_in_request()) {
+  // .Serialize.SignInRequest sign_in_request = 5;
+  if (_internal_has_sign_in_request()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(5, _Internal::sing_in_request(this),
-        _Internal::sing_in_request(this).GetCachedSize(), target, stream);
+      InternalWriteMessage(5, _Internal::sign_in_request(this),
+        _Internal::sign_in_request(this).GetCachedSize(), target, stream);
   }
 
   // .Serialize.TradeOrder order = 6;
@@ -1697,11 +1697,11 @@ size_t TradeRequest::ByteSizeLong() const {
           *_impl_.RequestData_.sign_up_request_);
       break;
     }
-    // .Serialize.SignInRequest sing_in_request = 5;
-    case kSingInRequest: {
+    // .Serialize.SignInRequest sign_in_request = 5;
+    case kSignInRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *_impl_.RequestData_.sing_in_request_);
+          *_impl_.RequestData_.sign_in_request_);
       break;
     }
     // .Serialize.TradeOrder order = 6;
@@ -1748,9 +1748,9 @@ void TradeRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::P
           from._internal_sign_up_request());
       break;
     }
-    case kSingInRequest: {
-      _this->_internal_mutable_sing_in_request()->::Serialize::SignInRequest::MergeFrom(
-          from._internal_sing_in_request());
+    case kSignInRequest: {
+      _this->_internal_mutable_sign_in_request()->::Serialize::SignInRequest::MergeFrom(
+          from._internal_sign_in_request());
       break;
     }
     case kOrder: {

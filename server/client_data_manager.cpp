@@ -4,16 +4,6 @@ ClientDataManager::ClientDataManager() : buy_orders_queue_(std::make_shared<Orde
                                          sell_orders_queue_(std::make_shared<OrderQueue>()) {
 }
 
-// double get_client_balance(std::string client_jwt, wallet_type_t wallet_type) const {
-//     // std::lock_guard<std::mutex> get_client_balance_lock_guard(client_data_mutex);
-//     auto hash_map_iterator = client_data.find(client_jwt);
-//     if (hash_map_iterator == client_data.end()) {
-//         spdlog::error("client with {} in unordered map client_data not found", client_jwt);
-//         throw std::runtime_error("client not found");
-//     }
-//     return wallet_type == RUB ? hash_map_iterator->second.rub_balance : hash_map_iterator->second.usd_balance;
-// }
-
 Serialize::AccountBalance ClientDataManager::get_client_balance(std::string client_username) const {
 
     std::shared_lock<std::shared_mutex> get_client_balance_shared_lock(client_data_mutex_);

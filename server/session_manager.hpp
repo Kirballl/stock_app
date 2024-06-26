@@ -16,6 +16,7 @@
 #include "session_client_connection.hpp"
 #include "trade_market_protocol.pb.h"
 #include "database.hpp"
+#include "auth.hpp"
 #include "config.hpp"
 
 //*INFO: Forward declaration
@@ -37,6 +38,7 @@ public:
     
     std::shared_ptr<ClientDataManager> get_client_data_manager() const;
     std::shared_ptr<Database> get_database() const;
+    std::shared_ptr<Auth> get_auth() const;
 
     void stop();
     void stop_all_sessions();
@@ -44,13 +46,15 @@ public:
 
 private:
     bool stop_new_sessions_ = false;
-    std::atomic<bool> is_running_;  ///*INFO: atomic to avalible to stop with other thread
+    std::atomic<bool> is_running_;  //*INFO: atomic to avalible to stop with other thread
 
     std::vector<std::shared_ptr<SessionClientConnection>> clients_sessions_;
     std::mutex handle_sessions_mutex_;
 
     std::shared_ptr<ClientDataManager> client_data_manager_;
     std::shared_ptr<Database> database_;
+
+    std::shared_ptr<Auth> auth_;
     
     moodycamel::ConcurrentQueue<std::unique_ptr<boost::asio::ip::tcp::socket>> new_connections_queue_;
 };

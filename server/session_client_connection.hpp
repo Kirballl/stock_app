@@ -37,16 +37,16 @@ private:
    void async_read_data_from_socket();
 
    Serialize::TradeRequest convert_raw_data_to_command(std::size_t length);
-   Serialize::TradeResponse handle_received_command(Serialize::TradeRequest request);
+   Serialize::TradeResponse handle_received_command(Serialize::TradeRequest& request);
 
-   // bool handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest trade_reqest);
-   bool handle_sing_in_command(Serialize::TradeRequest request);
-   bool handle_make_order_comand(Serialize::TradeRequest reqest);
+   bool handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest& reqest);
+   bool handle_sing_in_command(Serialize::TradeResponse& response, Serialize::TradeRequest& request);
+   bool handle_make_order_comand(Serialize::TradeRequest& request);
    int64_t get_current_timestamp();
    bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-   bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest request);
-   bool handle_view_balance_comand(Serialize::TradeRequest request, Serialize::TradeResponse& responce);
-   void handle_view_all_active_oreders_command(Serialize::TradeRequest request, Serialize::TradeResponse& responce);
+   bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest& request);
+   bool handle_view_balance_comand(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
+   void handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
 
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 

@@ -44,7 +44,7 @@ message TradeRequest {
 
     oneof RequestData{
         SignUpRequest sign_up_request = 4;
-        SignInRequest sing_in_request = 5;
+        SignInRequest sign_in_request = 5;
         TradeOrder order = 6;
     }
 }

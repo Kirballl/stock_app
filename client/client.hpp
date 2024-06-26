@@ -16,7 +16,7 @@ public:
    Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
-   void send_request_to_stock(const Serialize::TradeRequest& request);
+   bool send_request_to_stock(const Serialize::TradeRequest& request);
 
    std::string get_username() const;
    void set_username(std::string username);
@@ -25,9 +25,9 @@ public:
 
 private:
    void connect_to_server(const boost::asio::ip::tcp::resolver::results_type& endpoints);
-   void get_response_from_stock();
+   bool get_response_from_stock();
    void write_data_to_socket(const std::string& serialized_order);
-   void handle_received_response_from_stock(const Serialize::TradeResponse& response);
+   bool handle_received_response_from_stock(const Serialize::TradeResponse& response);
    void manage_server_socket_error(const boost::system::error_code& error_code);
 
 private:

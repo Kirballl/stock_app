@@ -61,19 +61,36 @@ Serialize::TradeRequest SessionClientConnection::convert_raw_data_to_command(std
     return request;
 }
 
-Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest request) {
+Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest& request) {
     Serialize::TradeResponse response;
     
     switch (request.command()) {
         case Serialize::TradeRequest::SIGN_UP : {
-            //handle_sing_up_command(response, request);
-            //response.set_response_msg(Serialize::TradeResponse::SIGN_UP_SUCCESSFUL);
+            if (!handle_sing_up_command(response, request)) {
+                response.set_response_msg(Serialize::TradeResponse::USERNAME_ALREADY_TAKEN);
+
+                spdlog::info("Username {} already exist in DB, request from: {}",
+                            request.sign_up_request().username(), get_client_endpoint_info());
+                break;
+            }
+            response.set_response_msg(Serialize::TradeResponse::SIGN_UP_SUCCESSFUL);
+
+            spdlog::info("Successfull sing up for username: {}, request from: {}", 
+                            request.sign_up_request().username(), get_client_endpoint_info());
             break;
         }
 
         case Serialize::TradeRequest::SIGN_IN : {
-            handle_sing_in_command(request); // проверочка 
+            if (!handle_sing_in_command(response, request)) {
+                response.set_response_msg(Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD);
+                spdlog::info("Invalid username or password, username: {}, request from: {}",
+                            request.sign_in_request().username(), get_client_endpoint_info());
+                break;
+            }
             response.set_response_msg(Serialize::TradeResponse::SIGN_IN_SUCCESSFUL);
+
+            spdlog::info("Successfull sing in for {}, request from {}", 
+                            request.sign_in_request().username(), get_client_endpoint_info());
             break;
         }
 
@@ -83,6 +100,10 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
                 break; 
             }
             response.set_response_msg(Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED);
+
+            spdlog::info("New order placed: user={} cost={} amount={} type={}", request.username(),
+                 request.order().usd_cost(), request.order().usd_amount(), 
+                (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
             break;
         }
 
@@ -131,16 +152,41 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
     return response;
 }
 
-bool SessionClientConnection::handle_sing_in_command(Serialize::TradeRequest request) {
-    auto client_data_manager = session_manager_->get_client_data_manager();
+bool SessionClientConnection::handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest& request) {
+    auto database = session_manager_->get_database();
 
-    if (!client_data_manager->has_username_in_client_data(request.username())) {
-        client_data_manager->create_new_client_data(request.username());
+    if (database->is_user_exists(request.sign_up_request().username())) {
+        spdlog::info("User {} is already exist in DB", request.sign_up_request().username());
+        return false;
     }
+
+    database->add_user(request.sign_up_request().username(), request.sign_up_request().password());
+
+    auto client_data_manager = session_manager_->get_client_data_manager();
+    if (!client_data_manager->has_username_in_client_data(request.sign_up_request().username())) {
+        client_data_manager->create_new_client_data(request.sign_up_request().username());
+    }
+
     return true;
 }
 
-bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest request) {
+bool SessionClientConnection::handle_sing_in_command(Serialize::TradeResponse& response, Serialize::TradeRequest& request) {
+    auto database = session_manager_->get_database();
+
+    if (!database->authenticate_user(request.sign_in_request().username(),  request.sign_in_request().password())) {
+        return false;
+    }
+    //TODO! jwt
+
+    auto client_data_manager = session_manager_->get_client_data_manager();
+    if (!client_data_manager->has_username_in_client_data(request.sign_in_request().username())) {
+        client_data_manager->create_new_client_data(request.sign_in_request().username());
+    }
+
+    return true;
+}
+
+bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest& request) {
     Serialize::TradeOrder order = request.order();
     order.set_timestamp(get_current_timestamp());
 
@@ -153,16 +199,12 @@ bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest r
         return false;
     }
     if (!push_received_from_socket_order_to_active_orders(order, request)) {
-        spdlog::info("Error to push received from socket order to active orders in client_data : user={} cost={} amount={} type={}",
-                     request.username(),
-                     order.usd_cost(), order.usd_amount(), 
+        spdlog::info("Error to push received from socket order to active orders in client_data : "
+                     "user={} cost={} amount={} type={}",
+                     request.username(), order.usd_cost(), order.usd_amount(), 
                      (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+        return false;
     }
-    
-
-        spdlog::info("New order placed: user={} cost={} amount={} type={}", request.username(),
-                 request.order().usd_cost(), request.order().usd_amount(), 
-                (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
     auto client_data_manager = session_manager_->get_client_data_manager();
     client_data_manager->notify_order_received();
@@ -178,7 +220,7 @@ int64_t SessionClientConnection::get_current_timestamp() {
     return timestamp;
 }
 
-bool SessionClientConnection::push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order,  Serialize::TradeRequest request) {
+bool SessionClientConnection::push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order,  Serialize::TradeRequest& request) {
     auto client_data_manager = session_manager_->get_client_data_manager();
 
     return client_data_manager->push_order_to_active_orders(request.username(), order);
@@ -197,7 +239,7 @@ bool SessionClientConnection::push_received_from_socket_order_to_queue(const Ser
     }
 }   
 
-bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest request, Serialize::TradeResponse& responce) {
+bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest& request, Serialize::TradeResponse& responce) {
     auto client_data_manager = session_manager_->get_client_data_manager();
 
     try {
@@ -210,7 +252,7 @@ bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest
     }
 }
 
-void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeRequest request, Serialize::TradeResponse& responce) {
+void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce) {
     auto client_data_manager = session_manager_->get_client_data_manager();
 
     Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders();

@@ -802,7 +802,7 @@ class TradeRequest final :
   }
   enum RequestDataCase {
     kSignUpRequest = 4,
-    kSingInRequest = 5,
+    kSignInRequest = 5,
     kOrder = 6,
     REQUESTDATA_NOT_SET = 0,
   };
@@ -933,7 +933,7 @@ class TradeRequest final :
     kJwtFieldNumber = 3,
     kCommandFieldNumber = 1,
     kSignUpRequestFieldNumber = 4,
-    kSingInRequestFieldNumber = 5,
+    kSignInRequestFieldNumber = 5,
     kOrderFieldNumber = 6,
   };
   // string username = 2;
@@ -991,23 +991,23 @@ class TradeRequest final :
       ::Serialize::SignUpRequest* sign_up_request);
   ::Serialize::SignUpRequest* unsafe_arena_release_sign_up_request();
 
-  // .Serialize.SignInRequest sing_in_request = 5;
-  bool has_sing_in_request() const;
+  // .Serialize.SignInRequest sign_in_request = 5;
+  bool has_sign_in_request() const;
   private:
-  bool _internal_has_sing_in_request() const;
+  bool _internal_has_sign_in_request() const;
   public:
-  void clear_sing_in_request();
-  const ::Serialize::SignInRequest& sing_in_request() const;
-  PROTOBUF_NODISCARD ::Serialize::SignInRequest* release_sing_in_request();
-  ::Serialize::SignInRequest* mutable_sing_in_request();
-  void set_allocated_sing_in_request(::Serialize::SignInRequest* sing_in_request);
+  void clear_sign_in_request();
+  const ::Serialize::SignInRequest& sign_in_request() const;
+  PROTOBUF_NODISCARD ::Serialize::SignInRequest* release_sign_in_request();
+  ::Serialize::SignInRequest* mutable_sign_in_request();
+  void set_allocated_sign_in_request(::Serialize::SignInRequest* sign_in_request);
   private:
-  const ::Serialize::SignInRequest& _internal_sing_in_request() const;
-  ::Serialize::SignInRequest* _internal_mutable_sing_in_request();
+  const ::Serialize::SignInRequest& _internal_sign_in_request() const;
+  ::Serialize::SignInRequest* _internal_mutable_sign_in_request();
   public:
-  void unsafe_arena_set_allocated_sing_in_request(
-      ::Serialize::SignInRequest* sing_in_request);
-  ::Serialize::SignInRequest* unsafe_arena_release_sing_in_request();
+  void unsafe_arena_set_allocated_sign_in_request(
+      ::Serialize::SignInRequest* sign_in_request);
+  ::Serialize::SignInRequest* unsafe_arena_release_sign_in_request();
 
   // .Serialize.TradeOrder order = 6;
   bool has_order() const;
@@ -1033,7 +1033,7 @@ class TradeRequest final :
  private:
   class _Internal;
   void set_has_sign_up_request();
-  void set_has_sing_in_request();
+  void set_has_sign_in_request();
   void set_has_order();
 
   inline bool has_RequestData() const;
@@ -1050,7 +1050,7 @@ class TradeRequest final :
       constexpr RequestDataUnion() : _constinit_{} {}
         ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
       ::Serialize::SignUpRequest* sign_up_request_;
-      ::Serialize::SignInRequest* sing_in_request_;
+      ::Serialize::SignInRequest* sign_in_request_;
       ::Serialize::TradeOrder* order_;
     } RequestData_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -2787,77 +2787,77 @@ inline ::Serialize::SignUpRequest* TradeRequest::mutable_sign_up_request() {
   return _msg;
 }
 
-// .Serialize.SignInRequest sing_in_request = 5;
-inline bool TradeRequest::_internal_has_sing_in_request() const {
-  return RequestData_case() == kSingInRequest;
+// .Serialize.SignInRequest sign_in_request = 5;
+inline bool TradeRequest::_internal_has_sign_in_request() const {
+  return RequestData_case() == kSignInRequest;
 }
-inline bool TradeRequest::has_sing_in_request() const {
-  return _internal_has_sing_in_request();
+inline bool TradeRequest::has_sign_in_request() const {
+  return _internal_has_sign_in_request();
 }
-inline void TradeRequest::set_has_sing_in_request() {
-  _impl_._oneof_case_[0] = kSingInRequest;
+inline void TradeRequest::set_has_sign_in_request() {
+  _impl_._oneof_case_[0] = kSignInRequest;
 }
-inline void TradeRequest::clear_sing_in_request() {
-  if (_internal_has_sing_in_request()) {
+inline void TradeRequest::clear_sign_in_request() {
+  if (_internal_has_sign_in_request()) {
     if (GetArenaForAllocation() == nullptr) {
-      delete _impl_.RequestData_.sing_in_request_;
+      delete _impl_.RequestData_.sign_in_request_;
     }
     clear_has_RequestData();
   }
 }
-inline ::Serialize::SignInRequest* TradeRequest::release_sing_in_request() {
-  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.sing_in_request)
-  if (_internal_has_sing_in_request()) {
+inline ::Serialize::SignInRequest* TradeRequest::release_sign_in_request() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.sign_in_request)
+  if (_internal_has_sign_in_request()) {
     clear_has_RequestData();
-    ::Serialize::SignInRequest* temp = _impl_.RequestData_.sing_in_request_;
+    ::Serialize::SignInRequest* temp = _impl_.RequestData_.sign_in_request_;
     if (GetArenaForAllocation() != nullptr) {
       temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
     }
-    _impl_.RequestData_.sing_in_request_ = nullptr;
+    _impl_.RequestData_.sign_in_request_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::Serialize::SignInRequest& TradeRequest::_internal_sing_in_request() const {
-  return _internal_has_sing_in_request()
-      ? *_impl_.RequestData_.sing_in_request_
+inline const ::Serialize::SignInRequest& TradeRequest::_internal_sign_in_request() const {
+  return _internal_has_sign_in_request()
+      ? *_impl_.RequestData_.sign_in_request_
       : reinterpret_cast< ::Serialize::SignInRequest&>(::Serialize::_SignInRequest_default_instance_);
 }
-inline const ::Serialize::SignInRequest& TradeRequest::sing_in_request() const {
-  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.sing_in_request)
-  return _internal_sing_in_request();
+inline const ::Serialize::SignInRequest& TradeRequest::sign_in_request() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.sign_in_request)
+  return _internal_sign_in_request();
 }
-inline ::Serialize::SignInRequest* TradeRequest::unsafe_arena_release_sing_in_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.TradeRequest.sing_in_request)
-  if (_internal_has_sing_in_request()) {
+inline ::Serialize::SignInRequest* TradeRequest::unsafe_arena_release_sign_in_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.TradeRequest.sign_in_request)
+  if (_internal_has_sign_in_request()) {
     clear_has_RequestData();
-    ::Serialize::SignInRequest* temp = _impl_.RequestData_.sing_in_request_;
-    _impl_.RequestData_.sing_in_request_ = nullptr;
+    ::Serialize::SignInRequest* temp = _impl_.RequestData_.sign_in_request_;
+    _impl_.RequestData_.sign_in_request_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void TradeRequest::unsafe_arena_set_allocated_sing_in_request(::Serialize::SignInRequest* sing_in_request) {
+inline void TradeRequest::unsafe_arena_set_allocated_sign_in_request(::Serialize::SignInRequest* sign_in_request) {
   clear_RequestData();
-  if (sing_in_request) {
-    set_has_sing_in_request();
-    _impl_.RequestData_.sing_in_request_ = sing_in_request;
+  if (sign_in_request) {
+    set_has_sign_in_request();
+    _impl_.RequestData_.sign_in_request_ = sign_in_request;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.TradeRequest.sing_in_request)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.TradeRequest.sign_in_request)
 }
-inline ::Serialize::SignInRequest* TradeRequest::_internal_mutable_sing_in_request() {
-  if (!_internal_has_sing_in_request()) {
+inline ::Serialize::SignInRequest* TradeRequest::_internal_mutable_sign_in_request() {
+  if (!_internal_has_sign_in_request()) {
     clear_RequestData();
-    set_has_sing_in_request();
-    _impl_.RequestData_.sing_in_request_ = CreateMaybeMessage< ::Serialize::SignInRequest >(GetArenaForAllocation());
+    set_has_sign_in_request();
+    _impl_.RequestData_.sign_in_request_ = CreateMaybeMessage< ::Serialize::SignInRequest >(GetArenaForAllocation());
   }
-  return _impl_.RequestData_.sing_in_request_;
+  return _impl_.RequestData_.sign_in_request_;
 }
-inline ::Serialize::SignInRequest* TradeRequest::mutable_sing_in_request() {
-  ::Serialize::SignInRequest* _msg = _internal_mutable_sing_in_request();
-  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.sing_in_request)
+inline ::Serialize::SignInRequest* TradeRequest::mutable_sign_in_request() {
+  ::Serialize::SignInRequest* _msg = _internal_mutable_sign_in_request();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.sign_in_request)
   return _msg;
 }
 

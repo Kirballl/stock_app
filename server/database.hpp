@@ -1,18 +1,18 @@
 #ifndef DATABASE_HPP
 #define DATABASE_HPP
 
-#include <pqxx/pqxx>
 #include <string>
-#include <vector>
 
+#include <pqxx/pqxx>
+#include <spdlog/spdlog.h>
 #include <jwt-cpp/jwt.h>
 #include "bcrypt.h"
 
 class Database {
 public:
     Database(const std::string& connection_info);
-    //~Database();
 
+    bool is_user_exists(const std::string& username);
     void add_user(const std::string& username, const std::string& password);
     bool authenticate_user(const std::string& username, const std::string& password);
 
