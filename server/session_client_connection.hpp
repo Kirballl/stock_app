@@ -17,10 +17,10 @@
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
 
-// Forward declaration
+//*INFO Forward declaration
 class SessionManager;
 
-// Handle certain client connection 
+//*INFO Certain client connection 
 class SessionClientConnection : public  std::enable_shared_from_this<SessionClientConnection> {
 public:
    SessionClientConnection(boost::asio::ip::tcp::socket socket, 
@@ -42,9 +42,9 @@ private:
    bool handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest& reqest);
    bool handle_sing_in_command(Serialize::TradeResponse& response, Serialize::TradeRequest& request);
    bool handle_make_order_comand(Serialize::TradeRequest& request);
-   int64_t get_current_timestamp();
-   bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-   bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest& request);
+      int64_t get_current_timestamp();
+      bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
+      bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest& request);
    bool handle_view_balance_comand(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
    void handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
 

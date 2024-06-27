@@ -45,7 +45,6 @@ public:
    void stock_loop();
 
 private:
-   //TODO    void save_order_to_db();
    void complement_order_books(std::shared_ptr<ClientDataManager> client_data_manager);
    void place_order_to_priority_queue(const Serialize::TradeOrder& order);
    void process_orders(); 

@@ -9,7 +9,7 @@ public:
     Auth(const std::string& secret_key);
 
     std::string generate_token(const std::string& username);
-    bool verify_token(const std::string& token, std::string& username);
+    bool verify_token(const std::string& token, const std::string& username);
 
 private:
     std::string secret_key_;

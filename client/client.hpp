@@ -16,7 +16,7 @@ public:
    Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
    Serialize::TradeOrder form_order(trade_type_t trade_type);
-   bool send_request_to_stock(const Serialize::TradeRequest& request);
+   bool send_request_to_stock(Serialize::TradeRequest& request);
 
    std::string get_username() const;
    void set_username(std::string username);
@@ -33,6 +33,7 @@ private:
 private:
    boost::asio::ip::tcp::socket socket_;
    std::string client_username_;
+   std::string jwt_token_;
 
    char data_length_[sizeof(uint32_t)];
 };

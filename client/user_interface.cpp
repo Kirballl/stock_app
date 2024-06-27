@@ -85,60 +85,48 @@ void UserInterface::auth_menu() {
         std::cout << "\nNTPro:\n"
                      "1) Sing up\n"
                      "2) Sing in\n"
-                     "3) Exit\n"
-                     << std::endl;
+                     "3) Exit\n" << std::endl;
+
         short auth_menu_option_num;
         std::cin >> auth_menu_option_num;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
         switch (auth_menu_option_num) {
-            case 1 : {
-                std::cout << "Registration:" << std::endl;
-                std::cout << "Enter Your username:" << std::endl;
-                std::string client_name;
-                std::cin >> client_name;
+            case 1 : 
+                [[fallthrough]];
+            case 2 : { 
+                std::string action = (auth_menu_option_num == 1) ? "Registration" : "Authorization";
+                std::cout << action << ":" << std::endl;
 
-                std::cout << "\nEnter Your password:" << std::endl;
-                std::string client_password;
-                std::cin >> client_password;
-                // TODO safety cin client name
+                std::string client_username = get_valid_input(
+                    "Enter Your username (one word, max 20 characters):",
+                    "Error: Username must be one word without spaces and not exceed 20 characters."
+                );
 
-                Serialize::TradeRequest sing_up_request;
-                sing_up_request.set_command(Serialize::TradeRequest::SIGN_UP);
-                sing_up_request.mutable_sign_up_request()->set_username(client_name);
-                sing_up_request.mutable_sign_up_request()->set_password(client_password);
+                std::string client_password = get_valid_input(
+                    "Enter Your password (one word, max 20 characters):",
+                    "Error: Password must be one word without spaces and not exceed 20 characters."
+                );
 
-                if (client_.send_request_to_stock(sing_up_request)) {
+                Serialize::TradeRequest::CommandType command = (auth_menu_option_num == 1) ? 
+                    Serialize::TradeRequest::SIGN_UP : Serialize::TradeRequest::SIGN_IN;
 
-                    client_.set_username(client_name);
-
-                    Serialize::TradeRequest sing_in_request;
-                    sing_in_request.set_command(Serialize::TradeRequest::SIGN_IN);
-                    sing_in_request.mutable_sign_in_request()->set_username(client_name);
-                    sing_in_request.mutable_sign_in_request()->set_password(client_password);
-    
-                    if (client_.send_request_to_stock(sing_in_request)) {
+                if (perform_auth_request(client_username, client_password, command)) {
+                    if (auth_menu_option_num == 1) {
+                        std::cout << "Account created successfully. Attempting to sign in..." << std::endl;
+                        //*INFO If registration was successful, attempt to sign in
+                        if (perform_auth_request(client_username, client_password, Serialize::TradeRequest::SIGN_IN)) {
+                            std::cout << "Signed in successfully." << std::endl;
+                            return;
+                        }
+                    } else {
+                        std::cout << "Signed in successfully." << std::endl;
                         return;
                     }
+                } else {
+                    std::cout << "Authentication failed. Please try again." << std::endl;
                 }
-                break;
-            }
-            case 2 : { 
-                std::cout << "Authorization:" << std::endl;
-                std::cout << "Enter Your username:" << std::endl;
-                std::string client_name;
-                std::cin >> client_name;
 
-                std::cout << "\nEnter Your password:" << std::endl;
-                std::string client_password;
-                std::cin >> client_password;
-                // TODO safety cin client name
-                Serialize::TradeRequest sing_in_request;
-                sing_in_request.set_command(Serialize::TradeRequest::SIGN_IN);
-                sing_in_request.mutable_sign_in_request()->set_username(client_name);
-                sing_in_request.mutable_sign_in_request()->set_password(client_password);
-                if (client_.send_request_to_stock(sing_in_request)) {
-                    client_.set_username(client_name);
-                    return;
-                }
                 break;
             }
             case 3 : {
@@ -155,4 +143,39 @@ void UserInterface::auth_menu() {
             }
         }
     }
+}
+
+std::string UserInterface::get_valid_input(const std::string& prompt, const std::string& error_message) {
+    std::string input;
+    while (true) {
+        std::cout << prompt << std::endl;
+        std::getline(std::cin, input);
+        if (input.find(' ') == std::string::npos && input.length() <= 20) {
+            return input;
+        }
+        std::cout << error_message << std::endl;
+    }
+}
+
+bool UserInterface::perform_auth_request(const std::string& username, const std::string& password, Serialize::TradeRequest::CommandType command) {
+    Serialize::TradeRequest request;
+    request.set_command(command); 
+
+    if (command == Serialize::TradeRequest::SIGN_UP) {
+        request.mutable_sign_up_request()->set_username(username);
+        request.mutable_sign_up_request()->set_password(password);
+    } else if (command == Serialize::TradeRequest::SIGN_IN) {
+        request.mutable_sign_in_request()->set_username(username);
+        request.mutable_sign_in_request()->set_password(password);
+    } else {
+        return false;
+    }
+
+    if (client_.send_request_to_stock(request)) {
+        if (command == Serialize::TradeRequest::SIGN_IN) {
+            client_.set_username(username);
+        }
+        return true;
+    }
+    return false;
 }

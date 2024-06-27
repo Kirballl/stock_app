@@ -5,7 +5,6 @@
 
 #include <pqxx/pqxx>
 #include <spdlog/spdlog.h>
-#include <jwt-cpp/jwt.h>
 #include "bcrypt.h"
 
 class Database {

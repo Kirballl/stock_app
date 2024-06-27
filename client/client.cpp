@@ -48,7 +48,12 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
     return order;
 }
 
-bool Client::send_request_to_stock(const Serialize::TradeRequest& request) {
+bool Client::send_request_to_stock(Serialize::TradeRequest& request) {
+    if (request.command() !=  Serialize::TradeRequest::SIGN_UP &&
+        request.command() != Serialize::TradeRequest::SIGN_IN) {
+        request.set_jwt(jwt_token_);
+    }
+
     std::string serialized_request;
     request.SerializeToString(&serialized_request);
 
@@ -97,7 +102,6 @@ bool Client::get_response_from_stock() {
 bool Client::handle_received_response_from_stock(const Serialize::TradeResponse& response) {
     switch (response.response_msg()) {
         case Serialize::TradeResponse::SIGN_UP_SUCCESSFUL : {
-            std::cout << "\nAccount created" << std::endl;
             return true;
         }
         case Serialize::TradeResponse::USERNAME_ALREADY_TAKEN : {
@@ -106,7 +110,8 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
         }
 
         case Serialize::TradeResponse::SIGN_IN_SUCCESSFUL : {
-            std::cout << "\nSusccesfull autorization" << std::endl;
+            //*INFO save jwt
+            jwt_token_ = response.jwt();
             return true;
         }
         case Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD : {

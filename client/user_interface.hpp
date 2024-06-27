@@ -11,6 +11,8 @@ public:
 
     void run();
     void auth_menu();
+    std::string get_valid_input(const std::string& prompt, const std::string& error_message);
+    bool perform_auth_request(const std::string& username, const std::string& password, Serialize::TradeRequest::CommandType command);
 
 private:
     Client& client_;

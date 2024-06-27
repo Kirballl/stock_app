@@ -6,10 +6,6 @@ SessionClientConnection::SessionClientConnection(boost::asio::ip::tcp::socket so
 }
 
 void SessionClientConnection::start () {
-    // Auntification
-    // read data from socket
-    // chaeck in DB
-    // if (!) {}
     async_read_data_from_socket();
 }
 
@@ -63,6 +59,21 @@ Serialize::TradeRequest SessionClientConnection::convert_raw_data_to_command(std
 
 Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest& request) {
     Serialize::TradeResponse response;
+
+    if (request.command() != Serialize::TradeRequest::SIGN_IN &&
+        request.command() != Serialize::TradeRequest::SIGN_UP) {
+        auto auth = session_manager_->get_auth();
+        //*INFO check jwt
+        if(!auth->verify_token(request.jwt(), username_)) {
+            std::cerr << "Username sent invalid jwt, request from:" << get_client_endpoint_info() << std::endl;
+            spdlog::info("Username {} sent invalid jwt, request from: {}",
+                            username_, get_client_endpoint_info());
+            response.set_response_msg(Serialize::TradeResponse::ERROR); 
+
+            async_write_data_to_socket(response);
+            close_this_session();
+        }
+    }
     
     switch (request.command()) {
         case Serialize::TradeRequest::SIGN_UP : {
@@ -162,6 +173,7 @@ bool SessionClientConnection::handle_sing_up_command(Serialize::TradeResponse& r
 
     database->add_user(request.sign_up_request().username(), request.sign_up_request().password());
 
+    //? 
     auto client_data_manager = session_manager_->get_client_data_manager();
     if (!client_data_manager->has_username_in_client_data(request.sign_up_request().username())) {
         client_data_manager->create_new_client_data(request.sign_up_request().username());
@@ -176,8 +188,14 @@ bool SessionClientConnection::handle_sing_in_command(Serialize::TradeResponse& r
     if (!database->authenticate_user(request.sign_in_request().username(),  request.sign_in_request().password())) {
         return false;
     }
-    //TODO! jwt
 
+    username_ = request.sign_in_request().username();
+    //*INFO generating jwt
+    auto auth = session_manager_->get_auth();
+    std::string jwt_token = auth->generate_token(request.sign_in_request().username());
+    response.set_jwt(jwt_token);
+
+    //? from DB
     auto client_data_manager = session_manager_->get_client_data_manager();
     if (!client_data_manager->has_username_in_client_data(request.sign_in_request().username())) {
         client_data_manager->create_new_client_data(request.sign_in_request().username());
