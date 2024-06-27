@@ -93,14 +93,13 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
 
         case Serialize::TradeRequest::SIGN_IN : {
             if (!handle_sing_in_command(response, request)) {
-                response.set_response_msg(Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD);
-                spdlog::info("Invalid username or password, username: {}, request from: {}",
-                            request.sign_in_request().username(), get_client_endpoint_info());
+                spdlog::info("Invalid sign-in attempt for username: {}, request from: {}",
+                     request.sign_in_request().username(), get_client_endpoint_info());
                 break;
             }
             response.set_response_msg(Serialize::TradeResponse::SIGN_IN_SUCCESSFUL);
 
-            spdlog::info("Successfull sing in for {}, request from {}", 
+            spdlog::info("Successfull sing-in for username: {}, request from {}", 
                             request.sign_in_request().username(), get_client_endpoint_info());
             break;
         }
@@ -186,6 +185,14 @@ bool SessionClientConnection::handle_sing_in_command(Serialize::TradeResponse& r
     auto database = session_manager_->get_database();
 
     if (!database->authenticate_user(request.sign_in_request().username(),  request.sign_in_request().password())) {
+        response.set_response_msg(Serialize::TradeResponse::INVALID_USERNAME_OR_PASSWORD);
+        return false;
+    }
+
+    if (session_manager_->is_user_logged_in(request.sign_in_request().username())) {
+        spdlog::info("User {} is already logged in, request from: {}",
+                     request.sign_in_request().username(), get_client_endpoint_info());
+        response.set_response_msg(Serialize::TradeResponse::USER_ALREADY_LOGGED_IN);
         return false;
     }
 

@@ -84,6 +84,16 @@ std::shared_ptr<Auth> SessionManager::get_auth() const {
     return auth_;
 }
 
+bool SessionManager::is_user_logged_in(const std::string& username) {
+    std::lock_guard<std::mutex> lock(handle_sessions_mutex_);
+    for (const auto& session : clients_sessions_) {
+        if (session->get_client_username() == username) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::shared_ptr<SessionClientConnection> SessionManager::get_session_by_username(const std::string& username) {
     std::lock_guard<std::mutex> get_session_by_username_lock_guard(handle_sessions_mutex_);
     for (auto& current_session : clients_sessions_) {

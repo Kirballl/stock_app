@@ -149,20 +149,21 @@ inline bool TradeRequest_CommandType_Parse(
     TradeRequest_CommandType_descriptor(), name, value);
 }
 enum TradeResponse_status : int {
-  TradeResponse_status_SIGN_UP_SUCCESSFUL = 0,
-  TradeResponse_status_USERNAME_ALREADY_TAKEN = 1,
-  TradeResponse_status_SIGN_IN_SUCCESSFUL = 2,
-  TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 3,
-  TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 4,
-  TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE = 5,
-  TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS = 6,
-  TradeResponse_status_ERROR = 7,
+  TradeResponse_status_ERROR = 0,
+  TradeResponse_status_SIGN_UP_SUCCESSFUL = 1,
+  TradeResponse_status_USERNAME_ALREADY_TAKEN = 2,
+  TradeResponse_status_SIGN_IN_SUCCESSFUL = 3,
+  TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 4,
+  TradeResponse_status_USER_ALREADY_LOGGED_IN = 5,
+  TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 6,
+  TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE = 7,
+  TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeResponse_status_IsValid(int value);
-constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_SIGN_UP_SUCCESSFUL;
-constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_ERROR;
+constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_ERROR;
+constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
 constexpr int TradeResponse_status_status_ARRAYSIZE = TradeResponse_status_status_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor();
@@ -1190,6 +1191,8 @@ class TradeResponse final :
   // nested types ----------------------------------------------------
 
   typedef TradeResponse_status status;
+  static constexpr status ERROR =
+    TradeResponse_status_ERROR;
   static constexpr status SIGN_UP_SUCCESSFUL =
     TradeResponse_status_SIGN_UP_SUCCESSFUL;
   static constexpr status USERNAME_ALREADY_TAKEN =
@@ -1198,14 +1201,14 @@ class TradeResponse final :
     TradeResponse_status_SIGN_IN_SUCCESSFUL;
   static constexpr status INVALID_USERNAME_OR_PASSWORD =
     TradeResponse_status_INVALID_USERNAME_OR_PASSWORD;
+  static constexpr status USER_ALREADY_LOGGED_IN =
+    TradeResponse_status_USER_ALREADY_LOGGED_IN;
   static constexpr status ORDER_SUCCESSFULLY_CREATED =
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
   static constexpr status SUCCES_VIEW_BALANCE_RESPONCE =
     TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE;
   static constexpr status SUCCES_VIEW_ALL_ACTIVE_ORDERS =
     TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
-  static constexpr status ERROR =
-    TradeResponse_status_ERROR;
   static inline bool status_IsValid(int value) {
     return TradeResponse_status_IsValid(value);
   }

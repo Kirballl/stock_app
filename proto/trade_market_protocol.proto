@@ -53,14 +53,15 @@ message TradeRequest {
 
 message TradeResponse {
     enum status {
-        SIGN_UP_SUCCESSFUL = 0;
-        USERNAME_ALREADY_TAKEN = 1;
-        SIGN_IN_SUCCESSFUL = 2;
-        INVALID_USERNAME_OR_PASSWORD = 3;
-        ORDER_SUCCESSFULLY_CREATED = 4;
-        SUCCES_VIEW_BALANCE_RESPONCE = 5;
-        SUCCES_VIEW_ALL_ACTIVE_ORDERS = 6;
-        ERROR = 7;
+        ERROR = 0;
+        SIGN_UP_SUCCESSFUL = 1;
+        USERNAME_ALREADY_TAKEN = 2;
+        SIGN_IN_SUCCESSFUL = 3;
+        INVALID_USERNAME_OR_PASSWORD = 4;
+        USER_ALREADY_LOGGED_IN = 5;
+        ORDER_SUCCESSFULLY_CREATED = 6;
+        SUCCES_VIEW_BALANCE_RESPONCE = 7;
+        SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8;
     }
     status response_msg = 1; // 
 

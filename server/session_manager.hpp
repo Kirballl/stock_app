@@ -34,6 +34,8 @@ public:
     void add_new_connection(boost::asio::ip::tcp::socket new_client_socket);
     void try_to_create_new_session_client_connection();
     void remove_session(std::shared_ptr<SessionClientConnection> session, std::string client_endpoint_info);
+
+    bool is_user_logged_in(const std::string& username);
     std::shared_ptr<SessionClientConnection> get_session_by_username(const std::string& username);
     
     std::shared_ptr<ClientDataManager> get_client_data_manager() const;

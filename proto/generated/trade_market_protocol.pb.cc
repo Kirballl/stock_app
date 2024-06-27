@@ -317,7 +317,7 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "ERS\020\004\022\031\n\025VIEW_MY_ACTIVE_ORDERS\020\005\022\031\n\025VIEW"
   "_COMPLETED_TRADES\020\006\022\026\n\022VIEW_QUOTE_HISTOR"
   "Y\020\007\022\030\n\024CANCEL_ACTIVE_ORDERS\020\010B\r\n\013Request"
-  "Data\"\267\004\n\rTradeResponse\0225\n\014response_msg\030\001"
+  "Data\"\323\004\n\rTradeResponse\0225\n\014response_msg\030\001"
   " \001(\0162\037.Serialize.TradeResponse.status\022\013\n"
   "\003jwt\030\002 \001(\t\0224\n\017account_balance\030\003 \001(\0132\031.Se"
   "rialize.AccountBalanceH\000\0220\n\ractive_order"
@@ -325,27 +325,28 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "mpleted_orders\030\005 \001(\0132\032.Serialize.Complet"
   "edOredrsH\000\0220\n\rquote_history\030\006 \001(\0132\027.Seri"
   "alize.QuoteHistoryH\000\022\030\n\016error_response\030\007"
-  " \001(\tH\000\"\346\001\n\006status\022\026\n\022SIGN_UP_SUCCESSFUL\020"
-  "\000\022\032\n\026USERNAME_ALREADY_TAKEN\020\001\022\026\n\022SIGN_IN"
-  "_SUCCESSFUL\020\002\022 \n\034INVALID_USERNAME_OR_PAS"
-  "SWORD\020\003\022\036\n\032ORDER_SUCCESSFULLY_CREATED\020\004\022"
-  " \n\034SUCCES_VIEW_BALANCE_RESPONCE\020\005\022!\n\035SUC"
-  "CES_VIEW_ALL_ACTIVE_ORDERS\020\006\022\t\n\005ERROR\020\007B"
-  "\r\n\013RequestData\":\n\016AccountBalance\022\023\n\013usd_"
-  "balance\030\001 \001(\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014Ac"
-  "tiveOrders\0220\n\021active_buy_orders\030\001 \003(\0132\025."
-  "Serialize.TradeOrder\0221\n\022active_sell_orde"
-  "rs\030\002 \003(\0132\025.Serialize.TradeOrder\"|\n\017Compl"
-  "etedOredrs\0223\n\024completed_buy_orders\030\001 \003(\013"
-  "2\025.Serialize.TradeOrder\0224\n\025completed_sel"
-  "l_orders\030\002 \003(\0132\025.Serialize.TradeOrder\"0\n"
-  "\014QuoteHistory\022 \n\006quotes\030\001 \003(\0132\020.Serializ"
-  "e.Quote\")\n\005Quote\022\021\n\ttimestamp\030\001 \001(\005\022\r\n\005p"
-  "rice\030\002 \001(\001b\006proto3"
+  " \001(\tH\000\"\202\002\n\006status\022\t\n\005ERROR\020\000\022\026\n\022SIGN_UP_"
+  "SUCCESSFUL\020\001\022\032\n\026USERNAME_ALREADY_TAKEN\020\002"
+  "\022\026\n\022SIGN_IN_SUCCESSFUL\020\003\022 \n\034INVALID_USER"
+  "NAME_OR_PASSWORD\020\004\022\032\n\026USER_ALREADY_LOGGE"
+  "D_IN\020\005\022\036\n\032ORDER_SUCCESSFULLY_CREATED\020\006\022 "
+  "\n\034SUCCES_VIEW_BALANCE_RESPONCE\020\007\022!\n\035SUCC"
+  "ES_VIEW_ALL_ACTIVE_ORDERS\020\010B\r\n\013RequestDa"
+  "ta\":\n\016AccountBalance\022\023\n\013usd_balance\030\001 \001("
+  "\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014ActiveOrders\0220"
+  "\n\021active_buy_orders\030\001 \003(\0132\025.Serialize.Tr"
+  "adeOrder\0221\n\022active_sell_orders\030\002 \003(\0132\025.S"
+  "erialize.TradeOrder\"|\n\017CompletedOredrs\0223"
+  "\n\024completed_buy_orders\030\001 \003(\0132\025.Serialize"
+  ".TradeOrder\0224\n\025completed_sell_orders\030\002 \003"
+  "(\0132\025.Serialize.TradeOrder\"0\n\014QuoteHistor"
+  "y\022 \n\006quotes\030\001 \003(\0132\020.Serialize.Quote\")\n\005Q"
+  "uote\022\021\n\ttimestamp\030\001 \001(\005\022\r\n\005price\030\002 \001(\001b\006"
+  "proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 1778, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 1806, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
     &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 10,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
@@ -429,6 +430,7 @@ bool TradeResponse_status_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
       return true;
     default:
       return false;
@@ -436,14 +438,15 @@ bool TradeResponse_status_IsValid(int value) {
 }
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+constexpr TradeResponse_status TradeResponse::ERROR;
 constexpr TradeResponse_status TradeResponse::SIGN_UP_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse::USERNAME_ALREADY_TAKEN;
 constexpr TradeResponse_status TradeResponse::SIGN_IN_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse::INVALID_USERNAME_OR_PASSWORD;
+constexpr TradeResponse_status TradeResponse::USER_ALREADY_LOGGED_IN;
 constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_CREATED;
 constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE;
 constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS;
-constexpr TradeResponse_status TradeResponse::ERROR;
 constexpr TradeResponse_status TradeResponse::status_MIN;
 constexpr TradeResponse_status TradeResponse::status_MAX;
 constexpr int TradeResponse::status_ARRAYSIZE;

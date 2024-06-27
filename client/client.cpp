@@ -118,6 +118,10 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             std::cout << "\nInvalid username or password" << std::endl;
             return false;
         }
+        case Serialize::TradeResponse::USER_ALREADY_LOGGED_IN : {
+            std::cout << "\nUsername already logged in" << std::endl;
+            return false;
+        }
 
         case Serialize::TradeResponse::ORDER_SUCCESSFULLY_CREATED : {
             std::cout << "\nOrder succesfully created" << std::endl;
