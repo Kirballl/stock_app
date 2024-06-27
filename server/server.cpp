@@ -3,9 +3,10 @@
 Server::Server(boost::asio::io_context& io_context, const Config& config) :
         io_context_(io_context),
         acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), config.port)),
-        session_manager_(std::make_shared<SessionManager>()), 
-        core_(std::make_shared<Core>(session_manager_)) {
+        session_manager_(std::make_shared<SessionManager>()) {
     spdlog::info("Server launched! Listen  {} : {}", config.host, config.port);
+
+    session_manager_->init_core();
 
     std::cout << "Server launched! Listen " << config.host << ":" << config.port << std::endl;
     start();
@@ -13,7 +14,7 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
 
 void Server::start() {
     session_manager_thread_ = std::thread(&SessionManager::run, session_manager_);
-    core_thread_ = std::thread(&Core::stock_loop, core_);
+    core_thread_ = std::thread(&Core::stock_loop, session_manager_->get_core()); 
     
     accept_new_connection();
 }

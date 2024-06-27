@@ -20,6 +20,10 @@ SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
     auth_ = std::make_shared<Auth>(config.jwt_secret_key);
 }
 
+void SessionManager::init_core() {
+    core_ = std::make_shared<Core>(shared_from_this());
+}
+
 bool SessionManager::is_runnig() {
     return is_running_.load(std::memory_order_acquire);
 }
@@ -82,6 +86,9 @@ std::shared_ptr<Database> SessionManager::get_database() const {
 
 std::shared_ptr<Auth> SessionManager::get_auth() const {
     return auth_;
+}
+std::shared_ptr<Core> SessionManager::get_core() const {
+    return core_;
 }
 
 bool SessionManager::is_user_logged_in(const std::string& username) {

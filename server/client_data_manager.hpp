@@ -6,6 +6,7 @@
 #include <shared_mutex>
 #include <algorithm>
 
+
 #include "common.hpp"
 #include "order_queue.hpp"
 #include "session_manager.hpp"
@@ -27,17 +28,20 @@ public:
     ClientDataManager();
 
     //*INFO: Core operations
-    Serialize::AccountBalance get_client_balance(std::string client_username) const;
-    bool change_client_balances_according_match(std::string client_sell, std::string client_buy,
+    Serialize::AccountBalance get_client_balance(const std::string& client_username) const;
+    bool change_client_balances_according_match(const std::string& client_sell, const std::string& client_buy,
                                int32_t transaction_amount, double transaction_cost);
-    bool change_client_balance(std::string client_username, change_balance_type_t change_balance_type,
+    bool change_client_balance(const std::string& client_username, change_balance_type_t change_balance_type,
                                wallet_type_t wallet_type, double amount);
-    bool move_order_from_active_to_completed(std::string client_username, int64_t timestamp);
+    std::pair<std::vector<Serialize::TradeOrder>::iterator, bool> find_order_by_username_and_timestamp(
+                                                            const std::string& client_username, int64_t timestamp);
+    bool change_order_usd_amount_according_match(const std::string& client_username, int64_t timestamp, int32_t transaction_amount);
+    bool move_order_from_active_to_completed(const std::string& client_username, int64_t timestamp);
 
     //*INFO: SessionClientConnection operations
     bool has_username_in_client_data(std::string key);
     void create_new_client_data(std::string new_key);
-    bool push_order_to_active_orders(std::string client_username, Serialize::TradeOrder& order);
+    bool push_order_to_active_orders(const std::string& client_username, Serialize::TradeOrder& order);
     Serialize::ActiveOrders get_all_active_oreders();
     Serialize::CompletedOredrs get_all_completed_oreders();
 

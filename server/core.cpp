@@ -150,6 +150,9 @@ bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder
     sell_order.set_usd_amount(sell_order.usd_amount() - transaction_amount);
     buy_order.set_usd_amount(buy_order.usd_amount() - transaction_amount);
 
+    change_order_usd_amount_in_data_manager(sell_order, transaction_amount);
+    change_order_usd_amount_in_data_manager(buy_order, transaction_amount);
+
     if (!change_clients_balances(sell_order, buy_order, transaction_amount, transaction_cost)) {
         spdlog::error("Error to change clients balances: BUY {} SELL {} - Amount: {} Cost: {}",
                         buy_order.username(), sell_order.username(), transaction_amount, transaction_cost);
@@ -167,6 +170,11 @@ bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize:
     auto client_data_manager = session_manager_->get_client_data_manager();
     return client_data_manager->change_client_balances_according_match(sell_order.username(), buy_order.username(),
                                                                             transaction_amount, transaction_cost);
+}
+
+bool Core::change_order_usd_amount_in_data_manager(Serialize::TradeOrder& order, int32_t transaction_amount) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
+    return client_data_manager->change_order_usd_amount_according_match(order.username(), order.timestamp(), transaction_amount);
 }
 
 bool Core::move_order_to_completed_oreders(Serialize::TradeOrder& order) {

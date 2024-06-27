@@ -4,7 +4,7 @@ ClientDataManager::ClientDataManager() : buy_orders_queue_(std::make_shared<Orde
                                          sell_orders_queue_(std::make_shared<OrderQueue>()) {
 }
 
-Serialize::AccountBalance ClientDataManager::get_client_balance(std::string client_username) const {
+Serialize::AccountBalance ClientDataManager::get_client_balance(const std::string& client_username) const {
 
     std::shared_lock<std::shared_mutex> get_client_balance_shared_lock(client_data_mutex_);
 
@@ -20,7 +20,7 @@ Serialize::AccountBalance ClientDataManager::get_client_balance(std::string clie
     return account_balance;
 }
 
-bool ClientDataManager::change_client_balances_according_match(std::string client_sell, std::string client_buy,
+bool ClientDataManager::change_client_balances_according_match(const std::string& client_sell, const std::string& client_buy,
                                                               int32_t transaction_amount, double transaction_cost) {
     std::unique_lock<std::shared_mutex> change_client_balance_unique_lock(client_data_mutex_);    
 
@@ -40,7 +40,7 @@ bool ClientDataManager::change_client_balances_according_match(std::string clien
     return true; 
 }
 
-bool ClientDataManager::change_client_balance(std::string client_username,
+bool ClientDataManager::change_client_balance(const std::string& client_username,
         change_balance_type_t change_balance_type, wallet_type_t wallet_type, double amount) {
 
     auto client_data_iterator = client_data_.find(client_username);
@@ -60,7 +60,7 @@ bool ClientDataManager::change_client_balance(std::string client_username,
     return true;
 }
 
-bool ClientDataManager::push_order_to_active_orders(std::string client_username, Serialize::TradeOrder& order) {
+bool ClientDataManager::push_order_to_active_orders(const std::string& client_username, Serialize::TradeOrder& order) {
 
     std::unique_lock<std::shared_mutex>  push_order_to_active_orders_unque_lock(client_data_mutex_);
 
@@ -74,29 +74,62 @@ bool ClientDataManager::push_order_to_active_orders(std::string client_username,
     return true;
 }
 
-bool ClientDataManager::move_order_from_active_to_completed(std::string client_username, int64_t timestamp) {
+bool ClientDataManager::change_order_usd_amount_according_match(const std::string& client_username, int64_t timestamp, int32_t transaction_amount) {
+    std::unique_lock<std::shared_mutex> change_order_usd_amount_according_match_unque_lock(client_data_mutex_);
+
+    auto [order_iterator, is_found] = find_order_by_username_and_timestamp(client_username, timestamp);
+    if (!is_found) {
+        return false;
+    }
+    
+    order_iterator->set_usd_amount(order_iterator->usd_amount() - transaction_amount);
+
+    spdlog::info("Order was partially executed : user={} cost={} amount={} type={}",
+                 order_iterator->username(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
+                (order_iterator->type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+    return true;
+}
+
+bool ClientDataManager::move_order_from_active_to_completed(const std::string& client_username, int64_t timestamp) {
 
     std::unique_lock<std::shared_mutex> move_order_from_active_to_completed_unque_lock(client_data_mutex_);
 
+    auto [order_iterator, found] = find_order_by_username_and_timestamp(client_username, timestamp);
+    if (!found) {
+        return false;
+    }
     auto client_data_iterator = client_data_.find(client_username);
-    if (client_data_iterator == client_data_.end()) {
-        spdlog::error("client with {} in unordered map client_data not found", client_username);
-        return false;
-    }
 
-    auto order_iterator = std::find_if(client_data_iterator->second.active_orders.begin(), client_data_iterator->second.active_orders.end(),
-        [timestamp](const Serialize::TradeOrder& order) {
-            return order.timestamp() == timestamp;
-        });
-
-    if (order_iterator == client_data_iterator->second.active_orders.end()) {
-        spdlog::error("client {} order with {} timestamp in unordered map client_data not found", client_username, timestamp);
-        return false;
-    }
+    spdlog::info("Order was executed: user={} cost={} amount={} type={}",
+                 order_iterator->username(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
+                (order_iterator->type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
     client_data_iterator->second.completed_orders.push_back(*order_iterator);
     client_data_iterator->second.active_orders.erase(order_iterator);
     return true;
+}
+
+std::pair<std::vector<Serialize::TradeOrder>::iterator, bool> ClientDataManager::find_order_by_username_and_timestamp(
+    const std::string& client_username, int64_t timestamp) {
+
+    auto client_data_iterator = client_data_.find(client_username);
+    if (client_data_iterator == client_data_.end()) {
+        spdlog::error("Client with username {} not found", client_username);
+        return {std::vector<Serialize::TradeOrder>::iterator{}, false};
+    }
+
+    auto& active_orders = client_data_iterator->second.active_orders;
+    auto order_iterator = std::find_if(active_orders.begin(), active_orders.end(),
+        [timestamp](const Serialize::TradeOrder& order) {
+            return order.timestamp() == timestamp;
+        });
+
+    if (order_iterator == active_orders.end()) {
+        spdlog::error("Order with timestamp {} for client {} not found", timestamp, client_username);
+        return {std::vector<Serialize::TradeOrder>::iterator{}, false};
+    }
+
+    return {order_iterator, true};
 }
 
 bool ClientDataManager::has_username_in_client_data(std::string key) {

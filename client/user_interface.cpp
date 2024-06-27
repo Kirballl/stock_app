@@ -83,13 +83,23 @@ void UserInterface::run() {
 void UserInterface::auth_menu() {
     while (true) {
         std::cout << "\nNTPro:\n"
-                     "1) Sing up\n"
-                     "2) Sing in\n"
+                     "1) Sign up\n"
+                     "2) Sign in\n"
                      "3) Exit\n" << std::endl;
 
+        std::string input;
+        std::getline(std::cin, input);
+
         short auth_menu_option_num;
-        std::cin >> auth_menu_option_num;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        try {
+            auth_menu_option_num = std::stoi(input);
+        } catch (const std::invalid_argument& e) {
+            std::cout << "Invalid input. Please enter a number." << std::endl;
+            continue;
+        } catch (const std::out_of_range& e) {
+            std::cout << "Input out of range. Please enter a valid menu option." << std::endl;
+            continue;
+        }
 
         switch (auth_menu_option_num) {
             case 1 : 

@@ -4,12 +4,15 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <memory>
 #include <string>
 
 #include "spdlog/spdlog.h"
 
 #include "common.hpp"
 #include "session_manager.hpp"
+#include "client_data_manager.hpp"
+#include "session_client_connection.hpp"
 #include "trade_market_protocol.pb.h"
 
 constexpr double EPSILON = 1e-6;
@@ -20,6 +23,9 @@ constexpr double EPSILON = 1e-6;
 #include <chrono>
 #include <sstream>
 
+//*INFO: Forward declaration
+class SessionManager;
+class ClientDataManager;
 
 struct BuyOrderComparator {
     bool operator()(const Serialize::TradeOrder& lhs, const Serialize::TradeOrder& rhs) const {
@@ -52,6 +58,7 @@ private:
    bool change_clients_balances(Serialize::TradeOrder& sell_order, 
                                 Serialize::TradeOrder& buy_order_iterator,
                                  int32_t transaction_amount, double transaction_cost); 
+   bool change_order_usd_amount_in_data_manager(Serialize::TradeOrder& order, int32_t transaction_amount);
    bool move_order_to_completed_oreders(Serialize::TradeOrder& order);
 
 

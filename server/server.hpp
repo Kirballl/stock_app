@@ -30,7 +30,6 @@ private:
     std::shared_ptr<SessionManager> session_manager_;
     std::thread session_manager_thread_;
 
-    std::shared_ptr<Core> core_;
     std::thread core_thread_;
 };
 
