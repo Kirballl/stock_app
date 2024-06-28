@@ -13,6 +13,7 @@
 #include <fmt/core.h>
 
 #include "common.hpp"
+#include "order_id_generator.hpp"
 #include "order_queue.hpp"
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"

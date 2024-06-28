@@ -728,13 +728,13 @@ class TradeOrder final :
   void _internal_set_timestamp(int64_t value);
   public:
 
-  // int32 order_id = 5;
+  // int64 order_id = 5;
   void clear_order_id();
-  int32_t order_id() const;
-  void set_order_id(int32_t value);
+  int64_t order_id() const;
+  void set_order_id(int64_t value);
   private:
-  int32_t _internal_order_id() const;
-  void _internal_set_order_id(int32_t value);
+  int64_t _internal_order_id() const;
+  void _internal_set_order_id(int64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Serialize.TradeOrder)
@@ -750,7 +750,7 @@ class TradeOrder final :
     int type_;
     int32_t usd_amount_;
     int64_t timestamp_;
-    int32_t order_id_;
+    int64_t order_id_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -2522,22 +2522,22 @@ inline void TradeOrder::set_timestamp(int64_t value) {
   // @@protoc_insertion_point(field_set:Serialize.TradeOrder.timestamp)
 }
 
-// int32 order_id = 5;
+// int64 order_id = 5;
 inline void TradeOrder::clear_order_id() {
-  _impl_.order_id_ = 0;
+  _impl_.order_id_ = int64_t{0};
 }
-inline int32_t TradeOrder::_internal_order_id() const {
+inline int64_t TradeOrder::_internal_order_id() const {
   return _impl_.order_id_;
 }
-inline int32_t TradeOrder::order_id() const {
+inline int64_t TradeOrder::order_id() const {
   // @@protoc_insertion_point(field_get:Serialize.TradeOrder.order_id)
   return _internal_order_id();
 }
-inline void TradeOrder::_internal_set_order_id(int32_t value) {
+inline void TradeOrder::_internal_set_order_id(int64_t value) {
   
   _impl_.order_id_ = value;
 }
-inline void TradeOrder::set_order_id(int32_t value) {
+inline void TradeOrder::set_order_id(int64_t value) {
   _internal_set_order_id(value);
   // @@protoc_insertion_point(field_set:Serialize.TradeOrder.order_id)
 }

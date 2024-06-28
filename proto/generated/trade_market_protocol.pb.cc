@@ -56,7 +56,7 @@ PROTOBUF_CONSTEXPR TradeOrder::TradeOrder(
   , /*decltype(_impl_.type_)*/0
   , /*decltype(_impl_.usd_amount_)*/0
   , /*decltype(_impl_.timestamp_)*/int64_t{0}
-  , /*decltype(_impl_.order_id_)*/0
+  , /*decltype(_impl_.order_id_)*/int64_t{0}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct TradeOrderDefaultTypeInternal {
   PROTOBUF_CONSTEXPR TradeOrderDefaultTypeInternal()
@@ -304,7 +304,7 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "r\022-\n\004type\030\001 \001(\0162\037.Serialize.TradeOrder.T"
   "radeType\022\020\n\010usd_cost\030\002 \001(\001\022\022\n\nusd_amount"
   "\030\003 \001(\005\022\021\n\ttimestamp\030\004 \001(\003\022\020\n\010order_id\030\005 "
-  "\001(\005\022\020\n\010username\030\006 \001(\t\"\036\n\tTradeType\022\007\n\003BU"
+  "\001(\003\022\020\n\010username\030\006 \001(\t\"\036\n\tTradeType\022\007\n\003BU"
   "Y\020\000\022\010\n\004SELL\020\001\"\324\003\n\014TradeRequest\0224\n\007comman"
   "d\030\001 \001(\0162#.Serialize.TradeRequest.Command"
   "Type\022\020\n\010username\030\002 \001(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017s"
@@ -1007,7 +1007,7 @@ inline void TradeOrder::SharedCtor(
     , decltype(_impl_.type_){0}
     , decltype(_impl_.usd_amount_){0}
     , decltype(_impl_.timestamp_){int64_t{0}}
-    , decltype(_impl_.order_id_){0}
+    , decltype(_impl_.order_id_){int64_t{0}}
     , /*decltype(_impl_._cached_size_)*/{}
   };
   _impl_.username_.InitDefault();
@@ -1086,10 +1086,10 @@ const char* TradeOrder::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
         } else
           goto handle_unusual;
         continue;
-      // int32 order_id = 5;
+      // int64 order_id = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          _impl_.order_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.order_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1162,10 +1162,10 @@ uint8_t* TradeOrder::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteInt64ToArray(4, this->_internal_timestamp(), target);
   }
 
-  // int32 order_id = 5;
+  // int64 order_id = 5;
   if (this->_internal_order_id() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_order_id(), target);
+    target = ::_pbi::WireFormatLite::WriteInt64ToArray(5, this->_internal_order_id(), target);
   }
 
   // string username = 6;
@@ -1226,9 +1226,9 @@ size_t TradeOrder::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timestamp());
   }
 
-  // int32 order_id = 5;
+  // int64 order_id = 5;
   if (this->_internal_order_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_order_id());
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_order_id());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);

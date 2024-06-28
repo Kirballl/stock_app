@@ -21,7 +21,7 @@ message TradeOrder {
     double usd_cost = 2;
     int32 usd_amount = 3;
     int64 timestamp = 4;
-    int32 order_id = 5;
+    int64 order_id = 5;
     string username = 6;
 }
 

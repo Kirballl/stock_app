@@ -213,20 +213,21 @@ bool SessionClientConnection::handle_sing_in_command(Serialize::TradeResponse& r
 
 bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest& request) {
     Serialize::TradeOrder order = request.order();
+
     order.set_timestamp(get_current_timestamp());
+    order.set_order_id(OrderIdGenerator::generate_id());
 
     if (!push_received_from_socket_order_to_queue(order)) {
-        spdlog::info("Error to push received from socket order to orders queue : user={} cost={} amount={} type={}",
-                     request.username(),
-                     order.usd_cost(), order.usd_amount(), 
+        spdlog::info("Error to push received from socket order to orders queue : "
+                     "user={} order_id={} cost={} amount={} type={}",
+                     request.username(), order.order_id(), order.usd_cost(), order.usd_amount(), 
                      (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
-        
         return false;
     }
     if (!push_received_from_socket_order_to_active_orders(order, request)) {
         spdlog::info("Error to push received from socket order to active orders in client_data : "
-                     "user={} cost={} amount={} type={}",
-                     request.username(), order.usd_cost(), order.usd_amount(), 
+                     "user={} order_id={} cost={} amount={} type={}",
+                     request.username(), order.order_id(), order.usd_cost(), order.usd_amount(), 
                      (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
         return false;
     }

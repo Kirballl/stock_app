@@ -1,7 +1,9 @@
 #include "session_manager.hpp"
 
-SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
-                                   client_data_manager_(std::make_shared<ClientDataManager>()) {
+SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_() {
+}
+
+void SessionManager::init_database() {
     Config config = read_config("server_config.ini");
 
     std::string db_config_info = "dbname=" + config.dbname +
@@ -16,12 +18,20 @@ SessionManager::SessionManager() : is_running_(true), handle_sessions_mutex_(),
         std::cerr << "Error creating database: " << e.what() << std::endl;
         spdlog::error("Error creating database: exception: {}", e.what());
     }
-
-    auth_ = std::make_shared<Auth>(config.jwt_secret_key);
 }
 
 void SessionManager::init_core() {
     core_ = std::make_shared<Core>(shared_from_this());
+}
+
+void SessionManager::init_client_data_manager() {
+     client_data_manager_ = std::make_shared<ClientDataManager>();
+}
+
+void SessionManager::init_auth() {
+    Config config = read_config("server_config.ini");
+
+    auth_ = std::make_shared<Auth>(config.jwt_secret_key);
 }
 
 bool SessionManager::is_runnig() {
@@ -153,7 +163,7 @@ void SessionManager::stop_all_sessions() {
      std::vector<std::shared_ptr<SessionClientConnection>> sessions_copy;
     {
         std::lock_guard<std::mutex> lock(handle_sessions_mutex_);
-        sessions_copy = clients_sessions_; // Copy to avoid iterator invalidation
+        sessions_copy = clients_sessions_; //*INFO Copy to avoid iterator invalidation
     }
 
     for (auto& session : sessions_copy) {
@@ -164,6 +174,6 @@ void SessionManager::stop_all_sessions() {
 
     {
         std::lock_guard<std::mutex> lock(handle_sessions_mutex_);
-        clients_sessions_.clear(); // clear original
+        clients_sessions_.clear(); //*INFO clear original
     }
 }

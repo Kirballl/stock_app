@@ -50,6 +50,9 @@ public:
 
    void stock_loop();
 
+   void save_active_orders_to_db();
+   void load_active_orders_from_db();
+
 private:
    void complement_order_books(std::shared_ptr<ClientDataManager> client_data_manager);
    void place_order_to_priority_queue(const Serialize::TradeOrder& order);
@@ -59,7 +62,7 @@ private:
                                 Serialize::TradeOrder& buy_order_iterator,
                                  int32_t transaction_amount, double transaction_cost); 
    bool change_order_usd_amount_in_data_manager(Serialize::TradeOrder& order, int32_t transaction_amount);
-   bool move_order_to_completed_oreders(Serialize::TradeOrder& order);
+   bool move_order_to_completed_orders(Serialize::TradeOrder& order);
 
 
 // DEBUG //

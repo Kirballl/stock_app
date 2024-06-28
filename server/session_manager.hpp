@@ -32,7 +32,10 @@ public:
     void run();
     bool is_runnig();
 
+    void init_database();
     void init_core();
+    void init_client_data_manager();
+    void init_auth();
 
     bool allowed_to_create_new_connection();
     void add_new_connection(boost::asio::ip::tcp::socket new_client_socket);
@@ -55,16 +58,13 @@ private:
     bool stop_new_sessions_ = false;
     std::atomic<bool> is_running_;  //*INFO: atomic to avalible to stop with other thread
 
+    std::shared_ptr<Database> database_;
     std::shared_ptr<Core> core_;
+    std::shared_ptr<Auth> auth_;
+    std::shared_ptr<ClientDataManager> client_data_manager_;
 
     std::vector<std::shared_ptr<SessionClientConnection>> clients_sessions_;
     std::mutex handle_sessions_mutex_;
-
-    std::shared_ptr<ClientDataManager> client_data_manager_;
-
-    std::shared_ptr<Database> database_;
-
-    std::shared_ptr<Auth> auth_;
     
     moodycamel::ConcurrentQueue<std::unique_ptr<boost::asio::ip::tcp::socket>> new_connections_queue_;
 };

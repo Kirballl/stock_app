@@ -84,8 +84,8 @@ bool ClientDataManager::change_order_usd_amount_according_match(const std::strin
     
     order_iterator->set_usd_amount(order_iterator->usd_amount() - transaction_amount);
 
-    spdlog::info("Order was partially executed : user={} cost={} amount={} type={}",
-                 order_iterator->username(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
+    spdlog::info("Order was partially executed : user={} order_id={}  cost={} amount={} type={}",
+                 order_iterator->username(), order_iterator->order_id(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
                 (order_iterator->type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
     return true;
 }
@@ -100,8 +100,8 @@ bool ClientDataManager::move_order_from_active_to_completed(const std::string& c
     }
     auto client_data_iterator = client_data_.find(client_username);
 
-    spdlog::info("Order was executed: user={} cost={} amount={} type={}",
-                 order_iterator->username(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
+    spdlog::info("Order was executed: user={} order_id={} cost={} amount={} type={}",
+                 order_iterator->username(), order_iterator->order_id(), order_iterator->usd_cost(), order_iterator->usd_amount(), 
                 (order_iterator->type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
 
     client_data_iterator->second.completed_orders.push_back(*order_iterator);

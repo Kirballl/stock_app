@@ -1,10 +1,43 @@
 #include "core.hpp"
 
 Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
+    load_active_orders_from_db();
+    std::cout << "active orders from db loaded to core" << std::endl;
+}
+
+void Core::save_active_orders_to_db() {
+    auto database = session_manager_->get_database();
+
+    while (!buy_orders_book_.empty()) {
+        database->save_active_order(buy_orders_book_.top());
+        buy_orders_book_.pop();
+    }
+
+    while (!sell_orders_book_.empty()) {
+        database->save_active_order(sell_orders_book_.top());
+        sell_orders_book_.pop();        
+    }   
+}
+
+void Core::load_active_orders_from_db() {
+    auto database = session_manager_->get_database();
+
+    auto active_buy_orders = database->load_active_orders(Serialize::TradeOrder::BUY);
+    for (const auto& order : active_buy_orders) {
+        buy_orders_book_.push(order);
+    }
+
+    auto active_sell_orders = database->load_active_orders(Serialize::TradeOrder::SELL);
+    for (const auto& order : active_sell_orders) {
+        sell_orders_book_.push(order);
+    }
 }
 
 //*INFO matching orders thread
 void Core::stock_loop() {
+
+    //
+
     while (session_manager_->is_runnig()) {
 
 //                                       //
@@ -19,6 +52,8 @@ void Core::stock_loop() {
 //                                       //
 
         if (!session_manager_->is_runnig()) { 
+            save_active_orders_to_db();
+            std::cout << "active orders from core saved to db" << std::endl;
             break;
         }
 
@@ -118,10 +153,10 @@ void Core::process_orders() {
             }
 
             if (buy_order.usd_amount() == 0) {
-                move_order_to_completed_oreders(buy_order);
+                move_order_to_completed_orders(buy_order);
             }
             if (sell_order.usd_amount() == 0) {
-                move_order_to_completed_oreders(sell_order);
+                move_order_to_completed_orders(sell_order);
             }
 
             if (buy_order.usd_amount() > 0) {
@@ -177,7 +212,7 @@ bool Core::change_order_usd_amount_in_data_manager(Serialize::TradeOrder& order,
     return client_data_manager->change_order_usd_amount_according_match(order.username(), order.timestamp(), transaction_amount);
 }
 
-bool Core::move_order_to_completed_oreders(Serialize::TradeOrder& order) {
+bool Core::move_order_to_completed_orders(Serialize::TradeOrder& order) {
     auto client_data_manager = session_manager_->get_client_data_manager();
     return client_data_manager->move_order_from_active_to_completed(order.username(), order.timestamp());
 }

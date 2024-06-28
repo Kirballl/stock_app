@@ -6,7 +6,10 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
         session_manager_(std::make_shared<SessionManager>()) {
     spdlog::info("Server launched! Listen  {} : {}", config.host, config.port);
 
+    session_manager_->init_database();
     session_manager_->init_core();
+    session_manager_->init_client_data_manager();
+    session_manager_->init_auth();
 
     std::cout << "Server launched! Listen " << config.host << ":" << config.port << std::endl;
     start();
