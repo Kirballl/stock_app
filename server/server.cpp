@@ -4,12 +4,18 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
         io_context_(io_context),
         acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), config.port)),
         session_manager_(std::make_shared<SessionManager>()) {
-    spdlog::info("Server launched! Listen  {} : {}", config.host, config.port);
+    spdlog::info("\nServer launched! Listen  {} : {}", config.host, config.port);
 
     session_manager_->init_database();
     session_manager_->init_core();
     session_manager_->init_client_data_manager();
     session_manager_->init_auth();
+    try {
+        auto database = session_manager_->get_database();
+        database->truncate_active_orders_table();
+    } catch (const std::exception& e) {
+        std::cerr << "Error to truncate active orders table:" << e.what() << std::endl;
+    }
 
     std::cout << "Server launched! Listen " << config.host << ":" << config.port << std::endl;
     start();

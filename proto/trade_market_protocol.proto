@@ -22,7 +22,8 @@ message TradeOrder {
     int32 usd_amount = 3;
     int64 timestamp = 4;
     int64 order_id = 5;
-    string username = 6;
+    int32 usd_volume = 6;
+    string username = 7;
 }
 
 message TradeRequest {
@@ -31,11 +32,12 @@ message TradeRequest {
         SIGN_IN = 1;
         MAKE_ORDER = 2;
         VIEW_BALANCE = 3;
-        VIEW_ALL_ACTIVE_ORDERS = 4;
-        VIEW_MY_ACTIVE_ORDERS = 5;
-        VIEW_COMPLETED_TRADES = 6;
-        VIEW_QUOTE_HISTORY = 7;
-        CANCEL_ACTIVE_ORDERS = 8;
+        VIEW_ALL_ACTIVE_BUY_ORDERS = 4;
+        VIEW_ALL_ACTIVE_SELL_ORDERS = 5;
+        VIEW_MY_ACTIVE_ORDERS = 6;
+        VIEW_COMPLETED_TRADES = 7;
+        VIEW_QUOTE_HISTORY = 8;
+        CANCEL_ACTIVE_ORDERS = 9;
     }
     CommandType command = 1;
 
@@ -76,6 +78,11 @@ message TradeResponse {
     }
 }
 
+message ClientBalance {
+    string username = 1;
+    AccountBalance funds = 2;
+}
+
 message AccountBalance {
     double usd_balance = 1;
     double rub_balance = 2;
@@ -96,6 +103,6 @@ message QuoteHistory {
 }
 
 message Quote {
-    int32 timestamp = 1;
+    int64 timestamp = 1;
     double price = 2;
 }

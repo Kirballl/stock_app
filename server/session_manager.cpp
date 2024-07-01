@@ -7,10 +7,10 @@ void SessionManager::init_database() {
     Config config = read_config("server_config.ini");
 
     std::string db_config_info = "dbname=" + config.dbname +
-                            " user=" + config.dbuser +
-                            " password=" + config.dbpassword +
-                            " host=" + config.dbhost +
-                            " port=" + std::to_string(config.dbport);
+                                 " user=" + config.dbuser +
+                                 " password=" + config.dbpassword +
+                                 " host=" + config.dbhost +
+                                 " port=" + std::to_string(config.dbport);
 
     try {
         database_ = std::make_shared<Database>(db_config_info);
@@ -25,7 +25,7 @@ void SessionManager::init_core() {
 }
 
 void SessionManager::init_client_data_manager() {
-     client_data_manager_ = std::make_shared<ClientDataManager>();
+    client_data_manager_ = std::make_shared<ClientDataManager>(shared_from_this());
 }
 
 void SessionManager::init_auth() {

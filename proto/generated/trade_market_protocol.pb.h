@@ -52,6 +52,9 @@ extern AccountBalanceDefaultTypeInternal _AccountBalance_default_instance_;
 class ActiveOrders;
 struct ActiveOrdersDefaultTypeInternal;
 extern ActiveOrdersDefaultTypeInternal _ActiveOrders_default_instance_;
+class ClientBalance;
+struct ClientBalanceDefaultTypeInternal;
+extern ClientBalanceDefaultTypeInternal _ClientBalance_default_instance_;
 class CompletedOredrs;
 struct CompletedOredrsDefaultTypeInternal;
 extern CompletedOredrsDefaultTypeInternal _CompletedOredrs_default_instance_;
@@ -80,6 +83,7 @@ extern TradeResponseDefaultTypeInternal _TradeResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Serialize::AccountBalance* Arena::CreateMaybeMessage<::Serialize::AccountBalance>(Arena*);
 template<> ::Serialize::ActiveOrders* Arena::CreateMaybeMessage<::Serialize::ActiveOrders>(Arena*);
+template<> ::Serialize::ClientBalance* Arena::CreateMaybeMessage<::Serialize::ClientBalance>(Arena*);
 template<> ::Serialize::CompletedOredrs* Arena::CreateMaybeMessage<::Serialize::CompletedOredrs>(Arena*);
 template<> ::Serialize::Quote* Arena::CreateMaybeMessage<::Serialize::Quote>(Arena*);
 template<> ::Serialize::QuoteHistory* Arena::CreateMaybeMessage<::Serialize::QuoteHistory>(Arena*);
@@ -121,11 +125,12 @@ enum TradeRequest_CommandType : int {
   TradeRequest_CommandType_SIGN_IN = 1,
   TradeRequest_CommandType_MAKE_ORDER = 2,
   TradeRequest_CommandType_VIEW_BALANCE = 3,
-  TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS = 4,
-  TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS = 5,
-  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 6,
-  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 7,
-  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 8,
+  TradeRequest_CommandType_VIEW_ALL_ACTIVE_BUY_ORDERS = 4,
+  TradeRequest_CommandType_VIEW_ALL_ACTIVE_SELL_ORDERS = 5,
+  TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS = 6,
+  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 7,
+  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 8,
+  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 9,
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
@@ -671,14 +676,15 @@ class TradeOrder final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kUsernameFieldNumber = 6,
+    kUsernameFieldNumber = 7,
     kUsdCostFieldNumber = 2,
     kTypeFieldNumber = 1,
     kUsdAmountFieldNumber = 3,
     kTimestampFieldNumber = 4,
     kOrderIdFieldNumber = 5,
+    kUsdVolumeFieldNumber = 6,
   };
-  // string username = 6;
+  // string username = 7;
   void clear_username();
   const std::string& username() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -737,6 +743,15 @@ class TradeOrder final :
   void _internal_set_order_id(int64_t value);
   public:
 
+  // int32 usd_volume = 6;
+  void clear_usd_volume();
+  int32_t usd_volume() const;
+  void set_usd_volume(int32_t value);
+  private:
+  int32_t _internal_usd_volume() const;
+  void _internal_set_usd_volume(int32_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Serialize.TradeOrder)
  private:
   class _Internal;
@@ -751,6 +766,7 @@ class TradeOrder final :
     int32_t usd_amount_;
     int64_t timestamp_;
     int64_t order_id_;
+    int32_t usd_volume_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -892,8 +908,10 @@ class TradeRequest final :
     TradeRequest_CommandType_MAKE_ORDER;
   static constexpr CommandType VIEW_BALANCE =
     TradeRequest_CommandType_VIEW_BALANCE;
-  static constexpr CommandType VIEW_ALL_ACTIVE_ORDERS =
-    TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS;
+  static constexpr CommandType VIEW_ALL_ACTIVE_BUY_ORDERS =
+    TradeRequest_CommandType_VIEW_ALL_ACTIVE_BUY_ORDERS;
+  static constexpr CommandType VIEW_ALL_ACTIVE_SELL_ORDERS =
+    TradeRequest_CommandType_VIEW_ALL_ACTIVE_SELL_ORDERS;
   static constexpr CommandType VIEW_MY_ACTIVE_ORDERS =
     TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS;
   static constexpr CommandType VIEW_COMPLETED_TRADES =
@@ -1396,6 +1414,179 @@ class TradeResponse final :
 };
 // -------------------------------------------------------------------
 
+class ClientBalance final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.ClientBalance) */ {
+ public:
+  inline ClientBalance() : ClientBalance(nullptr) {}
+  ~ClientBalance() override;
+  explicit PROTOBUF_CONSTEXPR ClientBalance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ClientBalance(const ClientBalance& from);
+  ClientBalance(ClientBalance&& from) noexcept
+    : ClientBalance() {
+    *this = ::std::move(from);
+  }
+
+  inline ClientBalance& operator=(const ClientBalance& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ClientBalance& operator=(ClientBalance&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ClientBalance& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ClientBalance* internal_default_instance() {
+    return reinterpret_cast<const ClientBalance*>(
+               &_ClientBalance_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(ClientBalance& a, ClientBalance& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ClientBalance* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ClientBalance* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ClientBalance* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ClientBalance>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ClientBalance& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ClientBalance& from) {
+    ClientBalance::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ClientBalance* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.ClientBalance";
+  }
+  protected:
+  explicit ClientBalance(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUsernameFieldNumber = 1,
+    kFundsFieldNumber = 2,
+  };
+  // string username = 1;
+  void clear_username();
+  const std::string& username() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_username(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_username();
+  PROTOBUF_NODISCARD std::string* release_username();
+  void set_allocated_username(std::string* username);
+  private:
+  const std::string& _internal_username() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_username(const std::string& value);
+  std::string* _internal_mutable_username();
+  public:
+
+  // .Serialize.AccountBalance funds = 2;
+  bool has_funds() const;
+  private:
+  bool _internal_has_funds() const;
+  public:
+  void clear_funds();
+  const ::Serialize::AccountBalance& funds() const;
+  PROTOBUF_NODISCARD ::Serialize::AccountBalance* release_funds();
+  ::Serialize::AccountBalance* mutable_funds();
+  void set_allocated_funds(::Serialize::AccountBalance* funds);
+  private:
+  const ::Serialize::AccountBalance& _internal_funds() const;
+  ::Serialize::AccountBalance* _internal_mutable_funds();
+  public:
+  void unsafe_arena_set_allocated_funds(
+      ::Serialize::AccountBalance* funds);
+  ::Serialize::AccountBalance* unsafe_arena_release_funds();
+
+  // @@protoc_insertion_point(class_scope:Serialize.ClientBalance)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+    ::Serialize::AccountBalance* funds_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_trade_5fmarket_5fprotocol_2eproto;
+};
+// -------------------------------------------------------------------
+
 class AccountBalance final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.AccountBalance) */ {
  public:
@@ -1444,7 +1635,7 @@ class AccountBalance final :
                &_AccountBalance_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(AccountBalance& a, AccountBalance& b) {
     a.Swap(&b);
@@ -1603,7 +1794,7 @@ class ActiveOrders final :
                &_ActiveOrders_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(ActiveOrders& a, ActiveOrders& b) {
     a.Swap(&b);
@@ -1780,7 +1971,7 @@ class CompletedOredrs final :
                &_CompletedOredrs_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(CompletedOredrs& a, CompletedOredrs& b) {
     a.Swap(&b);
@@ -1957,7 +2148,7 @@ class QuoteHistory final :
                &_QuoteHistory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(QuoteHistory& a, QuoteHistory& b) {
     a.Swap(&b);
@@ -2114,7 +2305,7 @@ class Quote final :
                &_Quote_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(Quote& a, Quote& b) {
     a.Swap(&b);
@@ -2187,9 +2378,18 @@ class Quote final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kPriceFieldNumber = 2,
     kTimestampFieldNumber = 1,
+    kPriceFieldNumber = 2,
   };
+  // int64 timestamp = 1;
+  void clear_timestamp();
+  int64_t timestamp() const;
+  void set_timestamp(int64_t value);
+  private:
+  int64_t _internal_timestamp() const;
+  void _internal_set_timestamp(int64_t value);
+  public:
+
   // double price = 2;
   void clear_price();
   double price() const;
@@ -2197,15 +2397,6 @@ class Quote final :
   private:
   double _internal_price() const;
   void _internal_set_price(double value);
-  public:
-
-  // int32 timestamp = 1;
-  void clear_timestamp();
-  int32_t timestamp() const;
-  void set_timestamp(int32_t value);
-  private:
-  int32_t _internal_timestamp() const;
-  void _internal_set_timestamp(int32_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Serialize.Quote)
@@ -2216,8 +2407,8 @@ class Quote final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
+    int64_t timestamp_;
     double price_;
-    int32_t timestamp_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -2542,7 +2733,27 @@ inline void TradeOrder::set_order_id(int64_t value) {
   // @@protoc_insertion_point(field_set:Serialize.TradeOrder.order_id)
 }
 
-// string username = 6;
+// int32 usd_volume = 6;
+inline void TradeOrder::clear_usd_volume() {
+  _impl_.usd_volume_ = 0;
+}
+inline int32_t TradeOrder::_internal_usd_volume() const {
+  return _impl_.usd_volume_;
+}
+inline int32_t TradeOrder::usd_volume() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeOrder.usd_volume)
+  return _internal_usd_volume();
+}
+inline void TradeOrder::_internal_set_usd_volume(int32_t value) {
+  
+  _impl_.usd_volume_ = value;
+}
+inline void TradeOrder::set_usd_volume(int32_t value) {
+  _internal_set_usd_volume(value);
+  // @@protoc_insertion_point(field_set:Serialize.TradeOrder.usd_volume)
+}
+
+// string username = 7;
 inline void TradeOrder::clear_username() {
   _impl_.username_.ClearToEmpty();
 }
@@ -3405,6 +3616,150 @@ inline TradeResponse::RequestDataCase TradeResponse::RequestData_case() const {
 }
 // -------------------------------------------------------------------
 
+// ClientBalance
+
+// string username = 1;
+inline void ClientBalance::clear_username() {
+  _impl_.username_.ClearToEmpty();
+}
+inline const std::string& ClientBalance::username() const {
+  // @@protoc_insertion_point(field_get:Serialize.ClientBalance.username)
+  return _internal_username();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ClientBalance::set_username(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.username_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Serialize.ClientBalance.username)
+}
+inline std::string* ClientBalance::mutable_username() {
+  std::string* _s = _internal_mutable_username();
+  // @@protoc_insertion_point(field_mutable:Serialize.ClientBalance.username)
+  return _s;
+}
+inline const std::string& ClientBalance::_internal_username() const {
+  return _impl_.username_.Get();
+}
+inline void ClientBalance::_internal_set_username(const std::string& value) {
+  
+  _impl_.username_.Set(value, GetArenaForAllocation());
+}
+inline std::string* ClientBalance::_internal_mutable_username() {
+  
+  return _impl_.username_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ClientBalance::release_username() {
+  // @@protoc_insertion_point(field_release:Serialize.ClientBalance.username)
+  return _impl_.username_.Release();
+}
+inline void ClientBalance::set_allocated_username(std::string* username) {
+  if (username != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.username_.SetAllocated(username, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.username_.IsDefault()) {
+    _impl_.username_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Serialize.ClientBalance.username)
+}
+
+// .Serialize.AccountBalance funds = 2;
+inline bool ClientBalance::_internal_has_funds() const {
+  return this != internal_default_instance() && _impl_.funds_ != nullptr;
+}
+inline bool ClientBalance::has_funds() const {
+  return _internal_has_funds();
+}
+inline void ClientBalance::clear_funds() {
+  if (GetArenaForAllocation() == nullptr && _impl_.funds_ != nullptr) {
+    delete _impl_.funds_;
+  }
+  _impl_.funds_ = nullptr;
+}
+inline const ::Serialize::AccountBalance& ClientBalance::_internal_funds() const {
+  const ::Serialize::AccountBalance* p = _impl_.funds_;
+  return p != nullptr ? *p : reinterpret_cast<const ::Serialize::AccountBalance&>(
+      ::Serialize::_AccountBalance_default_instance_);
+}
+inline const ::Serialize::AccountBalance& ClientBalance::funds() const {
+  // @@protoc_insertion_point(field_get:Serialize.ClientBalance.funds)
+  return _internal_funds();
+}
+inline void ClientBalance::unsafe_arena_set_allocated_funds(
+    ::Serialize::AccountBalance* funds) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.funds_);
+  }
+  _impl_.funds_ = funds;
+  if (funds) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.ClientBalance.funds)
+}
+inline ::Serialize::AccountBalance* ClientBalance::release_funds() {
+  
+  ::Serialize::AccountBalance* temp = _impl_.funds_;
+  _impl_.funds_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::Serialize::AccountBalance* ClientBalance::unsafe_arena_release_funds() {
+  // @@protoc_insertion_point(field_release:Serialize.ClientBalance.funds)
+  
+  ::Serialize::AccountBalance* temp = _impl_.funds_;
+  _impl_.funds_ = nullptr;
+  return temp;
+}
+inline ::Serialize::AccountBalance* ClientBalance::_internal_mutable_funds() {
+  
+  if (_impl_.funds_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Serialize::AccountBalance>(GetArenaForAllocation());
+    _impl_.funds_ = p;
+  }
+  return _impl_.funds_;
+}
+inline ::Serialize::AccountBalance* ClientBalance::mutable_funds() {
+  ::Serialize::AccountBalance* _msg = _internal_mutable_funds();
+  // @@protoc_insertion_point(field_mutable:Serialize.ClientBalance.funds)
+  return _msg;
+}
+inline void ClientBalance::set_allocated_funds(::Serialize::AccountBalance* funds) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.funds_;
+  }
+  if (funds) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(funds);
+    if (message_arena != submessage_arena) {
+      funds = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, funds, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.funds_ = funds;
+  // @@protoc_insertion_point(field_set_allocated:Serialize.ClientBalance.funds)
+}
+
+// -------------------------------------------------------------------
+
 // AccountBalance
 
 // double usd_balance = 1;
@@ -3663,22 +4018,22 @@ QuoteHistory::quotes() const {
 
 // Quote
 
-// int32 timestamp = 1;
+// int64 timestamp = 1;
 inline void Quote::clear_timestamp() {
-  _impl_.timestamp_ = 0;
+  _impl_.timestamp_ = int64_t{0};
 }
-inline int32_t Quote::_internal_timestamp() const {
+inline int64_t Quote::_internal_timestamp() const {
   return _impl_.timestamp_;
 }
-inline int32_t Quote::timestamp() const {
+inline int64_t Quote::timestamp() const {
   // @@protoc_insertion_point(field_get:Serialize.Quote.timestamp)
   return _internal_timestamp();
 }
-inline void Quote::_internal_set_timestamp(int32_t value) {
+inline void Quote::_internal_set_timestamp(int64_t value) {
   
   _impl_.timestamp_ = value;
 }
-inline void Quote::set_timestamp(int32_t value) {
+inline void Quote::set_timestamp(int64_t value) {
   _internal_set_timestamp(value);
   // @@protoc_insertion_point(field_set:Serialize.Quote.timestamp)
 }
@@ -3706,6 +4061,8 @@ inline void Quote::set_price(double value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

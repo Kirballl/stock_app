@@ -15,7 +15,7 @@ class Client {
 public:
    Client(boost::asio::io_context& io_context, const boost::asio::ip::tcp::resolver::results_type& endpoints);
 
-   Serialize::TradeOrder form_order(trade_type_t trade_type);
+   Serialize::TradeOrder form_order(trade_type_t trade_type, double usd_cost, int usd_amount);
    bool send_request_to_stock(Serialize::TradeRequest& request);
 
    std::string get_username() const;

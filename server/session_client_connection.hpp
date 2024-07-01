@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <memory>
-#include <chrono>
 #include <vector>
 #include <string>
 
@@ -13,7 +12,7 @@
 #include <fmt/core.h>
 
 #include "common.hpp"
-#include "order_id_generator.hpp"
+#include "time_order_utils.hpp"
 #include "order_queue.hpp"
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
@@ -43,9 +42,8 @@ private:
    bool handle_sing_up_command(Serialize::TradeResponse& response, Serialize::TradeRequest& reqest);
    bool handle_sing_in_command(Serialize::TradeResponse& response, Serialize::TradeRequest& request);
    bool handle_make_order_comand(Serialize::TradeRequest& request);
-      int64_t get_current_timestamp();
       bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
-      bool push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order, Serialize::TradeRequest& request);
+      void push_received_from_socket_order_to_active_orders(const Serialize::TradeOrder& order);
    bool handle_view_balance_comand(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
    void handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
 

@@ -4,7 +4,8 @@
 #include <atomic>
 #include <chrono>
 
-class OrderIdGenerator {
+class TimeOrderUtils {
 public:
     static int64_t generate_id();
+    static int64_t get_current_timestamp();
 };

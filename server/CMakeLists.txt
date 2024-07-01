@@ -8,7 +8,7 @@ set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/session_client_connection.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/auth.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/order_id_generator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/time_order_utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/config.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated/trade_market_protocol.pb.cc

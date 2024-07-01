@@ -126,7 +126,12 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
             break;
         }
             
-        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS : {
+        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_BUY_ORDERS : {
+            handle_view_all_active_oreders_command(request, response);
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
+            break;
+        }
+        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_SELL_ORDERS : {
             handle_view_all_active_oreders_command(request, response);
             response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
             break;
@@ -172,11 +177,8 @@ bool SessionClientConnection::handle_sing_up_command(Serialize::TradeResponse& r
 
     database->add_user(request.sign_up_request().username(), request.sign_up_request().password());
 
-    //? 
     auto client_data_manager = session_manager_->get_client_data_manager();
-    if (!client_data_manager->has_username_in_client_data(request.sign_up_request().username())) {
-        client_data_manager->create_new_client_data(request.sign_up_request().username());
-    }
+    client_data_manager->create_new_client_fund_data(request.sign_up_request().username());
 
     return true;
 }
@@ -202,20 +204,14 @@ bool SessionClientConnection::handle_sing_in_command(Serialize::TradeResponse& r
     std::string jwt_token = auth->generate_token(request.sign_in_request().username());
     response.set_jwt(jwt_token);
 
-    //? from DB
-    auto client_data_manager = session_manager_->get_client_data_manager();
-    if (!client_data_manager->has_username_in_client_data(request.sign_in_request().username())) {
-        client_data_manager->create_new_client_data(request.sign_in_request().username());
-    }
-
     return true;
 }
 
 bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest& request) {
     Serialize::TradeOrder order = request.order();
 
-    order.set_timestamp(get_current_timestamp());
-    order.set_order_id(OrderIdGenerator::generate_id());
+    order.set_timestamp(TimeOrderUtils::get_current_timestamp());
+    order.set_order_id(TimeOrderUtils::generate_id());
 
     if (!push_received_from_socket_order_to_queue(order)) {
         spdlog::info("Error to push received from socket order to orders queue : "
@@ -224,13 +220,8 @@ bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest& 
                      (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
         return false;
     }
-    if (!push_received_from_socket_order_to_active_orders(order, request)) {
-        spdlog::info("Error to push received from socket order to active orders in client_data : "
-                     "user={} order_id={} cost={} amount={} type={}",
-                     request.username(), order.order_id(), order.usd_cost(), order.usd_amount(), 
-                     (request.order().type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
-        return false;
-    }
+    push_received_from_socket_order_to_active_orders(order);
+
 
     auto client_data_manager = session_manager_->get_client_data_manager();
     client_data_manager->notify_order_received();
@@ -238,18 +229,10 @@ bool SessionClientConnection::handle_make_order_comand(Serialize::TradeRequest& 
     return true;
 }
 
-int64_t SessionClientConnection::get_current_timestamp() {
-    auto now = std::chrono::system_clock::now();
-    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-    auto epoch = now_ms.time_since_epoch();
-    int64_t timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count();
-    return timestamp;
-}
 
-bool SessionClientConnection::push_received_from_socket_order_to_active_orders(Serialize::TradeOrder& order,  Serialize::TradeRequest& request) {
+void SessionClientConnection::push_received_from_socket_order_to_active_orders(const Serialize::TradeOrder& order) {
     auto client_data_manager = session_manager_->get_client_data_manager();
-
-    return client_data_manager->push_order_to_active_orders(request.username(), order);
+    client_data_manager->push_order_to_active_orders(order);
 }
 
 bool SessionClientConnection::push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order) {
@@ -281,7 +264,9 @@ bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest
 void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce) {
     auto client_data_manager = session_manager_->get_client_data_manager();
 
-    Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders();
+    trade_type_t trade_type = request.command() == (Serialize::TradeRequest::VIEW_ALL_ACTIVE_BUY_ORDERS) ? BUY : SELL;
+
+    Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders(trade_type);
     responce.mutable_active_orders()->CopyFrom(all_active_orders);
 }
 

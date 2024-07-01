@@ -15,18 +15,12 @@ void Client::connect_to_server(const boost::asio::ip::tcp::resolver::results_typ
     }
 }
 
-Serialize::TradeOrder Client::form_order(trade_type_t trade_type) {
+Serialize::TradeOrder Client::form_order(trade_type_t trade_type, double usd_cost, int usd_amount) {
     Serialize::TradeOrder order;
 
-    std::cout << "Enter USD cost (RUB):\n" << std::endl;
-    int usd_cost;
-    std::cin >> usd_cost;
     order.set_usd_cost(usd_cost);
-
-    std::cout << "Enter USD amount:\n" << std::endl;
-    int usd_amount;
-    std::cin >> usd_amount;
     order.set_usd_amount(usd_amount);
+    order.set_usd_volume(usd_amount);
 
     order.set_username(get_username());
 

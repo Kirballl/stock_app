@@ -1,33 +1,33 @@
 #include "core.hpp"
 
 Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
-    load_active_orders_from_db();
+    load_all_active_orders_from_db();
     std::cout << "active orders from db loaded to core" << std::endl;
 }
 
-void Core::save_active_orders_to_db() {
+void Core::save_all_active_orders_to_db() {
     auto database = session_manager_->get_database();
 
     while (!buy_orders_book_.empty()) {
-        database->save_active_order(buy_orders_book_.top());
+        database->save_active_order_to_db(buy_orders_book_.top());
         buy_orders_book_.pop();
     }
 
     while (!sell_orders_book_.empty()) {
-        database->save_active_order(sell_orders_book_.top());
+        database->save_active_order_to_db(sell_orders_book_.top());
         sell_orders_book_.pop();        
     }   
 }
 
-void Core::load_active_orders_from_db() {
+void Core::load_all_active_orders_from_db() {
     auto database = session_manager_->get_database();
 
-    auto active_buy_orders = database->load_active_orders(Serialize::TradeOrder::BUY);
+    auto active_buy_orders = database->load_active_orders_from_db(Serialize::TradeOrder::BUY);
     for (const auto& order : active_buy_orders) {
         buy_orders_book_.push(order);
     }
 
-    auto active_sell_orders = database->load_active_orders(Serialize::TradeOrder::SELL);
+    auto active_sell_orders = database->load_active_orders_from_db(Serialize::TradeOrder::SELL);
     for (const auto& order : active_sell_orders) {
         sell_orders_book_.push(order);
     }
@@ -50,15 +50,13 @@ void Core::stock_loop() {
 //                                       //
  std::cout << "stock_loop" << std::endl;
 //                                       //
+        complement_order_books();
 
         if (!session_manager_->is_runnig()) { 
-            save_active_orders_to_db();
+            save_all_active_orders_to_db();
             std::cout << "active orders from core saved to db" << std::endl;
             break;
         }
-
-        complement_order_books(client_data_manager);
-        
 
 //                                       //
 
@@ -112,7 +110,9 @@ std::string Core::timestamp_to_readable(int64_t timestamp) {
 }
 //////////////////////////////////////
 
-void Core::complement_order_books(std::shared_ptr<ClientDataManager> client_data_manager) {
+void Core::complement_order_books() {
+    auto client_data_manager = session_manager_->get_client_data_manager();
+
     while(!client_data_manager->is_empty_order_queue(BUY)) {
             Serialize::TradeOrder buy_order;
             client_data_manager->pop_order_from_order_queue(BUY, buy_order);
@@ -148,7 +148,7 @@ void Core::process_orders() {
         if (buy_order.usd_cost() > sell_order.usd_cost() || std::fabs(buy_order.usd_cost() - sell_order.usd_cost()) < EPSILON) {
 
             if (!match_orders(sell_order, buy_order)) {
-                             spdlog::error("Error to match orders: BUY {} SELL {}",
+                spdlog::error("Error to match orders: BUY {} SELL {}",
                                             buy_order.username(), sell_order.username());
             }
 
@@ -185,8 +185,13 @@ bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder
     sell_order.set_usd_amount(sell_order.usd_amount() - transaction_amount);
     buy_order.set_usd_amount(buy_order.usd_amount() - transaction_amount);
 
-    change_order_usd_amount_in_data_manager(sell_order, transaction_amount);
-    change_order_usd_amount_in_data_manager(buy_order, transaction_amount);
+    if (!update_active_order_usd_amount_in_client_data_manager(sell_order, buy_order, transaction_amount, transaction_cost)) {
+        spdlog::error("Error to update active order usd_amount: BUY {}, id={} . SELL {}, id={} . Amount: {} Cost: {}",
+                            buy_order.username(), buy_order.order_id(), sell_order.username(), sell_order.order_id(),
+                            transaction_amount, transaction_cost);
+        return false;
+    }
+                    //TODO notify client order ()
 
     if (!change_clients_balances(sell_order, buy_order, transaction_amount, transaction_cost)) {
         spdlog::error("Error to change clients balances: BUY {} SELL {} - Amount: {} Cost: {}",
@@ -199,6 +204,18 @@ bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder
     return true;
 }
 
+bool Core::update_active_order_usd_amount_in_client_data_manager (const Serialize::TradeOrder& sell_order, const Serialize::TradeOrder& buy_order,
+                                int32_t transaction_amount, double transaction_cost) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
+
+    if (!client_data_manager->update_active_order_usd_amount(sell_order, transaction_amount) ||
+        !client_data_manager->update_active_order_usd_amount(buy_order, transaction_amount)) {
+        return false; 
+    }
+
+    return true;
+}
+
 bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order,
                                    int32_t transaction_amount, double transaction_cost) {
 
@@ -207,12 +224,7 @@ bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize:
                                                                             transaction_amount, transaction_cost);
 }
 
-bool Core::change_order_usd_amount_in_data_manager(Serialize::TradeOrder& order, int32_t transaction_amount) {
+bool Core::move_order_to_completed_orders(Serialize::TradeOrder& completed_order) {
     auto client_data_manager = session_manager_->get_client_data_manager();
-    return client_data_manager->change_order_usd_amount_according_match(order.username(), order.timestamp(), transaction_amount);
-}
-
-bool Core::move_order_to_completed_orders(Serialize::TradeOrder& order) {
-    auto client_data_manager = session_manager_->get_client_data_manager();
-    return client_data_manager->move_order_from_active_to_completed(order.username(), order.timestamp());
+    return client_data_manager->add_order_to_completed(completed_order);
 }
