@@ -8,6 +8,8 @@
 
 #include "client.hpp"
 
+#define MAX_AUTH_CHAR_LENGTH 20
+
 class UserInterface {
 public:
     UserInterface(Client& client, std::thread& io_context_thread);

@@ -5,6 +5,10 @@ SessionClientConnection::SessionClientConnection(boost::asio::ip::tcp::socket so
         : socket_(std::move(socket)), session_manager_(session_manager) {
 }
 
+//                                                                                //
+//                          Socket read-write functions                           //
+//                                                                                //
+
 void SessionClientConnection::start () {
     async_read_data_from_socket();
 }
@@ -56,6 +60,73 @@ Serialize::TradeRequest SessionClientConnection::convert_raw_data_to_command(std
     request.ParseFromArray(raw_data_from_socket_.data(), length);
     return request;
 }
+
+void SessionClientConnection::async_write_data_to_socket(const Serialize::TradeResponse& responce) {
+    auto self_ptr(shared_from_this());
+
+    std::string serialized_response;
+    responce.SerializeToString(&serialized_response);
+
+    int32_t message_length = static_cast<int32_t>(serialized_response.length());
+    std::string message = std::to_string(message_length) + serialized_response;
+
+    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_response.size()));
+    std::vector<boost::asio::const_buffer> buffers = {
+        boost::asio::buffer(&msg_length, sizeof(uint32_t)),
+        boost::asio::buffer(serialized_response)
+    };
+
+    boost::asio::async_write(socket_, buffers, 
+        [this, self_ptr](boost::system::error_code error_code, std::size_t length) {
+            if (error_code) {
+                spdlog::error("Failed to send response to client {} : {}", get_client_endpoint_info(), error_code.message());
+                if (error_code == boost::asio::error::eof) {
+                    spdlog::warn("Client {} has closed socket", get_client_endpoint_info());
+                }
+                if (error_code == boost::asio::error::connection_reset) {
+                    spdlog::warn("Connection with client {} was lost", get_client_endpoint_info());
+                }
+                close_this_session();
+            } 
+
+            async_read_data_from_socket();
+        });
+}
+
+//                                                                                //
+//                             Session client functions                           //
+//                                                                                //
+
+std::string SessionClientConnection::get_client_endpoint_info() const {
+    try {
+        return socket_.remote_endpoint().address().to_string() + ":" + std::to_string(socket_.remote_endpoint().port());
+    } catch (boost::system::system_error& error) {
+        spdlog::error("Failed to get client endpoint info: {}", error.what());
+        return "unknown";
+    }
+}
+
+std::string SessionClientConnection::get_client_username() const {
+    return username_;
+}
+
+void SessionClientConnection::close_this_session() {
+    std::string client_endpoint_info = get_client_endpoint_info();
+
+    boost::system::error_code error_code;
+    socket_.close(error_code);
+    if (error_code) {
+        spdlog::error("Error closing socket for client {}: {}", client_endpoint_info, error_code.message());
+    } else {
+        spdlog::info("Connection closed for client {}", client_endpoint_info);
+    }
+
+    session_manager_->remove_session(shared_from_this(), client_endpoint_info);
+}
+
+//                                                                                //
+//                            Handle commands functions                           //
+//                                                                                //
 
 Serialize::TradeResponse SessionClientConnection::handle_received_command(Serialize::TradeRequest& request) {
     Serialize::TradeResponse response;
@@ -122,38 +193,29 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
                 response.set_response_msg(Serialize::TradeResponse::ERROR);
                 break;
             } 
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE);
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_BALANCE);
             break;
         }
             
-        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_BUY_ORDERS : {
-            handle_view_all_active_oreders_command(request, response);
+        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS : {
+            handle_view_all_active_oreders_command(response);
             response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
-            break;
-        }
-        case Serialize::TradeRequest::VIEW_ALL_ACTIVE_SELL_ORDERS : {
-            handle_view_all_active_oreders_command(request, response);
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
-            break;
-        }
-
-        case Serialize::TradeRequest::VIEW_MY_ACTIVE_ORDERS : {
-            
-            
             break;
         }
             
         case Serialize::TradeRequest::VIEW_COMPLETED_TRADES : {
-            /* code */
+            handle_view_last_comleted_oreders_command(response);
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_COMPLETED_TRADES);
             break;
         }
             
         case Serialize::TradeRequest::VIEW_QUOTE_HISTORY : {
-            /* code */
+            handle_view_quote_history(response);
+            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_QUOTE_HISTORY);
             break;
         }
 
-        case Serialize::TradeRequest::CANCEL_ACTIVE_ORDERS : {
+        case Serialize::TradeRequest::CANCEL_ACTIVE_ORDER : {
             /* code */
             break;
         }
@@ -261,70 +323,23 @@ bool SessionClientConnection::handle_view_balance_comand(Serialize::TradeRequest
     }
 }
 
-void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce) {
+void SessionClientConnection::handle_view_all_active_oreders_command(Serialize::TradeResponse& responce) {
     auto client_data_manager = session_manager_->get_client_data_manager();
 
-    trade_type_t trade_type = request.command() == (Serialize::TradeRequest::VIEW_ALL_ACTIVE_BUY_ORDERS) ? BUY : SELL;
-
-    Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders(trade_type);
+    Serialize::ActiveOrders all_active_orders = client_data_manager->get_all_active_oreders();
     responce.mutable_active_orders()->CopyFrom(all_active_orders);
 }
 
-void SessionClientConnection::async_write_data_to_socket(const Serialize::TradeResponse& responce) {
-    auto self_ptr(shared_from_this());
+void SessionClientConnection::handle_view_last_comleted_oreders_command(Serialize::TradeResponse& responce) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
 
-    std::string serialized_response;
-    responce.SerializeToString(&serialized_response);
-
-    int32_t message_length = static_cast<int32_t>(serialized_response.length());
-    std::string message = std::to_string(message_length) + serialized_response;
-
-    uint32_t msg_length = htonl(static_cast<uint32_t>(serialized_response.size()));
-    std::vector<boost::asio::const_buffer> buffers = {
-        boost::asio::buffer(&msg_length, sizeof(uint32_t)),
-        boost::asio::buffer(serialized_response)
-    };
-
-    boost::asio::async_write(socket_, buffers, 
-        [this, self_ptr](boost::system::error_code error_code, std::size_t length) {
-            if (error_code) {
-                spdlog::error("Failed to send response to client {} : {}", get_client_endpoint_info(), error_code.message());
-                if (error_code == boost::asio::error::eof) {
-                    spdlog::warn("Client {} has closed socket", get_client_endpoint_info());
-                }
-                if (error_code == boost::asio::error::connection_reset) {
-                    spdlog::warn("Connection with client {} was lost", get_client_endpoint_info());
-                }
-                close_this_session();
-            } 
-
-            async_read_data_from_socket();
-        });
+    Serialize::CompletedOredrs completed_orders = client_data_manager->get_last_completed_oreders();
+    responce.mutable_completed_orders()->CopyFrom(completed_orders);
 }
 
-std::string SessionClientConnection::get_client_endpoint_info() const {
-    try {
-        return socket_.remote_endpoint().address().to_string() + ":" + std::to_string(socket_.remote_endpoint().port());
-    } catch (boost::system::system_error& error) {
-        spdlog::error("Failed to get client endpoint info: {}", error.what());
-        return "unknown";
-    }
-}
+void SessionClientConnection::handle_view_quote_history(Serialize::TradeResponse& responce) {
+    auto client_data_manager = session_manager_->get_client_data_manager();
 
-std::string SessionClientConnection::get_client_username() const {
-    return username_;
-}
-
-void SessionClientConnection::close_this_session() {
-    std::string client_endpoint_info = get_client_endpoint_info();
-
-    boost::system::error_code error_code;
-    socket_.close(error_code);
-    if (error_code) {
-        spdlog::error("Error closing socket for client {}: {}", client_endpoint_info, error_code.message());
-    } else {
-        spdlog::info("Connection closed for client {}", client_endpoint_info);
-    }
-
-    session_manager_->remove_session(shared_from_this(), client_endpoint_info);
+    Serialize::QuoteHistory quote_history = client_data_manager->get_quote_history();
+    responce.mutable_quote_history()->CopyFrom(quote_history);
 }

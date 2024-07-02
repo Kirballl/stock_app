@@ -46,6 +46,7 @@ bool Client::send_request_to_stock(Serialize::TradeRequest& request) {
     if (request.command() !=  Serialize::TradeRequest::SIGN_UP &&
         request.command() != Serialize::TradeRequest::SIGN_IN) {
         request.set_jwt(jwt_token_);
+        request.set_username(client_username_);
     }
 
     std::string serialized_request;
@@ -122,7 +123,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }
 
-        case Serialize::TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE : {
+        case Serialize::TradeResponse::SUCCES_VIEW_BALANCE : {
             std::cout << "\nYour balance: " 
                       << response.account_balance().rub_balance() << " RUB, "
                       << response.account_balance().usd_balance() << " USD."
@@ -130,6 +131,67 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }   
 
+        case Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS: {
+            const auto& active_orders = response.active_orders();
+
+            std::cout << "Active Buy Orders:\n";
+            for (const auto& order : active_orders.active_buy_orders()) {
+                std::cout << "Order ID: " << order.order_id() 
+                          << ", USD Cost: " << order.usd_cost()
+                          << ", USD Amount: " << order.usd_amount()
+                          << ", USD Volume: " << order.usd_volume()
+                          << ", Timestamp: " <<  timestamp_to_readable(order.timestamp())
+                          << ", Username: " << order.username() << std::endl;
+            }
+
+            std::cout << "\nActive Sell Orders:\n";
+            for (const auto& order : active_orders.active_sell_orders()) {
+                std::cout << "Order ID: " << order.order_id() 
+                          << ", USD Cost: " << order.usd_cost()
+                          << ", USD Amount: " << order.usd_amount()
+                          << ", USD Volume: " << order.usd_volume()
+                          << ", Timestamp: " <<  timestamp_to_readable(order.timestamp())
+                          << ", Username: " << order.username() << std::endl;
+            }
+             
+            return true;
+        }
+
+        case Serialize::TradeResponse::SUCCES_VIEW_COMPLETED_TRADES: {
+            const auto& completed_orders = response.completed_orders();
+
+            std::cout << "\nCompleted Buy Orders:\n";
+            for (const auto& order : completed_orders.completed_buy_orders()) {
+                std::cout << "Order ID: " << order.order_id() 
+                          << ", USD Cost: " << order.usd_cost()
+                          << ", USD Volume: " << order.usd_volume()
+                          << ", Username: " << order.username()
+                          << ", Timestamp: " << timestamp_to_readable(order.timestamp()) << std::endl;
+            }
+            std::cout << "\nCompleted Sell Orders:\n";
+            for (const auto& order : completed_orders.completed_sell_orders()) {
+                std::cout << "Order ID: " << order.order_id() 
+                          << ", USD Cost: " << order.usd_cost()
+                          << ", USD Volume: " << order.usd_volume()
+                          << ", Username: " << order.username()
+                          << ", Timestamp: " << timestamp_to_readable(order.timestamp()) << std::endl;
+            }
+    
+            return true;
+        }
+
+        case Serialize::TradeResponse::SUCCES_VIEW_QUOTE_HISTORY: {   
+            const auto& quote_history = response.quote_history();
+
+            std::cout << "\nQuote History:\n";
+            for (const auto& quote : quote_history.quotes()) {
+                std::cout << "Timestamp: " << timestamp_to_readable(quote.timestamp())
+                        << ", Price: " << quote.price() << std::endl;
+            }
+            
+            return true;
+        }
+        
         case Serialize::TradeResponse::ERROR : {
             std::cout << "\nUnkown error" << std::endl;
             return true;

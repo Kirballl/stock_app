@@ -45,7 +45,10 @@ private:
       bool push_received_from_socket_order_to_queue(const Serialize::TradeOrder& order);
       void push_received_from_socket_order_to_active_orders(const Serialize::TradeOrder& order);
    bool handle_view_balance_comand(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
-   void handle_view_all_active_oreders_command(Serialize::TradeRequest& request, Serialize::TradeResponse& responce);
+
+   void handle_view_all_active_oreders_command(Serialize::TradeResponse& responce);
+   void handle_view_last_comleted_oreders_command(Serialize::TradeResponse& responce);
+   void handle_view_quote_history(Serialize::TradeResponse& responce);
 
    void async_write_data_to_socket(const Serialize::TradeResponse& response);
 

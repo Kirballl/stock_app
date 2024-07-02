@@ -13,9 +13,12 @@ void ClientDataManager::initialize_from_database() {
     for (const auto& client_balance : clients_balances) {
         clients_funds_data_[client_balance.username()] = client_balance.funds();
     }
+    std::cout << "clients_balances from db loaded to clients_funds_data_" << std::endl;
 
     auto active_buy_orders = database->load_active_orders_from_db(Serialize::TradeOrder::BUY);
+    std::cout << "active_buy_orders from db loaded to clients_funds_data_" << std::endl;
     auto active_sell_orders = database->load_active_orders_from_db(Serialize::TradeOrder::SELL);
+    std::cout << "active_sell_orders from db loaded to clients_funds_data_" << std::endl;
     for (const auto& order : active_buy_orders) {
         active_buy_orders_[order.order_id()] = order;
     }
@@ -24,11 +27,13 @@ void ClientDataManager::initialize_from_database() {
     }
 
     auto last_completed_orders = database->load_last_completed_orders(AMOUNT_LAST_COMPLETED_OREDRS);
+    std::cout << "last_completed_orders from db loaded to clients_funds_data_" << std::endl;
     for (const auto& completed_order : last_completed_orders) {
         completed_orders_.push_back(completed_order);
     }
 
     auto qoute_history = database->load_quote_history(AMOUNT_QUOTE_HISTORY);
+    std::cout << "qoute_history from db loaded to clients_funds_data_" << std::endl;
     for (const auto& quote : qoute_history) {
         quote_history_.push_back(quote);
     }
@@ -204,43 +209,44 @@ Serialize::AccountBalance ClientDataManager::get_client_balance(const std::strin
     return account_balance;
 }
 
-Serialize::ActiveOrders ClientDataManager::get_all_active_oreders(trade_type_t trade_type) {
+Serialize::ActiveOrders ClientDataManager::get_all_active_oreders() {
     Serialize::ActiveOrders all_active_orders;
     std::shared_lock<std::shared_mutex> get_all_active_oreders_shared_lock(client_data_mutex_);
-
-    //! GET FROM here
-
-    // for (const auto& client_pair : clients_funds_data_) {
-    //     const auto& client_active_orders = client_pair.second.active_orders;
-    //     for (const auto& active_order : client_active_orders) {
-    //         if (active_order.type() == Serialize::TradeOrder::BUY) {
-    //             *all_active_orders.add_active_buy_orders() = active_order;
-    //         } else if (active_order.type() == Serialize::TradeOrder::SELL) {
-    //             *all_active_orders.add_active_sell_orders() = active_order;
-    //         }
-    //     }
-    // }
+    
+    for (const auto& [order_id, order] : active_buy_orders_) {
+        *all_active_orders.add_active_buy_orders() = order;
+    }
+    for (const auto& [order_id, order] : active_sell_orders_) {
+        *all_active_orders.add_active_sell_orders() = order;
+    }
 
     return all_active_orders;
 }
 
-Serialize::CompletedOredrs ClientDataManager::get_all_completed_oreders() {
-    Serialize::CompletedOredrs all_completed_oreders;
+Serialize::CompletedOredrs ClientDataManager::get_last_completed_oreders() {
+    Serialize::CompletedOredrs all_completed_orders;
     std::shared_lock<std::shared_mutex> get_all_completed_oreders_shared_lock(client_data_mutex_);
 
-    //! GET FROM HERE
-    // for (const auto& client_pair : clients_funds_data_) {
-    //     const auto& client_completed_orders = client_pair.second.completed_orders;
-    //     for (const auto& completed_order : client_completed_orders) {
-    //         if (completed_order.type() == Serialize::TradeOrder::BUY) {
-    //             *all_completed_oreders.add_completed_buy_orders() = completed_order;
-    //         } else if (completed_order.type() == Serialize::TradeOrder::SELL) {
-    //             *all_completed_oreders.add_completed_sell_orders() = completed_order;
-    //         }
-    //     }
-    // }
+    for (const auto& order : completed_orders_) {
+        if (order.type() == Serialize::TradeOrder::BUY) {
+            *all_completed_orders.add_completed_buy_orders() = order;
+        } else if (order.type() == Serialize::TradeOrder::SELL) {
+            *all_completed_orders.add_completed_sell_orders() = order;
+        }
+    }
 
-    return all_completed_oreders;
+    return all_completed_orders;
+}
+
+Serialize::QuoteHistory ClientDataManager::get_quote_history() {
+    Serialize::QuoteHistory quote_history;
+    std::shared_lock<std::shared_mutex> get_quote_history_shared_lock(client_data_mutex_);
+    
+    for (const auto& quote : quote_history_) {
+        *quote_history.add_quotes() = quote;
+    }
+    
+    return quote_history;
 }
 
 //                                                                                //

@@ -109,7 +109,7 @@ std::string UserInterface::get_valid_auth_input(const std::string& prompt, const
     while (true) {
         std::cout << prompt << std::endl;
         std::getline(std::cin, input);
-        if (input.find(' ') == std::string::npos && input.length() <= 20) {
+        if (input.find(' ') == std::string::npos && input.length() <= MAX_AUTH_CHAR_LENGTH) {
             return input;
         }
         std::cout << error_message << std::endl;
@@ -144,9 +144,14 @@ void UserInterface::stock_menu() {
         std::string menu_message = "\nMenu:\n"
                                    "1) Make order\n"
                                    "2) View my balance\n"
-                                   "3) Exit\n";
-        short main_menu_option_num = valid_menu_option_num_choice(menu_message, 1, 3);
+                                   "3) View all active orders\n"  
+                                   "4) View last completed trades\n"
+                                   "5) View qoute histiry\n"
+                                   "6) Cancel active order\n"
+                                   "7) Exit\n";
+        short main_menu_option_num = valid_menu_option_num_choice(menu_message, 1, 7);
 
+        Serialize::TradeRequest trade_request;
         switch (main_menu_option_num) {
                 case 1: {
                     std::string menu_order_type_msg = "Enter order type:\n"
@@ -154,14 +159,12 @@ void UserInterface::stock_menu() {
                                                       "2) sell $\n";
                     short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
 
-                    double usd_cost = get_valid_numeric_input<double>("Enter USD cost (RUB)", 0.01, 1000000.0);
+                    double usd_cost = get_valid_numeric_input<double>("Enter USD cost (RUB)", 0.01, 1000.0);
                     int usd_amount = get_valid_numeric_input<int>("Enter USD amount", 1, 1000000); 
 
                     trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
                     Serialize::TradeOrder order = client_.form_order(trade_type, usd_cost, usd_amount);
                     
-                    Serialize::TradeRequest trade_request;
-                    trade_request.set_username(client_.get_username());
                     trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
                     trade_request.mutable_order()->CopyFrom(order);
 
@@ -169,13 +172,33 @@ void UserInterface::stock_menu() {
                     break;
                 }
                 case 2: {
-                    Serialize::TradeRequest trade_request;
-                    trade_request.set_username(client_.get_username());
                     trade_request.set_command(Serialize::TradeRequest::VIEW_BALANCE);
                     client_.send_request_to_stock(trade_request);
                     break;
                 }
                 case 3: {
+                    trade_request.set_command(Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS);
+                    client_.send_request_to_stock(trade_request);
+                    break;
+                }
+                case 4: {
+                    trade_request.set_command(Serialize::TradeRequest::VIEW_COMPLETED_TRADES);
+                    client_.send_request_to_stock(trade_request);
+                    break;
+                }
+                case 5: {
+                    trade_request.set_command(Serialize::TradeRequest::VIEW_QUOTE_HISTORY);
+                    client_.send_request_to_stock(trade_request);
+                    break;
+                }
+                case 6: {
+                    trade_request.set_command(Serialize::TradeRequest::CANCEL_ACTIVE_ORDER);
+
+                    // enter oreder id 
+                    client_.send_request_to_stock(trade_request);
+                    break;
+                }
+                case 7: {
                     client_.close();
                     if (io_context_thread_.joinable()) {
                         io_context_thread_.join();

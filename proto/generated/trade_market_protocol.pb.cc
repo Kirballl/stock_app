@@ -87,8 +87,7 @@ struct TradeRequestDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeRequestDefaultTypeInternal _TradeRequest_default_instance_;
 PROTOBUF_CONSTEXPR TradeResponse::TradeResponse(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.jwt_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.response_msg_)*/0
+    /*decltype(_impl_.response_msg_)*/0
   , /*decltype(_impl_.RequestData_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}
   , /*decltype(_impl_._oneof_case_)*/{}} {}
@@ -239,7 +238,7 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.response_msg_),
-  PROTOBUF_FIELD_OFFSET(::Serialize::TradeResponse, _impl_.jwt_),
+  ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
@@ -331,51 +330,53 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "radeType\022\020\n\010usd_cost\030\002 \001(\001\022\022\n\nusd_amount"
   "\030\003 \001(\005\022\021\n\ttimestamp\030\004 \001(\003\022\020\n\010order_id\030\005 "
   "\001(\003\022\022\n\nusd_volume\030\006 \001(\005\022\020\n\010username\030\007 \001("
-  "\t\"\036\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\371\003\n\014Tr"
+  "\t\"\036\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\270\003\n\014Tr"
   "adeRequest\0224\n\007command\030\001 \001(\0162#.Serialize."
   "TradeRequest.CommandType\022\020\n\010username\030\002 \001"
   "(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017sign_up_request\030\004 \001(\013"
   "2\030.Serialize.SignUpRequestH\000\0223\n\017sign_in_"
   "request\030\005 \001(\0132\030.Serialize.SignInRequestH"
   "\000\022&\n\005order\030\006 \001(\0132\025.Serialize.TradeOrderH"
-  "\000\"\362\001\n\013CommandType\022\013\n\007SIGN_UP\020\000\022\013\n\007SIGN_I"
-  "N\020\001\022\016\n\nMAKE_ORDER\020\002\022\020\n\014VIEW_BALANCE\020\003\022\036\n"
-  "\032VIEW_ALL_ACTIVE_BUY_ORDERS\020\004\022\037\n\033VIEW_AL"
-  "L_ACTIVE_SELL_ORDERS\020\005\022\031\n\025VIEW_MY_ACTIVE"
-  "_ORDERS\020\006\022\031\n\025VIEW_COMPLETED_TRADES\020\007\022\026\n\022"
-  "VIEW_QUOTE_HISTORY\020\010\022\030\n\024CANCEL_ACTIVE_OR"
-  "DERS\020\tB\r\n\013RequestData\"\323\004\n\rTradeResponse\022"
-  "5\n\014response_msg\030\001 \001(\0162\037.Serialize.TradeR"
-  "esponse.status\022\013\n\003jwt\030\002 \001(\t\0224\n\017account_b"
-  "alance\030\003 \001(\0132\031.Serialize.AccountBalanceH"
-  "\000\0220\n\ractive_orders\030\004 \001(\0132\027.Serialize.Act"
-  "iveOrdersH\000\0226\n\020completed_orders\030\005 \001(\0132\032."
-  "Serialize.CompletedOredrsH\000\0220\n\rquote_his"
-  "tory\030\006 \001(\0132\027.Serialize.QuoteHistoryH\000\022\030\n"
-  "\016error_response\030\007 \001(\tH\000\"\202\002\n\006status\022\t\n\005ER"
-  "ROR\020\000\022\026\n\022SIGN_UP_SUCCESSFUL\020\001\022\032\n\026USERNAM"
-  "E_ALREADY_TAKEN\020\002\022\026\n\022SIGN_IN_SUCCESSFUL\020"
-  "\003\022 \n\034INVALID_USERNAME_OR_PASSWORD\020\004\022\032\n\026U"
-  "SER_ALREADY_LOGGED_IN\020\005\022\036\n\032ORDER_SUCCESS"
-  "FULLY_CREATED\020\006\022 \n\034SUCCES_VIEW_BALANCE_R"
-  "ESPONCE\020\007\022!\n\035SUCCES_VIEW_ALL_ACTIVE_ORDE"
-  "RS\020\010B\r\n\013RequestData\"K\n\rClientBalance\022\020\n\010"
-  "username\030\001 \001(\t\022(\n\005funds\030\002 \001(\0132\031.Serializ"
-  "e.AccountBalance\":\n\016AccountBalance\022\023\n\013us"
-  "d_balance\030\001 \001(\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014"
-  "ActiveOrders\0220\n\021active_buy_orders\030\001 \003(\0132"
-  "\025.Serialize.TradeOrder\0221\n\022active_sell_or"
-  "ders\030\002 \003(\0132\025.Serialize.TradeOrder\"|\n\017Com"
-  "pletedOredrs\0223\n\024completed_buy_orders\030\001 \003"
-  "(\0132\025.Serialize.TradeOrder\0224\n\025completed_s"
-  "ell_orders\030\002 \003(\0132\025.Serialize.TradeOrder\""
-  "0\n\014QuoteHistory\022 \n\006quotes\030\001 \003(\0132\020.Serial"
-  "ize.Quote\")\n\005Quote\022\021\n\ttimestamp\030\001 \001(\003\022\r\n"
-  "\005price\030\002 \001(\001b\006proto3"
+  "\000\"\261\001\n\013CommandType\022\013\n\007SIGN_UP\020\000\022\013\n\007SIGN_I"
+  "N\020\001\022\016\n\nMAKE_ORDER\020\002\022\020\n\014VIEW_BALANCE\020\003\022\032\n"
+  "\026VIEW_ALL_ACTIVE_ORDERS\020\004\022\031\n\025VIEW_COMPLE"
+  "TED_TRADES\020\005\022\026\n\022VIEW_QUOTE_HISTORY\020\006\022\027\n\023"
+  "CANCEL_ACTIVE_ORDER\020\007B\r\n\013RequestData\"\337\005\n"
+  "\rTradeResponse\0225\n\014response_msg\030\001 \001(\0162\037.S"
+  "erialize.TradeResponse.status\022\r\n\003jwt\030\002 \001"
+  "(\tH\000\0224\n\017account_balance\030\003 \001(\0132\031.Serializ"
+  "e.AccountBalanceH\000\0220\n\ractive_orders\030\004 \001("
+  "\0132\027.Serialize.ActiveOrdersH\000\0226\n\020complete"
+  "d_orders\030\005 \001(\0132\032.Serialize.CompletedOred"
+  "rsH\000\0220\n\rquote_history\030\006 \001(\0132\027.Serialize."
+  "QuoteHistoryH\000\022\030\n\016error_response\030\007 \001(\tH\000"
+  "\"\214\003\n\006status\022\t\n\005ERROR\020\000\022\026\n\022SIGN_UP_SUCCES"
+  "SFUL\020\001\022\032\n\026USERNAME_ALREADY_TAKEN\020\002\022\026\n\022SI"
+  "GN_IN_SUCCESSFUL\020\003\022 \n\034INVALID_USERNAME_O"
+  "R_PASSWORD\020\004\022\032\n\026USER_ALREADY_LOGGED_IN\020\005"
+  "\022\036\n\032ORDER_SUCCESSFULLY_CREATED\020\006\022\027\n\023SUCC"
+  "ES_VIEW_BALANCE\020\007\022!\n\035SUCCES_VIEW_ALL_ACT"
+  "IVE_ORDERS\020\010\022 \n\034SUCCES_VIEW_COMPLETED_TR"
+  "ADES\020\n\022\035\n\031SUCCES_VIEW_QUOTE_HISTORY\020\013\022\036\n"
+  "\032SUCCES_CANCEL_ACTIVE_ORDER\020\014\022\035\n\031ERROR_C"
+  "ANCEL_ACTIVE_ORDER\020\r\022\021\n\rORDER_MATCHED\020\016B"
+  "\r\n\013RequestData\"K\n\rClientBalance\022\020\n\010usern"
+  "ame\030\001 \001(\t\022(\n\005funds\030\002 \001(\0132\031.Serialize.Acc"
+  "ountBalance\":\n\016AccountBalance\022\023\n\013usd_bal"
+  "ance\030\001 \001(\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014Activ"
+  "eOrders\0220\n\021active_buy_orders\030\001 \003(\0132\025.Ser"
+  "ialize.TradeOrder\0221\n\022active_sell_orders\030"
+  "\002 \003(\0132\025.Serialize.TradeOrder\"|\n\017Complete"
+  "dOredrs\0223\n\024completed_buy_orders\030\001 \003(\0132\025."
+  "Serialize.TradeOrder\0224\n\025completed_sell_o"
+  "rders\030\002 \003(\0132\025.Serialize.TradeOrder\"0\n\014Qu"
+  "oteHistory\022 \n\006quotes\030\001 \003(\0132\020.Serialize.Q"
+  "uote\")\n\005Quote\022\021\n\ttimestamp\030\001 \001(\003\022\r\n\005pric"
+  "e\030\002 \001(\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 1940, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 2015, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
     &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 11,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
@@ -424,8 +425,6 @@ bool TradeRequest_CommandType_IsValid(int value) {
     case 5:
     case 6:
     case 7:
-    case 8:
-    case 9:
       return true;
     default:
       return false;
@@ -437,12 +436,10 @@ constexpr TradeRequest_CommandType TradeRequest::SIGN_UP;
 constexpr TradeRequest_CommandType TradeRequest::SIGN_IN;
 constexpr TradeRequest_CommandType TradeRequest::MAKE_ORDER;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_BALANCE;
-constexpr TradeRequest_CommandType TradeRequest::VIEW_ALL_ACTIVE_BUY_ORDERS;
-constexpr TradeRequest_CommandType TradeRequest::VIEW_ALL_ACTIVE_SELL_ORDERS;
-constexpr TradeRequest_CommandType TradeRequest::VIEW_MY_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::VIEW_ALL_ACTIVE_ORDERS;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_COMPLETED_TRADES;
 constexpr TradeRequest_CommandType TradeRequest::VIEW_QUOTE_HISTORY;
-constexpr TradeRequest_CommandType TradeRequest::CANCEL_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest::CANCEL_ACTIVE_ORDER;
 constexpr TradeRequest_CommandType TradeRequest::CommandType_MIN;
 constexpr TradeRequest_CommandType TradeRequest::CommandType_MAX;
 constexpr int TradeRequest::CommandType_ARRAYSIZE;
@@ -462,6 +459,11 @@ bool TradeResponse_status_IsValid(int value) {
     case 6:
     case 7:
     case 8:
+    case 10:
+    case 11:
+    case 12:
+    case 13:
+    case 14:
       return true;
     default:
       return false;
@@ -476,8 +478,13 @@ constexpr TradeResponse_status TradeResponse::SIGN_IN_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse::INVALID_USERNAME_OR_PASSWORD;
 constexpr TradeResponse_status TradeResponse::USER_ALREADY_LOGGED_IN;
 constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_CREATED;
-constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_BALANCE_RESPONCE;
+constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_BALANCE;
 constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS;
+constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_COMPLETED_TRADES;
+constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_QUOTE_HISTORY;
+constexpr TradeResponse_status TradeResponse::SUCCES_CANCEL_ACTIVE_ORDER;
+constexpr TradeResponse_status TradeResponse::ERROR_CANCEL_ACTIVE_ORDER;
+constexpr TradeResponse_status TradeResponse::ORDER_MATCHED;
 constexpr TradeResponse_status TradeResponse::status_MIN;
 constexpr TradeResponse_status TradeResponse::status_MAX;
 constexpr int TradeResponse::status_ARRAYSIZE;
@@ -1954,24 +1961,19 @@ TradeResponse::TradeResponse(const TradeResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   TradeResponse* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.jwt_){}
-    , decltype(_impl_.response_msg_){}
+      decltype(_impl_.response_msg_){}
     , decltype(_impl_.RequestData_){}
     , /*decltype(_impl_._cached_size_)*/{}
     , /*decltype(_impl_._oneof_case_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.jwt_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.jwt_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_jwt().empty()) {
-    _this->_impl_.jwt_.Set(from._internal_jwt(), 
-      _this->GetArenaForAllocation());
-  }
   _this->_impl_.response_msg_ = from._impl_.response_msg_;
   clear_has_RequestData();
   switch (from.RequestData_case()) {
+    case kJwt: {
+      _this->_internal_set_jwt(from._internal_jwt());
+      break;
+    }
     case kAccountBalance: {
       _this->_internal_mutable_account_balance()->::Serialize::AccountBalance::MergeFrom(
           from._internal_account_balance());
@@ -2008,16 +2010,11 @@ inline void TradeResponse::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.jwt_){}
-    , decltype(_impl_.response_msg_){0}
+      decltype(_impl_.response_msg_){0}
     , decltype(_impl_.RequestData_){}
     , /*decltype(_impl_._cached_size_)*/{}
     , /*decltype(_impl_._oneof_case_)*/{}
   };
-  _impl_.jwt_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.jwt_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   clear_has_RequestData();
 }
 
@@ -2032,7 +2029,6 @@ TradeResponse::~TradeResponse() {
 
 inline void TradeResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.jwt_.Destroy();
   if (has_RequestData()) {
     clear_RequestData();
   }
@@ -2045,6 +2041,10 @@ void TradeResponse::SetCachedSize(int size) const {
 void TradeResponse::clear_RequestData() {
 // @@protoc_insertion_point(one_of_clear_start:Serialize.TradeResponse)
   switch (RequestData_case()) {
+    case kJwt: {
+      _impl_.RequestData_.jwt_.Destroy();
+      break;
+    }
     case kAccountBalance: {
       if (GetArenaForAllocation() == nullptr) {
         delete _impl_.RequestData_.account_balance_;
@@ -2087,7 +2087,6 @@ void TradeResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.jwt_.ClearToEmpty();
   _impl_.response_msg_ = 0;
   clear_RequestData();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
@@ -2197,7 +2196,7 @@ uint8_t* TradeResponse::_InternalSerialize(
   }
 
   // string jwt = 2;
-  if (!this->_internal_jwt().empty()) {
+  if (_internal_has_jwt()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_jwt().data(), static_cast<int>(this->_internal_jwt().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
@@ -2260,13 +2259,6 @@ size_t TradeResponse::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string jwt = 2;
-  if (!this->_internal_jwt().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_jwt());
-  }
-
   // .Serialize.TradeResponse.status response_msg = 1;
   if (this->_internal_response_msg() != 0) {
     total_size += 1 +
@@ -2274,6 +2266,13 @@ size_t TradeResponse::ByteSizeLong() const {
   }
 
   switch (RequestData_case()) {
+    // string jwt = 2;
+    case kJwt: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+          this->_internal_jwt());
+      break;
+    }
     // .Serialize.AccountBalance account_balance = 3;
     case kAccountBalance: {
       total_size += 1 +
@@ -2331,13 +2330,14 @@ void TradeResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_jwt().empty()) {
-    _this->_internal_set_jwt(from._internal_jwt());
-  }
   if (from._internal_response_msg() != 0) {
     _this->_internal_set_response_msg(from._internal_response_msg());
   }
   switch (from.RequestData_case()) {
+    case kJwt: {
+      _this->_internal_set_jwt(from._internal_jwt());
+      break;
+    }
     case kAccountBalance: {
       _this->_internal_mutable_account_balance()->::Serialize::AccountBalance::MergeFrom(
           from._internal_account_balance());
@@ -2382,13 +2382,7 @@ bool TradeResponse::IsInitialized() const {
 
 void TradeResponse::InternalSwap(TradeResponse* other) {
   using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.jwt_, lhs_arena,
-      &other->_impl_.jwt_, rhs_arena
-  );
   swap(_impl_.response_msg_, other->_impl_.response_msg_);
   swap(_impl_.RequestData_, other->_impl_.RequestData_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);

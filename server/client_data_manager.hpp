@@ -41,8 +41,9 @@ public:
     void push_order_to_active_orders(const Serialize::TradeOrder& order);
 
     Serialize::AccountBalance get_client_balance(const std::string& client_username) const;
-    Serialize::ActiveOrders get_all_active_oreders(trade_type_t trade_type);
-    Serialize::CompletedOredrs get_all_completed_oreders();
+    Serialize::ActiveOrders get_all_active_oreders();
+    Serialize::CompletedOredrs get_last_completed_oreders();
+    Serialize::QuoteHistory get_quote_history();
 
     //*INFO: Condition variables notifications
     void notify_order_received();

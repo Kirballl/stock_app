@@ -11,6 +11,7 @@ const char* Database::CREATE_ACTIVE_BUY_ORDERS_TABLE = "CREATE TABLE IF NOT EXIS
                                                         "username VARCHAR(255), "
                                                         "usd_cost DOUBLE PRECISION, "
                                                         "usd_amount INTEGER, "
+                                                        "usd_volume INTEGER, "
                                                         "timestamp TIMESTAMP WITH TIME ZONE)";
 
 const char* Database::CREATE_ACTIVE_SELL_ORDERS_TABLE = "CREATE TABLE IF NOT EXISTS active_sell_orders ("
@@ -19,6 +20,7 @@ const char* Database::CREATE_ACTIVE_SELL_ORDERS_TABLE = "CREATE TABLE IF NOT EXI
                                                         "username VARCHAR(255), "
                                                         "usd_cost DOUBLE PRECISION, "
                                                         "usd_amount INTEGER, "
+                                                        "usd_volume INTEGER, "
                                                         "timestamp TIMESTAMP WITH TIME ZONE)";
 
 const char* Database::CREATE_CLIENTS_BALANCES_TABLE = "CREATE TABLE IF NOT EXISTS clients_balances ("
@@ -73,6 +75,10 @@ Database::Database(const std::string& connection_info) : connection_(connection_
     }
 }
 
+//                                                                                //
+//                                 Auth operations                                //
+//                                                                                //
+
 bool Database::is_user_exists(const std::string& username) {
     std::lock_guard<std::mutex> is_user_exists_lock_guard(mutex_);
     pqxx::work db_transaction(connection_);
@@ -118,6 +124,10 @@ bool Database::authenticate_user(const std::string& username, const std::string&
     return bcrypt::validatePassword(password, hashed_password);
 }
 
+//                                                                                //
+//                                 Save operations                                //
+//                                                                                //
+
 void Database::save_active_order_to_db(const Serialize::TradeOrder& order) {
     std::lock_guard<std::mutex> save_active_order_to_db_lock_guard(mutex_);
     pqxx::work db_transaction(connection_);
@@ -126,17 +136,85 @@ void Database::save_active_order_to_db(const Serialize::TradeOrder& order) {
                              ? "active_buy_orders" 
                              : "active_sell_orders";
 
-    db_transaction.exec_params("INSERT INTO " + table_name + " (order_id, username, usd_cost, usd_amount, timestamp)"
-                               "VALUES ($1, $2, $3, $4, to_timestamp($5 / 1000.0))",
+    db_transaction.exec_params("INSERT INTO " + table_name + " (order_id, username, usd_cost, usd_amount, usd_volume, timestamp)"
+                               "VALUES ($1, $2, $3, $4, $5, to_timestamp($6 / 1000.0))",
                                 order.order_id(),
                                 order.username(),
                                 order.usd_cost(),
                                 order.usd_amount(),
+                                order.usd_volume(),
                                 order.timestamp());
 
     db_transaction.commit();
     spdlog::info("Order saved to DB: {} ({})", order.order_id(), table_name);
 }
+
+void Database::update_actual_client_balance_in_db(const Serialize::ClientBalance& client_balance) {
+    std::lock_guard<std::mutex> update_actual_client_balance_in_db_lock_guard(mutex_);
+    pqxx::work db_transaction(connection_);
+
+    pqxx::result result = db_transaction.exec_params(
+            "UPDATE clients_balances "
+            "SET usd_balance = $1, rub_balance = $2 "
+            "WHERE username = $3",
+            client_balance.funds().usd_balance(),
+            client_balance.funds().rub_balance(), 
+            client_balance.username()
+        );
+
+    db_transaction.commit();
+    spdlog::info("Actual {} balance saved to DB: usd={} rub={}",
+        client_balance.username(), client_balance.funds().usd_balance(), client_balance.funds().rub_balance());
+}
+
+void Database::save_completed_order_to_db(const Serialize::TradeOrder& order, int64_t completion_timestamp) {
+    std::lock_guard<std::mutex> save_completed_order_to_db_lock_guard(mutex_);
+    pqxx::work db_transaction(connection_);
+
+    std::string order_type = order.type() == Serialize::TradeOrder::BUY ? "buy" : "sell";
+
+    db_transaction.exec_params("INSERT INTO completed_orders ("
+                               " order_id, "
+                               " username, "
+                               " type, "
+                               " usd_cost, "
+                               " usd_volume, "
+                               " timestamp, "
+                               " completion_timestamp) "
+        "VALUES ($1, $2, $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0))",
+                                order.order_id(),
+                                order.username(),
+                                order_type,
+                                order.usd_cost(),
+                                order.usd_volume(),
+                                order.timestamp(),
+                                completion_timestamp);
+
+    db_transaction.commit();
+    spdlog::info("Completed order saved to DB: "
+                                "order_id = {}, username={}, type={}, usd_cost={}, usd_volume={}, timestamp={}, completion_timestamp={})",
+                    order.order_id(), order.username(), order_type, order.usd_cost(), order.usd_volume(), order.timestamp(), completion_timestamp);
+}
+
+void Database::save_qoute_to_db(const Serialize::Quote& qoute) {
+    std::lock_guard<std::mutex> save_qoute_to_db_lock_guard(mutex_);
+    pqxx::work db_transaction(connection_);
+
+    db_transaction.exec_params("INSERT INTO quote_history ("
+                               "price, "
+                               "completion_timestamp) "
+                               "VALUES ($1, to_timestamp($2 / 1000.0))",
+                                qoute.price(),
+                                qoute.timestamp());
+
+    db_transaction.commit();
+    spdlog::info("qoute saved to DB: "
+                    "price = {}, timestamp={}", qoute.price(), qoute.timestamp());
+}
+
+//                                                                                //
+//                               Extract operations                               //
+//                                                                                //
 
 std::vector<Serialize::TradeOrder> Database::load_active_orders_from_db(Serialize::TradeOrder::TradeType type) {
     std::lock_guard<std::mutex> load_active_orders_from_db_lock_guard(mutex_);
@@ -151,7 +229,7 @@ std::vector<Serialize::TradeOrder> Database::load_active_orders_from_db(Serializ
 
     //*INFO load all orders     
     pqxx::result result = db_transaction.exec_params(
-        "SELECT order_id, username, usd_cost, usd_amount, "
+        "SELECT order_id, username, usd_cost, usd_amount, usd_volume, " 
         "EXTRACT(EPOCH FROM timestamp) * 1000 AS timestamp "
         "FROM " + table_name);
 
@@ -162,6 +240,7 @@ std::vector<Serialize::TradeOrder> Database::load_active_orders_from_db(Serializ
         order.set_username(row["username"].c_str());
         order.set_usd_cost(row["usd_cost"].as<double>());
         order.set_usd_amount(row["usd_amount"].as<int32_t>());
+        order.set_usd_volume(row["usd_volume"].as<int32_t>());
         int64_t timestamp_ms = static_cast<int64_t>(row["timestamp"].as<double>());
         order.set_timestamp(timestamp_ms);
         order.set_type(type);
@@ -196,25 +275,6 @@ void Database::truncate_active_orders_table() {
     }
 }
 
-
-void Database::update_actual_client_balance_in_db(const Serialize::ClientBalance& client_balance) {
-    std::lock_guard<std::mutex> update_actual_client_balance_in_db_lock_guard(mutex_);
-    pqxx::work db_transaction(connection_);
-
-    pqxx::result result = db_transaction.exec_params(
-            "UPDATE clients_balances "
-            "SET usd_balance = $1, rub_balance = $2 "
-            "WHERE username = $3",
-            client_balance.funds().usd_balance(),
-            client_balance.funds().rub_balance(), 
-            client_balance.username()
-        );
-
-    db_transaction.commit();
-    spdlog::info("Actual {} balance saved to DB: usd={} rub={}",
-        client_balance.username(), client_balance.funds().usd_balance(), client_balance.funds().rub_balance());
-}
-
 std::vector<Serialize::ClientBalance> Database::load_clients_balances_from_db() {
     std::lock_guard<std::mutex> load_clients_balances_from_db_lock_guard(mutex_);
     pqxx::work db_transaction(connection_);
@@ -238,35 +298,6 @@ std::vector<Serialize::ClientBalance> Database::load_clients_balances_from_db() 
     spdlog::info("Clients balances loaded to client_data_manager");
 
     return clients_balances;
-}
-
-void Database::save_completed_order_to_db(const Serialize::TradeOrder& order, int64_t completion_timestamp) {
-    std::lock_guard<std::mutex> save_completed_order_to_db_lock_guard(mutex_);
-    pqxx::work db_transaction(connection_);
-
-    std::string order_type = order.type() == Serialize::TradeOrder::BUY ? "buy" : "sell";
-
-    db_transaction.exec_params("INSERT INTO completed_orders ("
-                               " order_id, "
-                               " username, "
-                               " type, "
-                               " usd_cost, "
-                               " usd_volume, "
-                               " timestamp, "
-                               " completion_timestamp) "
-        "VALUES ($1, $2, $3, $4, $5, to_timestamp($6 / 1000.0), to_timestamp($7 / 1000.0))",
-                                order.order_id(),
-                                order.username(),
-                                order_type,
-                                order.usd_cost(),
-                                order.usd_volume(),
-                                order.timestamp(),
-                                completion_timestamp);
-
-    db_transaction.commit();
-    spdlog::info("Completed order saved to DB: "
-                                "order_id = {}, username={}, type={}, usd_cost={}, usd_volume={}, timestamp={}, completion_timestamp={})",
-                    order.order_id(), order.username(), order_type, order.usd_cost(), order.usd_volume(), order.timestamp(), completion_timestamp);
 }
 
 std::vector<Serialize::TradeOrder> Database::load_last_completed_orders(int number) {
@@ -307,28 +338,12 @@ std::vector<Serialize::TradeOrder> Database::load_last_completed_orders(int numb
     return orders;
 }
 
-void Database::save_qoute_to_db(const Serialize::Quote& qoute) {
-    std::lock_guard<std::mutex> save_qoute_to_db_lock_guard(mutex_);
-    pqxx::work db_transaction(connection_);
-
-    db_transaction.exec_params("INSERT INTO quote_history ("
-                               "price, "
-                               "completion_timestamp) "
-                               "VALUES ($1, to_timestamp($2 / 1000.0))",
-                                qoute.price(),
-                                qoute.timestamp());
-
-    db_transaction.commit();
-    spdlog::info("qoute saved to DB: "
-                    "price = {}, timestamp={}", qoute.price(), qoute.timestamp());
-}
-
 std::vector<Serialize::Quote> Database::load_quote_history(int number) {
     std::lock_guard<std::mutex> load_quote_history_lock_guard(mutex_);
     pqxx::work db_transaction(connection_);
    
     pqxx::result result = db_transaction.exec_params(
-        "SELECT id, price, completion_timestamp "
+        "SELECT id, price,  EXTRACT(EPOCH FROM completion_timestamp) * 1000 AS completion_timestamp "
         "FROM quote_history "
         "ORDER BY id "
         "DESC LIMIT $1;", number);

@@ -125,18 +125,16 @@ enum TradeRequest_CommandType : int {
   TradeRequest_CommandType_SIGN_IN = 1,
   TradeRequest_CommandType_MAKE_ORDER = 2,
   TradeRequest_CommandType_VIEW_BALANCE = 3,
-  TradeRequest_CommandType_VIEW_ALL_ACTIVE_BUY_ORDERS = 4,
-  TradeRequest_CommandType_VIEW_ALL_ACTIVE_SELL_ORDERS = 5,
-  TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS = 6,
-  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 7,
-  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 8,
-  TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS = 9,
+  TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS = 4,
+  TradeRequest_CommandType_VIEW_COMPLETED_TRADES = 5,
+  TradeRequest_CommandType_VIEW_QUOTE_HISTORY = 6,
+  TradeRequest_CommandType_CANCEL_ACTIVE_ORDER = 7,
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeRequest_CommandType_TradeRequest_CommandType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeRequest_CommandType_IsValid(int value);
 constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MIN = TradeRequest_CommandType_SIGN_UP;
-constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MAX = TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS;
+constexpr TradeRequest_CommandType TradeRequest_CommandType_CommandType_MAX = TradeRequest_CommandType_CANCEL_ACTIVE_ORDER;
 constexpr int TradeRequest_CommandType_CommandType_ARRAYSIZE = TradeRequest_CommandType_CommandType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeRequest_CommandType_descriptor();
@@ -161,14 +159,19 @@ enum TradeResponse_status : int {
   TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 4,
   TradeResponse_status_USER_ALREADY_LOGGED_IN = 5,
   TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 6,
-  TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE = 7,
+  TradeResponse_status_SUCCES_VIEW_BALANCE = 7,
   TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8,
+  TradeResponse_status_SUCCES_VIEW_COMPLETED_TRADES = 10,
+  TradeResponse_status_SUCCES_VIEW_QUOTE_HISTORY = 11,
+  TradeResponse_status_SUCCES_CANCEL_ACTIVE_ORDER = 12,
+  TradeResponse_status_ERROR_CANCEL_ACTIVE_ORDER = 13,
+  TradeResponse_status_ORDER_MATCHED = 14,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   TradeResponse_status_TradeResponse_status_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool TradeResponse_status_IsValid(int value);
 constexpr TradeResponse_status TradeResponse_status_status_MIN = TradeResponse_status_ERROR;
-constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
+constexpr TradeResponse_status TradeResponse_status_status_MAX = TradeResponse_status_ORDER_MATCHED;
 constexpr int TradeResponse_status_status_ARRAYSIZE = TradeResponse_status_status_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor();
@@ -908,18 +911,14 @@ class TradeRequest final :
     TradeRequest_CommandType_MAKE_ORDER;
   static constexpr CommandType VIEW_BALANCE =
     TradeRequest_CommandType_VIEW_BALANCE;
-  static constexpr CommandType VIEW_ALL_ACTIVE_BUY_ORDERS =
-    TradeRequest_CommandType_VIEW_ALL_ACTIVE_BUY_ORDERS;
-  static constexpr CommandType VIEW_ALL_ACTIVE_SELL_ORDERS =
-    TradeRequest_CommandType_VIEW_ALL_ACTIVE_SELL_ORDERS;
-  static constexpr CommandType VIEW_MY_ACTIVE_ORDERS =
-    TradeRequest_CommandType_VIEW_MY_ACTIVE_ORDERS;
+  static constexpr CommandType VIEW_ALL_ACTIVE_ORDERS =
+    TradeRequest_CommandType_VIEW_ALL_ACTIVE_ORDERS;
   static constexpr CommandType VIEW_COMPLETED_TRADES =
     TradeRequest_CommandType_VIEW_COMPLETED_TRADES;
   static constexpr CommandType VIEW_QUOTE_HISTORY =
     TradeRequest_CommandType_VIEW_QUOTE_HISTORY;
-  static constexpr CommandType CANCEL_ACTIVE_ORDERS =
-    TradeRequest_CommandType_CANCEL_ACTIVE_ORDERS;
+  static constexpr CommandType CANCEL_ACTIVE_ORDER =
+    TradeRequest_CommandType_CANCEL_ACTIVE_ORDER;
   static inline bool CommandType_IsValid(int value) {
     return TradeRequest_CommandType_IsValid(value);
   }
@@ -1125,6 +1124,7 @@ class TradeResponse final :
     return *internal_default_instance();
   }
   enum RequestDataCase {
+    kJwt = 2,
     kAccountBalance = 3,
     kActiveOrders = 4,
     kCompletedOrders = 5,
@@ -1223,10 +1223,20 @@ class TradeResponse final :
     TradeResponse_status_USER_ALREADY_LOGGED_IN;
   static constexpr status ORDER_SUCCESSFULLY_CREATED =
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
-  static constexpr status SUCCES_VIEW_BALANCE_RESPONCE =
-    TradeResponse_status_SUCCES_VIEW_BALANCE_RESPONCE;
+  static constexpr status SUCCES_VIEW_BALANCE =
+    TradeResponse_status_SUCCES_VIEW_BALANCE;
   static constexpr status SUCCES_VIEW_ALL_ACTIVE_ORDERS =
     TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
+  static constexpr status SUCCES_VIEW_COMPLETED_TRADES =
+    TradeResponse_status_SUCCES_VIEW_COMPLETED_TRADES;
+  static constexpr status SUCCES_VIEW_QUOTE_HISTORY =
+    TradeResponse_status_SUCCES_VIEW_QUOTE_HISTORY;
+  static constexpr status SUCCES_CANCEL_ACTIVE_ORDER =
+    TradeResponse_status_SUCCES_CANCEL_ACTIVE_ORDER;
+  static constexpr status ERROR_CANCEL_ACTIVE_ORDER =
+    TradeResponse_status_ERROR_CANCEL_ACTIVE_ORDER;
+  static constexpr status ORDER_MATCHED =
+    TradeResponse_status_ORDER_MATCHED;
   static inline bool status_IsValid(int value) {
     return TradeResponse_status_IsValid(value);
   }
@@ -1255,15 +1265,28 @@ class TradeResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kJwtFieldNumber = 2,
     kResponseMsgFieldNumber = 1,
+    kJwtFieldNumber = 2,
     kAccountBalanceFieldNumber = 3,
     kActiveOrdersFieldNumber = 4,
     kCompletedOrdersFieldNumber = 5,
     kQuoteHistoryFieldNumber = 6,
     kErrorResponseFieldNumber = 7,
   };
+  // .Serialize.TradeResponse.status response_msg = 1;
+  void clear_response_msg();
+  ::Serialize::TradeResponse_status response_msg() const;
+  void set_response_msg(::Serialize::TradeResponse_status value);
+  private:
+  ::Serialize::TradeResponse_status _internal_response_msg() const;
+  void _internal_set_response_msg(::Serialize::TradeResponse_status value);
+  public:
+
   // string jwt = 2;
+  bool has_jwt() const;
+  private:
+  bool _internal_has_jwt() const;
+  public:
   void clear_jwt();
   const std::string& jwt() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -1275,15 +1298,6 @@ class TradeResponse final :
   const std::string& _internal_jwt() const;
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_jwt(const std::string& value);
   std::string* _internal_mutable_jwt();
-  public:
-
-  // .Serialize.TradeResponse.status response_msg = 1;
-  void clear_response_msg();
-  ::Serialize::TradeResponse_status response_msg() const;
-  void set_response_msg(::Serialize::TradeResponse_status value);
-  private:
-  ::Serialize::TradeResponse_status _internal_response_msg() const;
-  void _internal_set_response_msg(::Serialize::TradeResponse_status value);
   public:
 
   // .Serialize.AccountBalance account_balance = 3;
@@ -1381,6 +1395,7 @@ class TradeResponse final :
   // @@protoc_insertion_point(class_scope:Serialize.TradeResponse)
  private:
   class _Internal;
+  void set_has_jwt();
   void set_has_account_balance();
   void set_has_active_orders();
   void set_has_completed_orders();
@@ -1394,11 +1409,11 @@ class TradeResponse final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr jwt_;
     int response_msg_;
     union RequestDataUnion {
       constexpr RequestDataUnion() : _constinit_{} {}
         ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
+      ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr jwt_;
       ::Serialize::AccountBalance* account_balance_;
       ::Serialize::ActiveOrders* active_orders_;
       ::Serialize::CompletedOredrs* completed_orders_;
@@ -3183,18 +3198,33 @@ inline void TradeResponse::set_response_msg(::Serialize::TradeResponse_status va
 }
 
 // string jwt = 2;
+inline bool TradeResponse::_internal_has_jwt() const {
+  return RequestData_case() == kJwt;
+}
+inline bool TradeResponse::has_jwt() const {
+  return _internal_has_jwt();
+}
+inline void TradeResponse::set_has_jwt() {
+  _impl_._oneof_case_[0] = kJwt;
+}
 inline void TradeResponse::clear_jwt() {
-  _impl_.jwt_.ClearToEmpty();
+  if (_internal_has_jwt()) {
+    _impl_.RequestData_.jwt_.Destroy();
+    clear_has_RequestData();
+  }
 }
 inline const std::string& TradeResponse::jwt() const {
   // @@protoc_insertion_point(field_get:Serialize.TradeResponse.jwt)
   return _internal_jwt();
 }
 template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void TradeResponse::set_jwt(ArgT0&& arg0, ArgT... args) {
- 
- _impl_.jwt_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+inline void TradeResponse::set_jwt(ArgT0&& arg0, ArgT... args) {
+  if (!_internal_has_jwt()) {
+    clear_RequestData();
+    set_has_jwt();
+    _impl_.RequestData_.jwt_.InitDefault();
+  }
+  _impl_.RequestData_.jwt_.Set( static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:Serialize.TradeResponse.jwt)
 }
 inline std::string* TradeResponse::mutable_jwt() {
@@ -3203,32 +3233,44 @@ inline std::string* TradeResponse::mutable_jwt() {
   return _s;
 }
 inline const std::string& TradeResponse::_internal_jwt() const {
-  return _impl_.jwt_.Get();
+  if (_internal_has_jwt()) {
+    return _impl_.RequestData_.jwt_.Get();
+  }
+  return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
 }
 inline void TradeResponse::_internal_set_jwt(const std::string& value) {
-  
-  _impl_.jwt_.Set(value, GetArenaForAllocation());
+  if (!_internal_has_jwt()) {
+    clear_RequestData();
+    set_has_jwt();
+    _impl_.RequestData_.jwt_.InitDefault();
+  }
+  _impl_.RequestData_.jwt_.Set(value, GetArenaForAllocation());
 }
 inline std::string* TradeResponse::_internal_mutable_jwt() {
-  
-  return _impl_.jwt_.Mutable(GetArenaForAllocation());
+  if (!_internal_has_jwt()) {
+    clear_RequestData();
+    set_has_jwt();
+    _impl_.RequestData_.jwt_.InitDefault();
+  }
+  return _impl_.RequestData_.jwt_.Mutable(      GetArenaForAllocation());
 }
 inline std::string* TradeResponse::release_jwt() {
   // @@protoc_insertion_point(field_release:Serialize.TradeResponse.jwt)
-  return _impl_.jwt_.Release();
+  if (_internal_has_jwt()) {
+    clear_has_RequestData();
+    return _impl_.RequestData_.jwt_.Release();
+  } else {
+    return nullptr;
+  }
 }
 inline void TradeResponse::set_allocated_jwt(std::string* jwt) {
+  if (has_RequestData()) {
+    clear_RequestData();
+  }
   if (jwt != nullptr) {
-    
-  } else {
-    
+    set_has_jwt();
+    _impl_.RequestData_.jwt_.InitAllocated(jwt, GetArenaForAllocation());
   }
-  _impl_.jwt_.SetAllocated(jwt, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (_impl_.jwt_.IsDefault()) {
-    _impl_.jwt_.Set("", GetArenaForAllocation());
-  }
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:Serialize.TradeResponse.jwt)
 }
 

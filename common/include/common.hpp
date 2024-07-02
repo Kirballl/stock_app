@@ -4,7 +4,15 @@
 #define LOGS_FILE_SIZE 524285 // ~5 MB
 #define AMOUNT_OF_ARCHIVED_FILES 5
 
+#include <string>
+#include <cstdint>
+#include <iomanip>
+#include <ctime>
+#include <chrono>
+#include <sstream>
+
 #include <spdlog/spdlog.h> 
+
 #include "config.hpp"
 
 enum trade_type_t {
@@ -23,5 +31,7 @@ enum change_balance_type_t {
 };
 
 spdlog::level::level_enum set_logging_level(const Config& config);
+
+std::string timestamp_to_readable(int64_t timestamp);
 
 #endif //CLIENSERVERECN_COMMON_HPP

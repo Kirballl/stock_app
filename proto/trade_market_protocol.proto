@@ -32,12 +32,10 @@ message TradeRequest {
         SIGN_IN = 1;
         MAKE_ORDER = 2;
         VIEW_BALANCE = 3;
-        VIEW_ALL_ACTIVE_BUY_ORDERS = 4;
-        VIEW_ALL_ACTIVE_SELL_ORDERS = 5;
-        VIEW_MY_ACTIVE_ORDERS = 6;
-        VIEW_COMPLETED_TRADES = 7;
-        VIEW_QUOTE_HISTORY = 8;
-        CANCEL_ACTIVE_ORDERS = 9;
+        VIEW_ALL_ACTIVE_ORDERS = 4;
+        VIEW_COMPLETED_TRADES = 5;
+        VIEW_QUOTE_HISTORY = 6;
+        CANCEL_ACTIVE_ORDER = 7;
     }
     CommandType command = 1;
 
@@ -62,14 +60,18 @@ message TradeResponse {
         INVALID_USERNAME_OR_PASSWORD = 4;
         USER_ALREADY_LOGGED_IN = 5;
         ORDER_SUCCESSFULLY_CREATED = 6;
-        SUCCES_VIEW_BALANCE_RESPONCE = 7;
+        SUCCES_VIEW_BALANCE = 7;
         SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8;
+        SUCCES_VIEW_COMPLETED_TRADES = 10;
+        SUCCES_VIEW_QUOTE_HISTORY = 11;
+        SUCCES_CANCEL_ACTIVE_ORDER = 12;
+        ERROR_CANCEL_ACTIVE_ORDER = 13;
+        ORDER_MATCHED = 14;
     }
-    status response_msg = 1; // 
-
-    string jwt = 2;
+    status response_msg = 1;
 
     oneof RequestData {
+        string jwt = 2;
         AccountBalance account_balance = 3;
         ActiveOrders active_orders = 4;
         CompletedOredrs completed_orders = 5;
