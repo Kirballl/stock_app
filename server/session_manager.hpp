@@ -16,6 +16,7 @@
 #include "client_data_manager.hpp"
 #include "session_client_connection.hpp"
 #include "trade_market_protocol.pb.h"
+#include "i_database.hpp"
 #include "database.hpp"
 #include "auth.hpp"
 #include "config.hpp"
@@ -33,6 +34,7 @@ public:
     bool is_runnig();
 
     void init_database();
+    void init_mockdb(std::shared_ptr<IDatabase> mock_db);
     void init_core();
     void init_client_data_manager();
     void init_auth();
@@ -46,7 +48,7 @@ public:
     std::shared_ptr<SessionClientConnection> get_session_by_username(const std::string& username);
     
     std::shared_ptr<ClientDataManager> get_client_data_manager() const;
-    std::shared_ptr<Database> get_database() const;
+    std::shared_ptr<IDatabase> get_database() const;
     std::shared_ptr<Auth> get_auth() const;
     std::shared_ptr<Core> get_core() const;
 
@@ -58,7 +60,7 @@ private:
     bool stop_new_sessions_ = false;
     std::atomic<bool> is_running_;  //*INFO: atomic to avalible to stop with other thread
 
-    std::shared_ptr<Database> database_;
+    std::shared_ptr<IDatabase> database_;
     std::shared_ptr<Core> core_;
     std::shared_ptr<Auth> auth_;
     std::shared_ptr<ClientDataManager> client_data_manager_;

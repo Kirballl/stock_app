@@ -20,12 +20,21 @@ void SessionManager::init_database() {
     }
 }
 
+//*INFO for testing
+void SessionManager::init_mockdb(std::shared_ptr<IDatabase> mock_db) {
+    database_ = mock_db;
+}
+
 void SessionManager::init_core() {
     core_ = std::make_shared<Core>(shared_from_this());
+    core_->load_all_active_orders_from_db();
+    std::cout << "active orders from db loaded to core" << std::endl;
 }
 
 void SessionManager::init_client_data_manager() {
     client_data_manager_ = std::make_shared<ClientDataManager>(shared_from_this());
+    client_data_manager_->initialize_from_database();
+    std::cout << "init_client_data_manager()" << std::endl;
 }
 
 void SessionManager::init_auth() {
@@ -90,7 +99,7 @@ std::shared_ptr<ClientDataManager> SessionManager::get_client_data_manager() con
     return client_data_manager_;
 }
 
-std::shared_ptr<Database> SessionManager::get_database() const {
+std::shared_ptr<IDatabase> SessionManager::get_database() const {
     return database_;
 }
 

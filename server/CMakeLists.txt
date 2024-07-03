@@ -1,3 +1,5 @@
+# server/CMakeLists.txt
+
 set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/server.cpp
@@ -14,12 +16,15 @@ set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/../proto/generated/trade_market_protocol.pb.cc
 )
 
-add_executable(server ${SERVER_SOURCES})
+add_library(server_lib ${SERVER_SOURCES})
                       
 # Линковка с protobuf и Boost и spdlog и прочими
-target_link_libraries(server ${Boost_LIBRARIES} ${Protobuf_LIBRARIES} ${TARGET_LOGGER}
+target_link_libraries(server_lib ${Boost_LIBRARIES} ${Protobuf_LIBRARIES} ${TARGET_LOGGER}
                              ${PostgreSQL_LIBRARIES} pqxx ${OPENSSL_LIBRARIES}
                              Threads::Threads proto_files moodycamel config common jwt-cpp bcrypt)
+
+add_executable(server ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+target_link_libraries(server server_lib)
 
 # Копирование конфигурационного файла
 add_custom_command(

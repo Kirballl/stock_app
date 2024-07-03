@@ -1,8 +1,7 @@
 #include "core.hpp"
 
 Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
-    load_all_active_orders_from_db();
-    std::cout << "active orders from db loaded to core" << std::endl;
+    //load_all_active_orders_from_db();
 }
 
 void Core::save_all_active_orders_to_db() {
@@ -191,7 +190,6 @@ bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder
                             transaction_amount, transaction_cost);
         return false;
     }
-                    //TODO notify client order ()
 
     if (!change_clients_balances(sell_order, buy_order, transaction_amount, transaction_cost)) {
         spdlog::error("Error to change clients balances: BUY {} SELL {} - Amount: {} Cost: {}",

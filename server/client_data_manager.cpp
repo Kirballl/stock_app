@@ -3,7 +3,7 @@
 ClientDataManager::ClientDataManager(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager),
                                          buy_orders_queue_(std::make_shared<OrderQueue>()),
                                          sell_orders_queue_(std::make_shared<OrderQueue>()) {
-    initialize_from_database();
+    //initialize_from_database();
 }
 
 void ClientDataManager::initialize_from_database() {
@@ -47,7 +47,7 @@ bool ClientDataManager::update_active_order_usd_amount(const Serialize::TradeOrd
 
     auto& target_orders = (order.type() == Serialize::TradeOrder::BUY) ? active_buy_orders_ : active_sell_orders_;
     if (target_orders.find(order.order_id()) == target_orders.end()) {
-        spdlog::error("Order with {} in unordered map active orders not found", order.order_id());
+        spdlog::error("Order with id={} in unordered map active orders not found", order.order_id());
         return false;
     }
 

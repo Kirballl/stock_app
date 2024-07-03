@@ -53,11 +53,13 @@ public:
     void save_all_active_orders_to_db();
     void load_all_active_orders_from_db();
 
-private:
-    void complement_order_books();
     void place_order_to_priority_queue(const Serialize::TradeOrder& order);
     void process_orders(); 
+
+private:
+    void complement_order_books();
     bool match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order); 
+    
     bool update_active_order_usd_amount_in_client_data_manager (
                                 const Serialize::TradeOrder& sell_order, const Serialize::TradeOrder& buy_order,
                                 int32_t transaction_amount, double transaction_cost);
