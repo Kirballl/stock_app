@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <iostream>
-
 #include "mock_database.hpp"
 #include "session_manager.hpp"
 #include "client_data_manager.hpp"
@@ -44,62 +42,114 @@ protected:
         mock_database_.reset();
     }
 
+    Serialize::TradeOrder create_test_order(Serialize::TradeOrder::TradeType type, double usd_cost, int usd_amount, const std::string& username) {
+        Serialize::TradeOrder order;
+        order.set_type(type);
+        order.set_order_id(TimeOrderUtils::generate_id());
+        order.set_timestamp(TimeOrderUtils::get_current_timestamp());
+        order.set_usd_cost(usd_cost);
+        order.set_usd_amount(usd_amount);
+        order.set_username(username);
+        return order;
+    }
+
+    void add_order_to_containers(const Serialize::TradeOrder& order) {
+        client_data_manager_->create_new_client_fund_data(order.username());
+        client_data_manager_->push_order_to_active_orders(order);
+        core_->place_order_to_priority_queue(order);
+    }
+
+    void verify_client_balance(const std::string& username, double expected_usd, double expectred_rub) {
+        auto balance = client_data_manager_->get_client_balance(username);
+        EXPECT_NEAR(balance.usd_balance(), expected_usd, EPSILON);
+        EXPECT_NEAR(balance.rub_balance(), expectred_rub, EPSILON);
+    }
+
     std::shared_ptr<MockDatabase> mock_database_;
     std::shared_ptr<SessionManager> session_manager_;
     std::shared_ptr<ClientDataManager> client_data_manager_;
     std::shared_ptr<Core> core_;
 };
 
-TEST_F(CoreTest, TestOrderMatchingWhenPriceCrosses) {
+TEST_F(CoreTest, ExamlpeTestCase) {
+    auto buy_order1 = create_test_order(Serialize::TradeOrder::BUY, 62.0, 10, "User1");
+    auto buy_order2 = create_test_order(Serialize::TradeOrder::BUY, 63.0, 20, "User2");
+    auto sell_order1 = create_test_order(Serialize::TradeOrder::SELL, 61.0, 50, "User3");
 
-    Serialize::TradeOrder buy_order1, buy_order2, sell_order1;
-
-    buy_order1.set_type(Serialize::TradeOrder::BUY);
-    buy_order1.set_order_id(TimeOrderUtils::generate_id());
-    buy_order1.set_timestamp(TimeOrderUtils::get_current_timestamp());
-    buy_order1.set_usd_cost(62.0);
-    buy_order1.set_usd_amount(10);
-    buy_order1.set_username("User1");
-
-    buy_order2.set_type(Serialize::TradeOrder::BUY);
-    buy_order2.set_order_id(TimeOrderUtils::generate_id());
-    buy_order2.set_timestamp(TimeOrderUtils::get_current_timestamp());
-    buy_order2.set_usd_cost(63.0);
-    buy_order2.set_usd_amount(20);
-    buy_order2.set_username("User2");
-
-    sell_order1.set_type(Serialize::TradeOrder::SELL);
-    sell_order1.set_order_id(TimeOrderUtils::generate_id());
-    sell_order1.set_timestamp(TimeOrderUtils::get_current_timestamp());
-    sell_order1.set_usd_cost(61.0);
-    sell_order1.set_usd_amount(50);
-    sell_order1.set_username("User3");
-
-    client_data_manager_->create_new_client_fund_data("User1");
-    client_data_manager_->create_new_client_fund_data("User2");
-    client_data_manager_->create_new_client_fund_data("User3");
-
-    client_data_manager_->push_order_to_active_orders(buy_order1);
-    client_data_manager_->push_order_to_active_orders(buy_order2);
-    client_data_manager_->push_order_to_active_orders(sell_order1);
-
-    core_->place_order_to_priority_queue(buy_order1);
-    core_->place_order_to_priority_queue(buy_order2);
-    core_->place_order_to_priority_queue(sell_order1);
+    add_order_to_containers(buy_order1);
+    add_order_to_containers(buy_order2);
+    add_order_to_containers(sell_order1);
 
     core_->process_orders();
 
     auto client_data_manager = session_manager_->get_client_data_manager();
 
-    EXPECT_NEAR(client_data_manager->get_client_balance("User1").usd_balance(),    10, EPSILON);
-    EXPECT_NEAR(client_data_manager->get_client_balance("User1").rub_balance(),  -620, EPSILON);
-    EXPECT_NEAR(client_data_manager->get_client_balance("User2").usd_balance(),    20, EPSILON);
-    EXPECT_NEAR(client_data_manager->get_client_balance("User2").rub_balance(), -1260, EPSILON);
-    EXPECT_NEAR(client_data_manager->get_client_balance("User3").usd_balance(),   -30, EPSILON);
-    EXPECT_NEAR(client_data_manager->get_client_balance("User3").rub_balance(),  1880, EPSILON);
+    verify_client_balance("User1", 10, -620);
+    verify_client_balance("User2", 20, -1260);
+    verify_client_balance("User3", -30, 1880);
 
     auto active_orders = client_data_manager->get_all_active_oreders();
     EXPECT_EQ(active_orders.active_sell_orders_size(), 1);
     EXPECT_EQ(active_orders.active_sell_orders(0).usd_amount(), 20);
 }
 
+TEST_F(CoreTest, NonIntersectingOrders) {
+    auto buy_order = create_test_order(Serialize::TradeOrder::BUY, 60.0, 10, "Buyer");
+    auto sell_order = create_test_order(Serialize::TradeOrder::SELL, 61.0, 10, "Seller");
+
+    add_order_to_containers(buy_order);
+    add_order_to_containers(sell_order);
+
+    core_->process_orders();
+
+    verify_client_balance("Buyer", 0, 0);
+    verify_client_balance("Seller", 0, 0);
+
+    auto active_orders = client_data_manager_->get_all_active_oreders();
+    EXPECT_EQ(active_orders.active_buy_orders_size(), 1);
+    EXPECT_EQ(active_orders.active_sell_orders_size(), 1);
+}
+
+TEST_F(CoreTest, MatchingOrdersWithSamePriceAndVolume) {
+    auto buy_order = create_test_order(Serialize::TradeOrder::BUY, 72.5, 15, "Buyer");
+    auto sell_order = create_test_order(Serialize::TradeOrder::SELL, 72.5, 15, "Seller");
+
+    add_order_to_containers(buy_order);
+    add_order_to_containers(sell_order);
+
+    core_->process_orders();
+
+    verify_client_balance("Buyer", 15, -1087.5);
+    verify_client_balance("Seller", -15, 1087.5);
+
+    auto active_orders = client_data_manager_->get_all_active_oreders();
+    EXPECT_EQ(active_orders.active_buy_orders_size(), 0);
+    EXPECT_EQ(active_orders.active_sell_orders_size(), 0);
+}
+
+
+TEST_F(CoreTest, MultipleOrderExecution) {
+    auto buy_order1 = create_test_order(Serialize::TradeOrder::BUY, 65.0, 20, "Buyer1");
+    auto buy_order2 = create_test_order(Serialize::TradeOrder::BUY, 64.0, 15, "Buyer2");
+    auto buy_order3 = create_test_order(Serialize::TradeOrder::BUY, 63.0, 10, "Buyer3");
+    auto sell_order1 = create_test_order(Serialize::TradeOrder::SELL, 62.0, 30, "Seller1");
+    auto sell_order2 = create_test_order(Serialize::TradeOrder::SELL, 63.5, 25, "Seller2");
+
+    add_order_to_containers(buy_order1);
+    add_order_to_containers(buy_order2);
+    add_order_to_containers(buy_order3);
+    add_order_to_containers(sell_order1);
+    add_order_to_containers(sell_order2);
+    
+    core_->process_orders();
+
+    verify_client_balance("Buyer1", 20, -1300);
+    verify_client_balance("Buyer2", 15, -960);
+    verify_client_balance("Buyer3", 0, 0);
+    verify_client_balance("Seller1", -30, 1940);
+    verify_client_balance("Seller2", -5, 320);
+
+    auto active_orders = client_data_manager_->get_all_active_oreders();
+    EXPECT_EQ(active_orders.active_buy_orders_size(), 1);
+    EXPECT_EQ(active_orders.active_sell_orders_size(), 1);
+}
