@@ -173,9 +173,9 @@ void Core::process_orders() {
 }
 
 bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order) {
-    //                                       //
+
     std::cout << "match_orders   !!! " << std::endl;
-    //                                       //
+
     int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order.usd_amount());
     double transaction_cost = transaction_amount * buy_order.usd_cost(); //*INFO: RUB
 

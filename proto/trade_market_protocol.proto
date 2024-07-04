@@ -59,7 +59,6 @@ message TradeRequest {
     }
 }
 
-///////////////////////////////////////////////// 
 
 message TradeResponse {
     enum status {

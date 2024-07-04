@@ -16,7 +16,6 @@
 #include "client_data_manager.hpp"
 #include "session_client_connection.hpp"
 #include "trade_market_protocol.pb.h"
-#include "i_database.hpp"
 #include "database.hpp"
 #include "auth.hpp"
 #include "config.hpp"

@@ -10,6 +10,7 @@
 #include "common.hpp"
 #include "time_order_utils.hpp"
 #include "order_queue.hpp"
+#include "core.hpp"
 #include "session_manager.hpp"
 #include "trade_market_protocol.pb.h"
 
@@ -18,7 +19,7 @@
 
 //*INFO: Forward declaration
 class SessionManager;
-
+class Core;
 
 class ClientDataManager {
 public:

@@ -150,19 +150,15 @@ void SessionManager::stop_accepting_new_sessions() {
 
 void SessionManager::stop() {
     spdlog::info("Stopping server session namager...");
-    std::cout << "Stopping session namager..." << std::endl;
-
     is_running_.store(false, std::memory_order_release);
 
     client_data_manager_->notify_to_stop_matching_orders();
 
     stop_all_sessions();
-    std::cout << "all_sessions stoped" << std::endl;
+    spdlog::info("All sessions in SessionManager stoped");
 }
 
 void SessionManager::stop_all_sessions() {
-    std::cout << "stop_all_sessions()..." << std::endl;
-
     stop_accepting_new_sessions();
 
      std::vector<std::shared_ptr<SessionClientConnection>> sessions_copy;

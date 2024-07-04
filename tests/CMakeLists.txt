@@ -4,11 +4,6 @@ set(TEST_SOURCES
     main_test.cpp
     core_test.cpp)
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../server
-    ${CMAKE_CURRENT_SOURCE_DIR}/mocks  
-)
-
 add_executable(trade_tests ${TEST_SOURCES})
 
 target_link_libraries(trade_tests

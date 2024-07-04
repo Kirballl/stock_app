@@ -206,7 +206,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             std::cout << "\nQuote History:\n";
             for (const auto& quote : quote_history.quotes()) {
                 std::cout << "Timestamp: " << timestamp_to_readable(quote.timestamp())
-                        << ", Price: " << quote.price() << std::endl;
+                          << ", Price: " << quote.price() << std::endl;
             }
             
             return true;

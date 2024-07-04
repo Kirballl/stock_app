@@ -5,12 +5,8 @@ UserInterface::UserInterface(Client& client, std::thread& io_context_thread) :
 }
 
 void UserInterface::run() {
-
     auth_menu();
-
-    std::cout << "\nWelcome to USD exchange!\n"
-                     << std::endl;
-
+    std::cout << "\nWelcome to USD exchange!" << std::endl;
     stock_menu();
 }
 
@@ -151,68 +147,33 @@ void UserInterface::stock_menu() {
                                    "7) Exit\n";
         short main_menu_option_num = valid_menu_option_num_choice(menu_message, 1, 7);
 
-        Serialize::TradeRequest trade_request;
         switch (main_menu_option_num) {
                 case 1: {
-                    std::string menu_order_type_msg = "Enter order type:\n"
-                                                      "1) buy $\n"
-                                                      "2) sell $\n";
-                    short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
-
-                    double usd_cost = get_valid_numeric_input<double>("Enter USD cost (RUB)", 0.01, 1000.0);
-                    int usd_amount = get_valid_numeric_input<int>("Enter USD amount", 1, 1000000); 
-
-                    trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
-                    Serialize::TradeOrder order = client_.form_order(trade_type, usd_cost, usd_amount);
-                    
-                    trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
-                    trade_request.mutable_order()->CopyFrom(order);
-
-                    client_.send_request_to_stock(trade_request);
+                    handle_make_order();
                     break;
                 }
                 case 2: {
-                    trade_request.set_command(Serialize::TradeRequest::VIEW_BALANCE);
-                    client_.send_request_to_stock(trade_request);
+                    handle_view_balance();
                     break;
                 }
                 case 3: {
-                    trade_request.set_command(Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS);
-                    client_.send_request_to_stock(trade_request);
+                    handle_view_active_orders();
                     break;
                 }
                 case 4: {
-                    trade_request.set_command(Serialize::TradeRequest::VIEW_COMPLETED_TRADES);
-                    client_.send_request_to_stock(trade_request);
+                    handle_view_completed_trades();
                     break;
                 }
                 case 5: {
-                    trade_request.set_command(Serialize::TradeRequest::VIEW_QUOTE_HISTORY);
-                    client_.send_request_to_stock(trade_request);
+                    handle_view_quote_history();
                     break;
                 }
                 case 6: {
-                    std::string menu_order_type_msg = "Enter calcel order type:\n"
-                                                      "1) buy $\n"
-                                                      "2) sell $\n";
-                    short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
-
-                    int64_t cancel_order_id = get_valid_numeric_input<int64_t>("Enter "              
-                                            " order_id you want to cancel. [Tip - copy/paste] \n", 1LL, std::numeric_limits<int64_t>::max());
-                    
-                    trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
-                    Serialize::CancelTradeOrder cancel_order = client_.cancel_order(trade_type, cancel_order_id);
-                    trade_request.set_command(Serialize::TradeRequest::CANCEL_ACTIVE_ORDER);
-                    trade_request.mutable_cancel_order()->CopyFrom(cancel_order);
-                    
-                    client_.send_request_to_stock(trade_request);
+                    handle_cancel_order();
                     break;
                 }
                 case 7: {
-                    client_.close();
-                    if (io_context_thread_.joinable()) {
-                        io_context_thread_.join();
-                    }
+                    handle_exit();
                     return;
                 }
                 default: {
@@ -222,6 +183,75 @@ void UserInterface::stock_menu() {
     }
 }
 
+void UserInterface::handle_make_order() {
+    Serialize::TradeRequest trade_request;
+
+    std::string menu_order_type_msg = "Enter order type:\n"
+                                                      "1) buy $\n"
+                                                      "2) sell $\n";
+    short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
+
+    double usd_cost = get_valid_numeric_input<double>("Enter USD cost (RUB)", 0.01, 1000.0);
+    int usd_amount = get_valid_numeric_input<int>("Enter USD amount", 1, 1000000); 
+
+    trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
+    Serialize::TradeOrder order = client_.form_order(trade_type, usd_cost, usd_amount);
+                    
+    trade_request.set_command(Serialize::TradeRequest::MAKE_ORDER);
+    trade_request.mutable_order()->CopyFrom(order);
+
+    client_.send_request_to_stock(trade_request);
+}
+    
+void UserInterface::handle_view_balance() {
+    Serialize::TradeRequest trade_request;
+    trade_request.set_command(Serialize::TradeRequest::VIEW_BALANCE);
+    client_.send_request_to_stock(trade_request);
+}
+
+void UserInterface::handle_view_active_orders() {
+    Serialize::TradeRequest trade_request;
+    trade_request.set_command(Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS);
+    client_.send_request_to_stock(trade_request);
+}
+    
+void UserInterface::handle_view_completed_trades() {
+    Serialize::TradeRequest trade_request;
+    trade_request.set_command(Serialize::TradeRequest::VIEW_COMPLETED_TRADES);
+    client_.send_request_to_stock(trade_request);
+}
+
+void UserInterface::handle_view_quote_history() {
+    Serialize::TradeRequest trade_request;
+    trade_request.set_command(Serialize::TradeRequest::VIEW_QUOTE_HISTORY);
+    client_.send_request_to_stock(trade_request);
+}
+
+void UserInterface::handle_cancel_order() {
+    Serialize::TradeRequest trade_request;
+    std::string menu_order_type_msg = "Enter calcel order type:\n"
+                                                              "1) buy $\n"
+                                                              "2) sell $\n";
+    short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
+
+    int64_t cancel_order_id = get_valid_numeric_input<int64_t>("Enter "              
+                " order_id you want to cancel. [Tip - copy/paste] \n", 1LL, std::numeric_limits<int64_t>::max());
+                    
+    trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
+    Serialize::CancelTradeOrder cancel_order = client_.cancel_order(trade_type, cancel_order_id);
+
+    trade_request.set_command(Serialize::TradeRequest::CANCEL_ACTIVE_ORDER);
+    trade_request.mutable_cancel_order()->CopyFrom(cancel_order);
+                    
+    client_.send_request_to_stock(trade_request);
+}
+
+void UserInterface::handle_exit() {
+    client_.close();
+    if (io_context_thread_.joinable()) {
+        io_context_thread_.join();
+    }
+}
 
 template<typename T>
 T UserInterface::get_valid_numeric_input(const std::string& prompt, T min_value, T max_value) {

@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <gmock/gmock.h>
 
-#include "i_database.hpp"
+#include "database.hpp"
 #include "trade_market_protocol.pb.h"
 
 class MockDatabase : public IDatabase {

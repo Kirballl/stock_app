@@ -34,8 +34,6 @@ try {
 
     Client client(io_context, endpoints);
 
-    spdlog::info("ping ping");
-
     std::thread io_context_thread([&io_context](){
         io_context.run();
     });
