@@ -56,6 +56,10 @@ public:
     void place_order_to_priority_queue(const Serialize::TradeOrder& order);
     void process_orders(); 
 
+    bool remove_order_by_id(int64_t order_id, trade_type_t trade_type);
+    template<typename T, typename Container, typename Compare>
+    bool remove_from_queue(std::priority_queue<T, Container, Compare>& queue, int64_t order_id);
+
 private:
     void complement_order_books();
     bool match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order); 
@@ -76,10 +80,12 @@ private:
 
 
 private:
-   std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, BuyOrderComparator> buy_orders_book_;
-   std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, SellOrderComparator> sell_orders_book_;
+    mutable std::mutex core_mutex_;
 
-   std::shared_ptr<SessionManager> session_manager_;
+    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, BuyOrderComparator> buy_orders_book_;
+    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, SellOrderComparator> sell_orders_book_;
+
+    std::shared_ptr<SessionManager> session_manager_;
 };
 
 #endif // CORE_HPP

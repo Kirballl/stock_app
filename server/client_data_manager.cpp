@@ -243,6 +243,39 @@ Serialize::QuoteHistory ClientDataManager::get_quote_history() {
     return quote_history;
 }
 
+bool ClientDataManager::cancel_active_order(trade_type_t trade_type, int64_t order_id, const std::string& client_username) {
+
+    auto& target_orders = (trade_type == BUY) ? active_buy_orders_ : active_sell_orders_;
+
+    {
+        std::unique_lock<std::shared_mutex> cancel_active_order_unique_lock(client_data_mutex_); 
+        auto active_order_iterator = target_orders.find(order_id);
+        if (active_order_iterator == target_orders.end()) {
+            return false;
+        }
+
+        auto possible_to_cancel_order = active_order_iterator->second;
+        if (possible_to_cancel_order.username() != client_username) {
+            return false;
+        }
+    }
+    
+    auto core = session_manager_->get_core();
+    if (!core->remove_order_by_id(order_id, trade_type)) {
+        return false;
+    }
+
+    {
+        std::unique_lock<std::shared_mutex> cancel_active_order_unique_lock(client_data_mutex_);
+
+        auto type = (trade_type == BUY) ? Serialize::TradeOrder::BUY : Serialize::TradeOrder::SELL;
+
+        remove_order_from_active_orders(order_id, type);
+    }
+    
+    return true;
+}
+
 //                                                                                //
 //                     Condition variables notifications                          //
 //                                                                                //

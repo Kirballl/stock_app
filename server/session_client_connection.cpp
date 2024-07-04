@@ -193,30 +193,34 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
                 response.set_response_msg(Serialize::TradeResponse::ERROR);
                 break;
             } 
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_BALANCE);
+            response.set_response_msg(Serialize::TradeResponse::SUCCESS_VIEW_BALANCE);
             break;
         }
             
         case Serialize::TradeRequest::VIEW_ALL_ACTIVE_ORDERS : {
             handle_view_all_active_oreders_command(response);
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS);
+            response.set_response_msg(Serialize::TradeResponse::SUCCESS_VIEW_ALL_ACTIVE_ORDERS);
             break;
         }
             
         case Serialize::TradeRequest::VIEW_COMPLETED_TRADES : {
             handle_view_last_comleted_oreders_command(response);
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_COMPLETED_TRADES);
+            response.set_response_msg(Serialize::TradeResponse::SUCCESS_VIEW_COMPLETED_TRADES);
             break;
         }
             
         case Serialize::TradeRequest::VIEW_QUOTE_HISTORY : {
             handle_view_quote_history(response);
-            response.set_response_msg(Serialize::TradeResponse::SUCCES_VIEW_QUOTE_HISTORY);
+            response.set_response_msg(Serialize::TradeResponse::SUCCESS_VIEW_QUOTE_HISTORY);
             break;
         }
 
         case Serialize::TradeRequest::CANCEL_ACTIVE_ORDER : {
-            /* code */
+            if (!handle_cancel_active_order_command(request)) {
+                response.set_response_msg(Serialize::TradeResponse::ERROR_CANCEL_ACTIVE_ORDER);
+                break;
+            } 
+            response.set_response_msg(Serialize::TradeResponse::SUCCESS_CANCEL_ACTIVE_ORDER); 
             break;
         }
 
@@ -342,4 +346,13 @@ void SessionClientConnection::handle_view_quote_history(Serialize::TradeResponse
 
     Serialize::QuoteHistory quote_history = client_data_manager->get_quote_history();
     responce.mutable_quote_history()->CopyFrom(quote_history);
+}
+
+bool SessionClientConnection::handle_cancel_active_order_command(Serialize::TradeRequest& request) {
+    Serialize::CancelTradeOrder cancel_order = request.cancel_order();
+    trade_type_t type = (cancel_order.type() == Serialize::CancelTradeOrder::BUY) ? BUY : SELL;
+
+    auto client_data_manager = session_manager_->get_client_data_manager();
+
+    return client_data_manager->cancel_active_order(type, cancel_order.order_id(), username_);
 }

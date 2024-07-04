@@ -68,6 +68,20 @@ struct TradeOrderDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeOrderDefaultTypeInternal _TradeOrder_default_instance_;
+PROTOBUF_CONSTEXPR CancelTradeOrder::CancelTradeOrder(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.order_id_)*/int64_t{0}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct CancelTradeOrderDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CancelTradeOrderDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CancelTradeOrderDefaultTypeInternal() {}
+  union {
+    CancelTradeOrder _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CancelTradeOrderDefaultTypeInternal _CancelTradeOrder_default_instance_;
 PROTOBUF_CONSTEXPR TradeRequest::TradeRequest(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.username_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
@@ -184,8 +198,8 @@ struct QuoteDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 QuoteDefaultTypeInternal _Quote_default_instance_;
 }  // namespace Serialize
-static ::_pb::Metadata file_level_metadata_trade_5fmarket_5fprotocol_2eproto[11];
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[3];
+static ::_pb::Metadata file_level_metadata_trade_5fmarket_5fprotocol_2eproto[12];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[4];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_trade_5fmarket_5fprotocol_2eproto = nullptr;
 
 const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -219,6 +233,14 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.usd_volume_),
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeOrder, _impl_.username_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Serialize::CancelTradeOrder, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Serialize::CancelTradeOrder, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::Serialize::CancelTradeOrder, _impl_.order_id_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_._oneof_case_[0]),
@@ -227,6 +249,7 @@ const uint32_t TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets[] PROTOBUF
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.command_),
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.username_),
   PROTOBUF_FIELD_OFFSET(::Serialize::TradeRequest, _impl_.jwt_),
+  ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
@@ -297,20 +320,22 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 0, -1, -1, sizeof(::Serialize::SignUpRequest)},
   { 8, -1, -1, sizeof(::Serialize::SignInRequest)},
   { 16, -1, -1, sizeof(::Serialize::TradeOrder)},
-  { 29, -1, -1, sizeof(::Serialize::TradeRequest)},
-  { 42, -1, -1, sizeof(::Serialize::TradeResponse)},
-  { 56, -1, -1, sizeof(::Serialize::ClientBalance)},
-  { 64, -1, -1, sizeof(::Serialize::AccountBalance)},
-  { 72, -1, -1, sizeof(::Serialize::ActiveOrders)},
-  { 80, -1, -1, sizeof(::Serialize::CompletedOredrs)},
-  { 88, -1, -1, sizeof(::Serialize::QuoteHistory)},
-  { 95, -1, -1, sizeof(::Serialize::Quote)},
+  { 29, -1, -1, sizeof(::Serialize::CancelTradeOrder)},
+  { 37, -1, -1, sizeof(::Serialize::TradeRequest)},
+  { 51, -1, -1, sizeof(::Serialize::TradeResponse)},
+  { 65, -1, -1, sizeof(::Serialize::ClientBalance)},
+  { 73, -1, -1, sizeof(::Serialize::AccountBalance)},
+  { 81, -1, -1, sizeof(::Serialize::ActiveOrders)},
+  { 89, -1, -1, sizeof(::Serialize::CompletedOredrs)},
+  { 97, -1, -1, sizeof(::Serialize::QuoteHistory)},
+  { 104, -1, -1, sizeof(::Serialize::Quote)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
   &::Serialize::_SignUpRequest_default_instance_._instance,
   &::Serialize::_SignInRequest_default_instance_._instance,
   &::Serialize::_TradeOrder_default_instance_._instance,
+  &::Serialize::_CancelTradeOrder_default_instance_._instance,
   &::Serialize::_TradeRequest_default_instance_._instance,
   &::Serialize::_TradeResponse_default_instance_._instance,
   &::Serialize::_ClientBalance_default_instance_._instance,
@@ -330,55 +355,59 @@ const char descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto[] PROTOBU
   "radeType\022\020\n\010usd_cost\030\002 \001(\001\022\022\n\nusd_amount"
   "\030\003 \001(\005\022\021\n\ttimestamp\030\004 \001(\003\022\020\n\010order_id\030\005 "
   "\001(\003\022\022\n\nusd_volume\030\006 \001(\005\022\020\n\010username\030\007 \001("
-  "\t\"\036\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\270\003\n\014Tr"
-  "adeRequest\0224\n\007command\030\001 \001(\0162#.Serialize."
-  "TradeRequest.CommandType\022\020\n\010username\030\002 \001"
-  "(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017sign_up_request\030\004 \001(\013"
-  "2\030.Serialize.SignUpRequestH\000\0223\n\017sign_in_"
-  "request\030\005 \001(\0132\030.Serialize.SignInRequestH"
-  "\000\022&\n\005order\030\006 \001(\0132\025.Serialize.TradeOrderH"
-  "\000\"\261\001\n\013CommandType\022\013\n\007SIGN_UP\020\000\022\013\n\007SIGN_I"
-  "N\020\001\022\016\n\nMAKE_ORDER\020\002\022\020\n\014VIEW_BALANCE\020\003\022\032\n"
-  "\026VIEW_ALL_ACTIVE_ORDERS\020\004\022\031\n\025VIEW_COMPLE"
-  "TED_TRADES\020\005\022\026\n\022VIEW_QUOTE_HISTORY\020\006\022\027\n\023"
-  "CANCEL_ACTIVE_ORDER\020\007B\r\n\013RequestData\"\337\005\n"
-  "\rTradeResponse\0225\n\014response_msg\030\001 \001(\0162\037.S"
-  "erialize.TradeResponse.status\022\r\n\003jwt\030\002 \001"
-  "(\tH\000\0224\n\017account_balance\030\003 \001(\0132\031.Serializ"
-  "e.AccountBalanceH\000\0220\n\ractive_orders\030\004 \001("
-  "\0132\027.Serialize.ActiveOrdersH\000\0226\n\020complete"
-  "d_orders\030\005 \001(\0132\032.Serialize.CompletedOred"
-  "rsH\000\0220\n\rquote_history\030\006 \001(\0132\027.Serialize."
-  "QuoteHistoryH\000\022\030\n\016error_response\030\007 \001(\tH\000"
-  "\"\214\003\n\006status\022\t\n\005ERROR\020\000\022\026\n\022SIGN_UP_SUCCES"
-  "SFUL\020\001\022\032\n\026USERNAME_ALREADY_TAKEN\020\002\022\026\n\022SI"
-  "GN_IN_SUCCESSFUL\020\003\022 \n\034INVALID_USERNAME_O"
-  "R_PASSWORD\020\004\022\032\n\026USER_ALREADY_LOGGED_IN\020\005"
-  "\022\036\n\032ORDER_SUCCESSFULLY_CREATED\020\006\022\027\n\023SUCC"
-  "ES_VIEW_BALANCE\020\007\022!\n\035SUCCES_VIEW_ALL_ACT"
-  "IVE_ORDERS\020\010\022 \n\034SUCCES_VIEW_COMPLETED_TR"
-  "ADES\020\n\022\035\n\031SUCCES_VIEW_QUOTE_HISTORY\020\013\022\036\n"
-  "\032SUCCES_CANCEL_ACTIVE_ORDER\020\014\022\035\n\031ERROR_C"
-  "ANCEL_ACTIVE_ORDER\020\r\022\021\n\rORDER_MATCHED\020\016B"
-  "\r\n\013RequestData\"K\n\rClientBalance\022\020\n\010usern"
-  "ame\030\001 \001(\t\022(\n\005funds\030\002 \001(\0132\031.Serialize.Acc"
-  "ountBalance\":\n\016AccountBalance\022\023\n\013usd_bal"
-  "ance\030\001 \001(\001\022\023\n\013rub_balance\030\002 \001(\001\"s\n\014Activ"
-  "eOrders\0220\n\021active_buy_orders\030\001 \003(\0132\025.Ser"
-  "ialize.TradeOrder\0221\n\022active_sell_orders\030"
-  "\002 \003(\0132\025.Serialize.TradeOrder\"|\n\017Complete"
-  "dOredrs\0223\n\024completed_buy_orders\030\001 \003(\0132\025."
-  "Serialize.TradeOrder\0224\n\025completed_sell_o"
-  "rders\030\002 \003(\0132\025.Serialize.TradeOrder\"0\n\014Qu"
-  "oteHistory\022 \n\006quotes\030\001 \003(\0132\020.Serialize.Q"
-  "uote\")\n\005Quote\022\021\n\ttimestamp\030\001 \001(\003\022\r\n\005pric"
-  "e\030\002 \001(\001b\006proto3"
+  "\t\"\036\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"y\n\020Can"
+  "celTradeOrder\0223\n\004type\030\001 \001(\0162%.Serialize."
+  "CancelTradeOrder.TradeType\022\020\n\010order_id\030\002"
+  " \001(\003\"\036\n\tTradeType\022\007\n\003BUY\020\000\022\010\n\004SELL\020\001\"\355\003\n"
+  "\014TradeRequest\0224\n\007command\030\001 \001(\0162#.Seriali"
+  "ze.TradeRequest.CommandType\022\020\n\010username\030"
+  "\002 \001(\t\022\013\n\003jwt\030\003 \001(\t\0223\n\017sign_up_request\030\004 "
+  "\001(\0132\030.Serialize.SignUpRequestH\000\0223\n\017sign_"
+  "in_request\030\005 \001(\0132\030.Serialize.SignInReque"
+  "stH\000\022&\n\005order\030\006 \001(\0132\025.Serialize.TradeOrd"
+  "erH\000\0223\n\014cancel_order\030\007 \001(\0132\033.Serialize.C"
+  "ancelTradeOrderH\000\"\261\001\n\013CommandType\022\013\n\007SIG"
+  "N_UP\020\000\022\013\n\007SIGN_IN\020\001\022\016\n\nMAKE_ORDER\020\002\022\020\n\014V"
+  "IEW_BALANCE\020\003\022\032\n\026VIEW_ALL_ACTIVE_ORDERS\020"
+  "\004\022\031\n\025VIEW_COMPLETED_TRADES\020\005\022\026\n\022VIEW_QUO"
+  "TE_HISTORY\020\006\022\027\n\023CANCEL_ACTIVE_ORDER\020\007B\r\n"
+  "\013RequestData\"\344\005\n\rTradeResponse\0225\n\014respon"
+  "se_msg\030\001 \001(\0162\037.Serialize.TradeResponse.s"
+  "tatus\022\r\n\003jwt\030\002 \001(\tH\000\0224\n\017account_balance\030"
+  "\003 \001(\0132\031.Serialize.AccountBalanceH\000\0220\n\rac"
+  "tive_orders\030\004 \001(\0132\027.Serialize.ActiveOrde"
+  "rsH\000\0226\n\020completed_orders\030\005 \001(\0132\032.Seriali"
+  "ze.CompletedOredrsH\000\0220\n\rquote_history\030\006 "
+  "\001(\0132\027.Serialize.QuoteHistoryH\000\022\030\n\016error_"
+  "response\030\007 \001(\tH\000\"\221\003\n\006status\022\t\n\005ERROR\020\000\022\026"
+  "\n\022SIGN_UP_SUCCESSFUL\020\001\022\032\n\026USERNAME_ALREA"
+  "DY_TAKEN\020\002\022\026\n\022SIGN_IN_SUCCESSFUL\020\003\022 \n\034IN"
+  "VALID_USERNAME_OR_PASSWORD\020\004\022\032\n\026USER_ALR"
+  "EADY_LOGGED_IN\020\005\022\036\n\032ORDER_SUCCESSFULLY_C"
+  "REATED\020\006\022\030\n\024SUCCESS_VIEW_BALANCE\020\007\022\"\n\036SU"
+  "CCESS_VIEW_ALL_ACTIVE_ORDERS\020\010\022!\n\035SUCCES"
+  "S_VIEW_COMPLETED_TRADES\020\n\022\036\n\032SUCCESS_VIE"
+  "W_QUOTE_HISTORY\020\013\022\037\n\033SUCCESS_CANCEL_ACTI"
+  "VE_ORDER\020\014\022\035\n\031ERROR_CANCEL_ACTIVE_ORDER\020"
+  "\r\022\021\n\rORDER_MATCHED\020\016B\r\n\013RequestData\"K\n\rC"
+  "lientBalance\022\020\n\010username\030\001 \001(\t\022(\n\005funds\030"
+  "\002 \001(\0132\031.Serialize.AccountBalance\":\n\016Acco"
+  "untBalance\022\023\n\013usd_balance\030\001 \001(\001\022\023\n\013rub_b"
+  "alance\030\002 \001(\001\"s\n\014ActiveOrders\0220\n\021active_b"
+  "uy_orders\030\001 \003(\0132\025.Serialize.TradeOrder\0221"
+  "\n\022active_sell_orders\030\002 \003(\0132\025.Serialize.T"
+  "radeOrder\"|\n\017CompletedOredrs\0223\n\024complete"
+  "d_buy_orders\030\001 \003(\0132\025.Serialize.TradeOrde"
+  "r\0224\n\025completed_sell_orders\030\002 \003(\0132\025.Seria"
+  "lize.TradeOrder\"0\n\014QuoteHistory\022 \n\006quote"
+  "s\030\001 \003(\0132\020.Serialize.Quote\")\n\005Quote\022\021\n\tti"
+  "mestamp\030\001 \001(\003\022\r\n\005price\030\002 \001(\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_trade_5fmarket_5fprotocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_trade_5fmarket_5fprotocol_2eproto = {
-    false, false, 2015, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
+    false, false, 2196, descriptor_table_protodef_trade_5fmarket_5fprotocol_2eproto,
     "trade_market_protocol.proto",
-    &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 11,
+    &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once, nullptr, 0, 12,
     schemas, file_default_instances, TableStruct_trade_5fmarket_5fprotocol_2eproto::offsets,
     file_level_metadata_trade_5fmarket_5fprotocol_2eproto, file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto,
     file_level_service_descriptors_trade_5fmarket_5fprotocol_2eproto,
@@ -411,9 +440,30 @@ constexpr TradeOrder_TradeType TradeOrder::TradeType_MIN;
 constexpr TradeOrder_TradeType TradeOrder::TradeType_MAX;
 constexpr int TradeOrder::TradeType_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeRequest_CommandType_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CancelTradeOrder_TradeType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_trade_5fmarket_5fprotocol_2eproto);
   return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[1];
+}
+bool CancelTradeOrder_TradeType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+constexpr CancelTradeOrder_TradeType CancelTradeOrder::BUY;
+constexpr CancelTradeOrder_TradeType CancelTradeOrder::SELL;
+constexpr CancelTradeOrder_TradeType CancelTradeOrder::TradeType_MIN;
+constexpr CancelTradeOrder_TradeType CancelTradeOrder::TradeType_MAX;
+constexpr int CancelTradeOrder::TradeType_ARRAYSIZE;
+#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeRequest_CommandType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_trade_5fmarket_5fprotocol_2eproto);
+  return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[2];
 }
 bool TradeRequest_CommandType_IsValid(int value) {
   switch (value) {
@@ -446,7 +496,7 @@ constexpr int TradeRequest::CommandType_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TradeResponse_status_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_trade_5fmarket_5fprotocol_2eproto);
-  return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[2];
+  return file_level_enum_descriptors_trade_5fmarket_5fprotocol_2eproto[3];
 }
 bool TradeResponse_status_IsValid(int value) {
   switch (value) {
@@ -478,11 +528,11 @@ constexpr TradeResponse_status TradeResponse::SIGN_IN_SUCCESSFUL;
 constexpr TradeResponse_status TradeResponse::INVALID_USERNAME_OR_PASSWORD;
 constexpr TradeResponse_status TradeResponse::USER_ALREADY_LOGGED_IN;
 constexpr TradeResponse_status TradeResponse::ORDER_SUCCESSFULLY_CREATED;
-constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_BALANCE;
-constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS;
-constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_COMPLETED_TRADES;
-constexpr TradeResponse_status TradeResponse::SUCCES_VIEW_QUOTE_HISTORY;
-constexpr TradeResponse_status TradeResponse::SUCCES_CANCEL_ACTIVE_ORDER;
+constexpr TradeResponse_status TradeResponse::SUCCESS_VIEW_BALANCE;
+constexpr TradeResponse_status TradeResponse::SUCCESS_VIEW_ALL_ACTIVE_ORDERS;
+constexpr TradeResponse_status TradeResponse::SUCCESS_VIEW_COMPLETED_TRADES;
+constexpr TradeResponse_status TradeResponse::SUCCESS_VIEW_QUOTE_HISTORY;
+constexpr TradeResponse_status TradeResponse::SUCCESS_CANCEL_ACTIVE_ORDER;
 constexpr TradeResponse_status TradeResponse::ERROR_CANCEL_ACTIVE_ORDER;
 constexpr TradeResponse_status TradeResponse::ORDER_MATCHED;
 constexpr TradeResponse_status TradeResponse::status_MIN;
@@ -1372,11 +1422,226 @@ void TradeOrder::InternalSwap(TradeOrder* other) {
 
 // ===================================================================
 
+class CancelTradeOrder::_Internal {
+ public:
+};
+
+CancelTradeOrder::CancelTradeOrder(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Serialize.CancelTradeOrder)
+}
+CancelTradeOrder::CancelTradeOrder(const CancelTradeOrder& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CancelTradeOrder* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.order_id_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&_impl_.order_id_, &from._impl_.order_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.order_id_)) + sizeof(_impl_.type_));
+  // @@protoc_insertion_point(copy_constructor:Serialize.CancelTradeOrder)
+}
+
+inline void CancelTradeOrder::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.order_id_){int64_t{0}}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+CancelTradeOrder::~CancelTradeOrder() {
+  // @@protoc_insertion_point(destructor:Serialize.CancelTradeOrder)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void CancelTradeOrder::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void CancelTradeOrder::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void CancelTradeOrder::Clear() {
+// @@protoc_insertion_point(message_clear_start:Serialize.CancelTradeOrder)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&_impl_.order_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.order_id_)) + sizeof(_impl_.type_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* CancelTradeOrder::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .Serialize.CancelTradeOrder.TradeType type = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_type(static_cast<::Serialize::CancelTradeOrder_TradeType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int64 order_id = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          _impl_.order_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* CancelTradeOrder::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Serialize.CancelTradeOrder)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Serialize.CancelTradeOrder.TradeType type = 1;
+  if (this->_internal_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_type(), target);
+  }
+
+  // int64 order_id = 2;
+  if (this->_internal_order_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt64ToArray(2, this->_internal_order_id(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Serialize.CancelTradeOrder)
+  return target;
+}
+
+size_t CancelTradeOrder::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Serialize.CancelTradeOrder)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int64 order_id = 2;
+  if (this->_internal_order_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_order_id());
+  }
+
+  // .Serialize.CancelTradeOrder.TradeType type = 1;
+  if (this->_internal_type() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CancelTradeOrder::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    CancelTradeOrder::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CancelTradeOrder::GetClassData() const { return &_class_data_; }
+
+
+void CancelTradeOrder::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CancelTradeOrder*>(&to_msg);
+  auto& from = static_cast<const CancelTradeOrder&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Serialize.CancelTradeOrder)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_order_id() != 0) {
+    _this->_internal_set_order_id(from._internal_order_id());
+  }
+  if (from._internal_type() != 0) {
+    _this->_internal_set_type(from._internal_type());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void CancelTradeOrder::CopyFrom(const CancelTradeOrder& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Serialize.CancelTradeOrder)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CancelTradeOrder::IsInitialized() const {
+  return true;
+}
+
+void CancelTradeOrder::InternalSwap(CancelTradeOrder* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CancelTradeOrder, _impl_.type_)
+      + sizeof(CancelTradeOrder::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(CancelTradeOrder, _impl_.order_id_)>(
+          reinterpret_cast<char*>(&_impl_.order_id_),
+          reinterpret_cast<char*>(&other->_impl_.order_id_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata CancelTradeOrder::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[3]);
+}
+
+// ===================================================================
+
 class TradeRequest::_Internal {
  public:
   static const ::Serialize::SignUpRequest& sign_up_request(const TradeRequest* msg);
   static const ::Serialize::SignInRequest& sign_in_request(const TradeRequest* msg);
   static const ::Serialize::TradeOrder& order(const TradeRequest* msg);
+  static const ::Serialize::CancelTradeOrder& cancel_order(const TradeRequest* msg);
 };
 
 const ::Serialize::SignUpRequest&
@@ -1390,6 +1655,10 @@ TradeRequest::_Internal::sign_in_request(const TradeRequest* msg) {
 const ::Serialize::TradeOrder&
 TradeRequest::_Internal::order(const TradeRequest* msg) {
   return *msg->_impl_.RequestData_.order_;
+}
+const ::Serialize::CancelTradeOrder&
+TradeRequest::_Internal::cancel_order(const TradeRequest* msg) {
+  return *msg->_impl_.RequestData_.cancel_order_;
 }
 void TradeRequest::set_allocated_sign_up_request(::Serialize::SignUpRequest* sign_up_request) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -1435,6 +1704,21 @@ void TradeRequest::set_allocated_order(::Serialize::TradeOrder* order) {
     _impl_.RequestData_.order_ = order;
   }
   // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.order)
+}
+void TradeRequest::set_allocated_cancel_order(::Serialize::CancelTradeOrder* cancel_order) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_RequestData();
+  if (cancel_order) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(cancel_order);
+    if (message_arena != submessage_arena) {
+      cancel_order = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, cancel_order, submessage_arena);
+    }
+    set_has_cancel_order();
+    _impl_.RequestData_.cancel_order_ = cancel_order;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Serialize.TradeRequest.cancel_order)
 }
 TradeRequest::TradeRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -1486,6 +1770,11 @@ TradeRequest::TradeRequest(const TradeRequest& from)
     case kOrder: {
       _this->_internal_mutable_order()->::Serialize::TradeOrder::MergeFrom(
           from._internal_order());
+      break;
+    }
+    case kCancelOrder: {
+      _this->_internal_mutable_cancel_order()->::Serialize::CancelTradeOrder::MergeFrom(
+          from._internal_cancel_order());
       break;
     }
     case REQUESTDATA_NOT_SET: {
@@ -1558,6 +1847,12 @@ void TradeRequest::clear_RequestData() {
     case kOrder: {
       if (GetArenaForAllocation() == nullptr) {
         delete _impl_.RequestData_.order_;
+      }
+      break;
+    }
+    case kCancelOrder: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.RequestData_.cancel_order_;
       }
       break;
     }
@@ -1641,6 +1936,14 @@ const char* TradeRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* 
         } else
           goto handle_unusual;
         continue;
+      // .Serialize.CancelTradeOrder cancel_order = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58)) {
+          ptr = ctx->ParseMessage(_internal_mutable_cancel_order(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
       default:
         goto handle_unusual;
     }  // switch
@@ -1718,6 +2021,13 @@ uint8_t* TradeRequest::_InternalSerialize(
         _Internal::order(this).GetCachedSize(), target, stream);
   }
 
+  // .Serialize.CancelTradeOrder cancel_order = 7;
+  if (_internal_has_cancel_order()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(7, _Internal::cancel_order(this),
+        _Internal::cancel_order(this).GetCachedSize(), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1776,6 +2086,13 @@ size_t TradeRequest::ByteSizeLong() const {
           *_impl_.RequestData_.order_);
       break;
     }
+    // .Serialize.CancelTradeOrder cancel_order = 7;
+    case kCancelOrder: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *_impl_.RequestData_.cancel_order_);
+      break;
+    }
     case REQUESTDATA_NOT_SET: {
       break;
     }
@@ -1823,6 +2140,11 @@ void TradeRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::P
           from._internal_order());
       break;
     }
+    case kCancelOrder: {
+      _this->_internal_mutable_cancel_order()->::Serialize::CancelTradeOrder::MergeFrom(
+          from._internal_cancel_order());
+      break;
+    }
     case REQUESTDATA_NOT_SET: {
       break;
     }
@@ -1862,7 +2184,7 @@ void TradeRequest::InternalSwap(TradeRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata TradeRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[3]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[4]);
 }
 
 // ===================================================================
@@ -2391,7 +2713,7 @@ void TradeResponse::InternalSwap(TradeResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata TradeResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[4]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[5]);
 }
 
 // ===================================================================
@@ -2636,7 +2958,7 @@ void ClientBalance::InternalSwap(ClientBalance* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ClientBalance::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[5]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[6]);
 }
 
 // ===================================================================
@@ -2871,7 +3193,7 @@ void AccountBalance::InternalSwap(AccountBalance* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AccountBalance::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[6]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[7]);
 }
 
 // ===================================================================
@@ -3090,7 +3412,7 @@ void ActiveOrders::InternalSwap(ActiveOrders* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ActiveOrders::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[7]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[8]);
 }
 
 // ===================================================================
@@ -3309,7 +3631,7 @@ void CompletedOredrs::InternalSwap(CompletedOredrs* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata CompletedOredrs::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[8]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[9]);
 }
 
 // ===================================================================
@@ -3494,7 +3816,7 @@ void QuoteHistory::InternalSwap(QuoteHistory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata QuoteHistory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[9]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[10]);
 }
 
 // ===================================================================
@@ -3717,7 +4039,7 @@ void Quote::InternalSwap(Quote* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata Quote::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_trade_5fmarket_5fprotocol_2eproto_getter, &descriptor_table_trade_5fmarket_5fprotocol_2eproto_once,
-      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[10]);
+      file_level_metadata_trade_5fmarket_5fprotocol_2eproto[11]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -3734,6 +4056,10 @@ Arena::CreateMaybeMessage< ::Serialize::SignInRequest >(Arena* arena) {
 template<> PROTOBUF_NOINLINE ::Serialize::TradeOrder*
 Arena::CreateMaybeMessage< ::Serialize::TradeOrder >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Serialize::TradeOrder >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Serialize::CancelTradeOrder*
+Arena::CreateMaybeMessage< ::Serialize::CancelTradeOrder >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Serialize::CancelTradeOrder >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Serialize::TradeRequest*
 Arena::CreateMaybeMessage< ::Serialize::TradeRequest >(Arena* arena) {

@@ -43,14 +43,16 @@ void Core::stock_loop() {
 
         auto client_data_manager = session_manager_->get_client_data_manager();
         client_data_manager->stock_loop_wait_for_orders(session_manager_);
+
 //                                       //
  std::cout << "stock_loop" << std::endl;
 //                                       //
+        std::lock_guard<std::mutex> match_engine_lock_guard(core_mutex_);
+
         complement_order_books();
 
         if (!session_manager_->is_runnig()) { 
             save_all_active_orders_to_db();
-            std::cout << "active orders from core saved to db" << std::endl;
             break;
         }
 
@@ -221,4 +223,37 @@ bool Core::change_clients_balances(Serialize::TradeOrder& sell_order, Serialize:
 bool Core::move_order_to_completed_orders(Serialize::TradeOrder& completed_order) {
     auto client_data_manager = session_manager_->get_client_data_manager();
     return client_data_manager->add_order_to_completed(completed_order);
+}
+
+bool Core::remove_order_by_id(int64_t order_id, trade_type_t trade_type) {
+    std::lock_guard<std::mutex> remove_order_by_id_lock_guard(core_mutex_);
+
+    if (trade_type == BUY) {
+        return remove_from_queue(buy_orders_book_, order_id);
+    } else
+    if (trade_type == SELL) {
+        return remove_from_queue(sell_orders_book_, order_id);
+    } else {
+        return false;
+    }
+}
+
+template<typename T, typename Container, typename Compare>
+bool Core::remove_from_queue(std::priority_queue<T, Container, Compare>& queue, int64_t order_id) {
+
+    std::priority_queue<T, Container, Compare> temp_queue;
+    bool found = false;
+
+    while (!queue.empty()) {
+        const auto& order = queue.top();
+        if (order.order_id() != order_id) {
+            temp_queue.push(std::move(const_cast<T&>(order)));
+        } else {
+            found = true;
+        }
+        queue.pop();
+    }
+
+    queue = std::move(temp_queue);
+    return found;
 }

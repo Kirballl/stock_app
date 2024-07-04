@@ -26,6 +26,15 @@ message TradeOrder {
     string username = 7;
 }
 
+message CancelTradeOrder {
+    enum TradeType {
+        BUY = 0;
+        SELL = 1;
+    }
+    TradeType type = 1;
+    int64 order_id = 2;
+}
+
 message TradeRequest {
     enum CommandType {
         SIGN_UP = 0;
@@ -46,6 +55,7 @@ message TradeRequest {
         SignUpRequest sign_up_request = 4;
         SignInRequest sign_in_request = 5;
         TradeOrder order = 6;
+        CancelTradeOrder cancel_order = 7;
     }
 }
 
@@ -60,11 +70,11 @@ message TradeResponse {
         INVALID_USERNAME_OR_PASSWORD = 4;
         USER_ALREADY_LOGGED_IN = 5;
         ORDER_SUCCESSFULLY_CREATED = 6;
-        SUCCES_VIEW_BALANCE = 7;
-        SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8;
-        SUCCES_VIEW_COMPLETED_TRADES = 10;
-        SUCCES_VIEW_QUOTE_HISTORY = 11;
-        SUCCES_CANCEL_ACTIVE_ORDER = 12;
+        SUCCESS_VIEW_BALANCE = 7;
+        SUCCESS_VIEW_ALL_ACTIVE_ORDERS = 8;
+        SUCCESS_VIEW_COMPLETED_TRADES = 10;
+        SUCCESS_VIEW_QUOTE_HISTORY = 11;
+        SUCCESS_CANCEL_ACTIVE_ORDER = 12;
         ERROR_CANCEL_ACTIVE_ORDER = 13;
         ORDER_MATCHED = 14;
     }

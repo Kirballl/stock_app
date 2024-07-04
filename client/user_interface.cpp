@@ -192,9 +192,19 @@ void UserInterface::stock_menu() {
                     break;
                 }
                 case 6: {
-                    trade_request.set_command(Serialize::TradeRequest::CANCEL_ACTIVE_ORDER);
+                    std::string menu_order_type_msg = "Enter calcel order type:\n"
+                                                      "1) buy $\n"
+                                                      "2) sell $\n";
+                    short menu_order_type = valid_menu_option_num_choice(menu_order_type_msg, 1, 2);
 
-                    // enter oreder id 
+                    int64_t cancel_order_id = get_valid_numeric_input<int64_t>("Enter "              
+                                            " order_id you want to cancel. [Tip - copy/paste] \n", 1LL, std::numeric_limits<int64_t>::max());
+                    
+                    trade_type_t trade_type = (menu_order_type == 1) ? BUY : SELL;
+                    Serialize::CancelTradeOrder cancel_order = client_.cancel_order(trade_type, cancel_order_id);
+                    trade_request.set_command(Serialize::TradeRequest::CANCEL_ACTIVE_ORDER);
+                    trade_request.mutable_cancel_order()->CopyFrom(cancel_order);
+                    
                     client_.send_request_to_stock(trade_request);
                     break;
                 }
@@ -220,22 +230,33 @@ T UserInterface::get_valid_numeric_input(const std::string& prompt, T min_value,
     while (true) {
         std::cout << prompt << " (between " << min_value << " and " << max_value << "): ";
         std::getline(std::cin, input);
-
+        
         try {
+            size_t pos;
             if constexpr (std::is_same_v<T, int>) {
-                value = std::stoi(input);
-            } else 
-            if constexpr (std::is_same_v<T, double>) {
+                value = std::stoi(input, &pos);
+                if (pos != input.length()) {
+                    throw std::invalid_argument("Input contains non-integer part");
+                }
+            } else if constexpr (std::is_same_v<T, int64_t>) {
+                value = std::stoll(input, &pos);
+                if (pos != input.length()) {
+                    throw std::invalid_argument("Input contains non-integer part");
+                }
+            } else if constexpr (std::is_same_v<T, double>) {
                 value = std::stod(input);
+            } else {
+                static_assert(std::is_same_v<T, int> || std::is_same_v<T, int64_t> || std::is_same_v<T, double>,
+                              "Unsupported type for get_valid_numeric_input");
             }
-
+            
             if (value >= min_value && value <= max_value) {
                 return value;
             } else {
                 std::cout << "Value must be between " << min_value << " and " << max_value << ". Please try again." << std::endl;
             }
         } catch (const std::invalid_argument&) {
-            std::cout << "Invalid input. Please enter a number." << std::endl;
+            std::cout << "Invalid input. Please enter a valid number." << std::endl;
         } catch (const std::out_of_range&) {
             std::cout << "Input out of range. Please enter a value between " << min_value << " and " << max_value << "." << std::endl;
         }

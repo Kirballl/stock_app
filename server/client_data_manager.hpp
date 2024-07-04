@@ -45,6 +45,8 @@ public:
     Serialize::CompletedOredrs get_last_completed_oreders();
     Serialize::QuoteHistory get_quote_history();
 
+    bool cancel_active_order(trade_type_t trade_type, int64_t order_id, const std::string& client_username);
+
     //*INFO: Condition variables notifications
     void notify_order_received();
     void notify_to_stop_matching_orders();

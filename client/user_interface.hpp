@@ -3,6 +3,7 @@
 
 #include <string>
 #include <thread>
+#include <limits>
 
 #include <boost/asio.hpp>
 

@@ -36,10 +36,30 @@ Serialize::TradeOrder Client::form_order(trade_type_t trade_type, double usd_cos
     }
 
     spdlog::info("New order formed: cost={} amount={} type={}", 
-                 order.usd_cost(), order.usd_amount(), 
-                (order.type() == Serialize::TradeOrder::BUY) ? "BUY" : "SELL");
+                 order.usd_cost(), order.usd_amount(), (trade_type == BUY) ? "BUY" : "SELL");
 
     return order;
+}
+
+Serialize::CancelTradeOrder Client::cancel_order(trade_type_t trade_type, int64_t order_id) {
+    Serialize::CancelTradeOrder cancel_order;
+
+    switch (trade_type) {
+        case BUY : {
+            cancel_order.set_type(Serialize::CancelTradeOrder::BUY);
+            break;
+        }
+        case SELL : {
+            cancel_order.set_type(Serialize::CancelTradeOrder::SELL);
+            break;
+        }
+    }
+    cancel_order.set_order_id(order_id);
+
+    spdlog::info("Request to cancel order formed: id={}, type={}", 
+                 order_id, (trade_type == BUY) ? "BUY" : "SELL");
+
+    return cancel_order;
 }
 
 bool Client::send_request_to_stock(Serialize::TradeRequest& request) {
@@ -123,7 +143,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }
 
-        case Serialize::TradeResponse::SUCCES_VIEW_BALANCE : {
+        case Serialize::TradeResponse::SUCCESS_VIEW_BALANCE : {
             std::cout << "\nYour balance: " 
                       << response.account_balance().rub_balance() << " RUB, "
                       << response.account_balance().usd_balance() << " USD."
@@ -131,7 +151,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }   
 
-        case Serialize::TradeResponse::SUCCES_VIEW_ALL_ACTIVE_ORDERS: {
+        case Serialize::TradeResponse::SUCCESS_VIEW_ALL_ACTIVE_ORDERS: {
             const auto& active_orders = response.active_orders();
 
             std::cout << "Active Buy Orders:\n";
@@ -157,7 +177,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }
 
-        case Serialize::TradeResponse::SUCCES_VIEW_COMPLETED_TRADES: {
+        case Serialize::TradeResponse::SUCCESS_VIEW_COMPLETED_TRADES: {
             const auto& completed_orders = response.completed_orders();
 
             std::cout << "\nCompleted Buy Orders:\n";
@@ -180,7 +200,7 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             return true;
         }
 
-        case Serialize::TradeResponse::SUCCES_VIEW_QUOTE_HISTORY: {   
+        case Serialize::TradeResponse::SUCCESS_VIEW_QUOTE_HISTORY: {   
             const auto& quote_history = response.quote_history();
 
             std::cout << "\nQuote History:\n";
@@ -191,6 +211,16 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             
             return true;
         }
+
+        case Serialize::TradeResponse::SUCCESS_CANCEL_ACTIVE_ORDER : {
+            std::cout << "\nOrder successfully canceled" << std::endl;
+            return true;
+        }
+        case Serialize::TradeResponse::ERROR_CANCEL_ACTIVE_ORDER : {
+            std::cout << "\nYou can't cancel this order" << std::endl;
+            return true;
+        }
+
         
         case Serialize::TradeResponse::ERROR : {
             std::cout << "\nUnkown error" << std::endl;

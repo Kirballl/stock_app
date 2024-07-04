@@ -52,6 +52,9 @@ extern AccountBalanceDefaultTypeInternal _AccountBalance_default_instance_;
 class ActiveOrders;
 struct ActiveOrdersDefaultTypeInternal;
 extern ActiveOrdersDefaultTypeInternal _ActiveOrders_default_instance_;
+class CancelTradeOrder;
+struct CancelTradeOrderDefaultTypeInternal;
+extern CancelTradeOrderDefaultTypeInternal _CancelTradeOrder_default_instance_;
 class ClientBalance;
 struct ClientBalanceDefaultTypeInternal;
 extern ClientBalanceDefaultTypeInternal _ClientBalance_default_instance_;
@@ -83,6 +86,7 @@ extern TradeResponseDefaultTypeInternal _TradeResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Serialize::AccountBalance* Arena::CreateMaybeMessage<::Serialize::AccountBalance>(Arena*);
 template<> ::Serialize::ActiveOrders* Arena::CreateMaybeMessage<::Serialize::ActiveOrders>(Arena*);
+template<> ::Serialize::CancelTradeOrder* Arena::CreateMaybeMessage<::Serialize::CancelTradeOrder>(Arena*);
 template<> ::Serialize::ClientBalance* Arena::CreateMaybeMessage<::Serialize::ClientBalance>(Arena*);
 template<> ::Serialize::CompletedOredrs* Arena::CreateMaybeMessage<::Serialize::CompletedOredrs>(Arena*);
 template<> ::Serialize::Quote* Arena::CreateMaybeMessage<::Serialize::Quote>(Arena*);
@@ -119,6 +123,31 @@ inline bool TradeOrder_TradeType_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, TradeOrder_TradeType* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<TradeOrder_TradeType>(
     TradeOrder_TradeType_descriptor(), name, value);
+}
+enum CancelTradeOrder_TradeType : int {
+  CancelTradeOrder_TradeType_BUY = 0,
+  CancelTradeOrder_TradeType_SELL = 1,
+  CancelTradeOrder_TradeType_CancelTradeOrder_TradeType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  CancelTradeOrder_TradeType_CancelTradeOrder_TradeType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool CancelTradeOrder_TradeType_IsValid(int value);
+constexpr CancelTradeOrder_TradeType CancelTradeOrder_TradeType_TradeType_MIN = CancelTradeOrder_TradeType_BUY;
+constexpr CancelTradeOrder_TradeType CancelTradeOrder_TradeType_TradeType_MAX = CancelTradeOrder_TradeType_SELL;
+constexpr int CancelTradeOrder_TradeType_TradeType_ARRAYSIZE = CancelTradeOrder_TradeType_TradeType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CancelTradeOrder_TradeType_descriptor();
+template<typename T>
+inline const std::string& CancelTradeOrder_TradeType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, CancelTradeOrder_TradeType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function CancelTradeOrder_TradeType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    CancelTradeOrder_TradeType_descriptor(), enum_t_value);
+}
+inline bool CancelTradeOrder_TradeType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, CancelTradeOrder_TradeType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<CancelTradeOrder_TradeType>(
+    CancelTradeOrder_TradeType_descriptor(), name, value);
 }
 enum TradeRequest_CommandType : int {
   TradeRequest_CommandType_SIGN_UP = 0,
@@ -159,11 +188,11 @@ enum TradeResponse_status : int {
   TradeResponse_status_INVALID_USERNAME_OR_PASSWORD = 4,
   TradeResponse_status_USER_ALREADY_LOGGED_IN = 5,
   TradeResponse_status_ORDER_SUCCESSFULLY_CREATED = 6,
-  TradeResponse_status_SUCCES_VIEW_BALANCE = 7,
-  TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS = 8,
-  TradeResponse_status_SUCCES_VIEW_COMPLETED_TRADES = 10,
-  TradeResponse_status_SUCCES_VIEW_QUOTE_HISTORY = 11,
-  TradeResponse_status_SUCCES_CANCEL_ACTIVE_ORDER = 12,
+  TradeResponse_status_SUCCESS_VIEW_BALANCE = 7,
+  TradeResponse_status_SUCCESS_VIEW_ALL_ACTIVE_ORDERS = 8,
+  TradeResponse_status_SUCCESS_VIEW_COMPLETED_TRADES = 10,
+  TradeResponse_status_SUCCESS_VIEW_QUOTE_HISTORY = 11,
+  TradeResponse_status_SUCCESS_CANCEL_ACTIVE_ORDER = 12,
   TradeResponse_status_ERROR_CANCEL_ACTIVE_ORDER = 13,
   TradeResponse_status_ORDER_MATCHED = 14,
   TradeResponse_status_TradeResponse_status_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
@@ -777,6 +806,195 @@ class TradeOrder final :
 };
 // -------------------------------------------------------------------
 
+class CancelTradeOrder final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.CancelTradeOrder) */ {
+ public:
+  inline CancelTradeOrder() : CancelTradeOrder(nullptr) {}
+  ~CancelTradeOrder() override;
+  explicit PROTOBUF_CONSTEXPR CancelTradeOrder(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  CancelTradeOrder(const CancelTradeOrder& from);
+  CancelTradeOrder(CancelTradeOrder&& from) noexcept
+    : CancelTradeOrder() {
+    *this = ::std::move(from);
+  }
+
+  inline CancelTradeOrder& operator=(const CancelTradeOrder& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CancelTradeOrder& operator=(CancelTradeOrder&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CancelTradeOrder& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CancelTradeOrder* internal_default_instance() {
+    return reinterpret_cast<const CancelTradeOrder*>(
+               &_CancelTradeOrder_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(CancelTradeOrder& a, CancelTradeOrder& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CancelTradeOrder* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CancelTradeOrder* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CancelTradeOrder* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CancelTradeOrder>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const CancelTradeOrder& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const CancelTradeOrder& from) {
+    CancelTradeOrder::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CancelTradeOrder* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Serialize.CancelTradeOrder";
+  }
+  protected:
+  explicit CancelTradeOrder(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef CancelTradeOrder_TradeType TradeType;
+  static constexpr TradeType BUY =
+    CancelTradeOrder_TradeType_BUY;
+  static constexpr TradeType SELL =
+    CancelTradeOrder_TradeType_SELL;
+  static inline bool TradeType_IsValid(int value) {
+    return CancelTradeOrder_TradeType_IsValid(value);
+  }
+  static constexpr TradeType TradeType_MIN =
+    CancelTradeOrder_TradeType_TradeType_MIN;
+  static constexpr TradeType TradeType_MAX =
+    CancelTradeOrder_TradeType_TradeType_MAX;
+  static constexpr int TradeType_ARRAYSIZE =
+    CancelTradeOrder_TradeType_TradeType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  TradeType_descriptor() {
+    return CancelTradeOrder_TradeType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& TradeType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, TradeType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function TradeType_Name.");
+    return CancelTradeOrder_TradeType_Name(enum_t_value);
+  }
+  static inline bool TradeType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      TradeType* value) {
+    return CancelTradeOrder_TradeType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kOrderIdFieldNumber = 2,
+    kTypeFieldNumber = 1,
+  };
+  // int64 order_id = 2;
+  void clear_order_id();
+  int64_t order_id() const;
+  void set_order_id(int64_t value);
+  private:
+  int64_t _internal_order_id() const;
+  void _internal_set_order_id(int64_t value);
+  public:
+
+  // .Serialize.CancelTradeOrder.TradeType type = 1;
+  void clear_type();
+  ::Serialize::CancelTradeOrder_TradeType type() const;
+  void set_type(::Serialize::CancelTradeOrder_TradeType value);
+  private:
+  ::Serialize::CancelTradeOrder_TradeType _internal_type() const;
+  void _internal_set_type(::Serialize::CancelTradeOrder_TradeType value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Serialize.CancelTradeOrder)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int64_t order_id_;
+    int type_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_trade_5fmarket_5fprotocol_2eproto;
+};
+// -------------------------------------------------------------------
+
 class TradeRequest final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Serialize.TradeRequest) */ {
  public:
@@ -824,6 +1042,7 @@ class TradeRequest final :
     kSignUpRequest = 4,
     kSignInRequest = 5,
     kOrder = 6,
+    kCancelOrder = 7,
     REQUESTDATA_NOT_SET = 0,
   };
 
@@ -832,7 +1051,7 @@ class TradeRequest final :
                &_TradeRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(TradeRequest& a, TradeRequest& b) {
     a.Swap(&b);
@@ -953,6 +1172,7 @@ class TradeRequest final :
     kSignUpRequestFieldNumber = 4,
     kSignInRequestFieldNumber = 5,
     kOrderFieldNumber = 6,
+    kCancelOrderFieldNumber = 7,
   };
   // string username = 2;
   void clear_username();
@@ -1045,6 +1265,24 @@ class TradeRequest final :
       ::Serialize::TradeOrder* order);
   ::Serialize::TradeOrder* unsafe_arena_release_order();
 
+  // .Serialize.CancelTradeOrder cancel_order = 7;
+  bool has_cancel_order() const;
+  private:
+  bool _internal_has_cancel_order() const;
+  public:
+  void clear_cancel_order();
+  const ::Serialize::CancelTradeOrder& cancel_order() const;
+  PROTOBUF_NODISCARD ::Serialize::CancelTradeOrder* release_cancel_order();
+  ::Serialize::CancelTradeOrder* mutable_cancel_order();
+  void set_allocated_cancel_order(::Serialize::CancelTradeOrder* cancel_order);
+  private:
+  const ::Serialize::CancelTradeOrder& _internal_cancel_order() const;
+  ::Serialize::CancelTradeOrder* _internal_mutable_cancel_order();
+  public:
+  void unsafe_arena_set_allocated_cancel_order(
+      ::Serialize::CancelTradeOrder* cancel_order);
+  ::Serialize::CancelTradeOrder* unsafe_arena_release_cancel_order();
+
   void clear_RequestData();
   RequestDataCase RequestData_case() const;
   // @@protoc_insertion_point(class_scope:Serialize.TradeRequest)
@@ -1053,6 +1291,7 @@ class TradeRequest final :
   void set_has_sign_up_request();
   void set_has_sign_in_request();
   void set_has_order();
+  void set_has_cancel_order();
 
   inline bool has_RequestData() const;
   inline void clear_has_RequestData();
@@ -1070,6 +1309,7 @@ class TradeRequest final :
       ::Serialize::SignUpRequest* sign_up_request_;
       ::Serialize::SignInRequest* sign_in_request_;
       ::Serialize::TradeOrder* order_;
+      ::Serialize::CancelTradeOrder* cancel_order_;
     } RequestData_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
     uint32_t _oneof_case_[1];
@@ -1138,7 +1378,7 @@ class TradeResponse final :
                &_TradeResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(TradeResponse& a, TradeResponse& b) {
     a.Swap(&b);
@@ -1223,16 +1463,16 @@ class TradeResponse final :
     TradeResponse_status_USER_ALREADY_LOGGED_IN;
   static constexpr status ORDER_SUCCESSFULLY_CREATED =
     TradeResponse_status_ORDER_SUCCESSFULLY_CREATED;
-  static constexpr status SUCCES_VIEW_BALANCE =
-    TradeResponse_status_SUCCES_VIEW_BALANCE;
-  static constexpr status SUCCES_VIEW_ALL_ACTIVE_ORDERS =
-    TradeResponse_status_SUCCES_VIEW_ALL_ACTIVE_ORDERS;
-  static constexpr status SUCCES_VIEW_COMPLETED_TRADES =
-    TradeResponse_status_SUCCES_VIEW_COMPLETED_TRADES;
-  static constexpr status SUCCES_VIEW_QUOTE_HISTORY =
-    TradeResponse_status_SUCCES_VIEW_QUOTE_HISTORY;
-  static constexpr status SUCCES_CANCEL_ACTIVE_ORDER =
-    TradeResponse_status_SUCCES_CANCEL_ACTIVE_ORDER;
+  static constexpr status SUCCESS_VIEW_BALANCE =
+    TradeResponse_status_SUCCESS_VIEW_BALANCE;
+  static constexpr status SUCCESS_VIEW_ALL_ACTIVE_ORDERS =
+    TradeResponse_status_SUCCESS_VIEW_ALL_ACTIVE_ORDERS;
+  static constexpr status SUCCESS_VIEW_COMPLETED_TRADES =
+    TradeResponse_status_SUCCESS_VIEW_COMPLETED_TRADES;
+  static constexpr status SUCCESS_VIEW_QUOTE_HISTORY =
+    TradeResponse_status_SUCCESS_VIEW_QUOTE_HISTORY;
+  static constexpr status SUCCESS_CANCEL_ACTIVE_ORDER =
+    TradeResponse_status_SUCCESS_CANCEL_ACTIVE_ORDER;
   static constexpr status ERROR_CANCEL_ACTIVE_ORDER =
     TradeResponse_status_ERROR_CANCEL_ACTIVE_ORDER;
   static constexpr status ORDER_MATCHED =
@@ -1477,7 +1717,7 @@ class ClientBalance final :
                &_ClientBalance_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(ClientBalance& a, ClientBalance& b) {
     a.Swap(&b);
@@ -1650,7 +1890,7 @@ class AccountBalance final :
                &_AccountBalance_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(AccountBalance& a, AccountBalance& b) {
     a.Swap(&b);
@@ -1809,7 +2049,7 @@ class ActiveOrders final :
                &_ActiveOrders_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(ActiveOrders& a, ActiveOrders& b) {
     a.Swap(&b);
@@ -1986,7 +2226,7 @@ class CompletedOredrs final :
                &_CompletedOredrs_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(CompletedOredrs& a, CompletedOredrs& b) {
     a.Swap(&b);
@@ -2163,7 +2403,7 @@ class QuoteHistory final :
                &_QuoteHistory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(QuoteHistory& a, QuoteHistory& b) {
     a.Swap(&b);
@@ -2320,7 +2560,7 @@ class Quote final :
                &_Quote_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(Quote& a, Quote& b) {
     a.Swap(&b);
@@ -2820,6 +3060,50 @@ inline void TradeOrder::set_allocated_username(std::string* username) {
 
 // -------------------------------------------------------------------
 
+// CancelTradeOrder
+
+// .Serialize.CancelTradeOrder.TradeType type = 1;
+inline void CancelTradeOrder::clear_type() {
+  _impl_.type_ = 0;
+}
+inline ::Serialize::CancelTradeOrder_TradeType CancelTradeOrder::_internal_type() const {
+  return static_cast< ::Serialize::CancelTradeOrder_TradeType >(_impl_.type_);
+}
+inline ::Serialize::CancelTradeOrder_TradeType CancelTradeOrder::type() const {
+  // @@protoc_insertion_point(field_get:Serialize.CancelTradeOrder.type)
+  return _internal_type();
+}
+inline void CancelTradeOrder::_internal_set_type(::Serialize::CancelTradeOrder_TradeType value) {
+  
+  _impl_.type_ = value;
+}
+inline void CancelTradeOrder::set_type(::Serialize::CancelTradeOrder_TradeType value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:Serialize.CancelTradeOrder.type)
+}
+
+// int64 order_id = 2;
+inline void CancelTradeOrder::clear_order_id() {
+  _impl_.order_id_ = int64_t{0};
+}
+inline int64_t CancelTradeOrder::_internal_order_id() const {
+  return _impl_.order_id_;
+}
+inline int64_t CancelTradeOrder::order_id() const {
+  // @@protoc_insertion_point(field_get:Serialize.CancelTradeOrder.order_id)
+  return _internal_order_id();
+}
+inline void CancelTradeOrder::_internal_set_order_id(int64_t value) {
+  
+  _impl_.order_id_ = value;
+}
+inline void CancelTradeOrder::set_order_id(int64_t value) {
+  _internal_set_order_id(value);
+  // @@protoc_insertion_point(field_set:Serialize.CancelTradeOrder.order_id)
+}
+
+// -------------------------------------------------------------------
+
 // TradeRequest
 
 // .Serialize.TradeRequest.CommandType command = 1;
@@ -3161,6 +3445,80 @@ inline ::Serialize::TradeOrder* TradeRequest::_internal_mutable_order() {
 inline ::Serialize::TradeOrder* TradeRequest::mutable_order() {
   ::Serialize::TradeOrder* _msg = _internal_mutable_order();
   // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.order)
+  return _msg;
+}
+
+// .Serialize.CancelTradeOrder cancel_order = 7;
+inline bool TradeRequest::_internal_has_cancel_order() const {
+  return RequestData_case() == kCancelOrder;
+}
+inline bool TradeRequest::has_cancel_order() const {
+  return _internal_has_cancel_order();
+}
+inline void TradeRequest::set_has_cancel_order() {
+  _impl_._oneof_case_[0] = kCancelOrder;
+}
+inline void TradeRequest::clear_cancel_order() {
+  if (_internal_has_cancel_order()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.RequestData_.cancel_order_;
+    }
+    clear_has_RequestData();
+  }
+}
+inline ::Serialize::CancelTradeOrder* TradeRequest::release_cancel_order() {
+  // @@protoc_insertion_point(field_release:Serialize.TradeRequest.cancel_order)
+  if (_internal_has_cancel_order()) {
+    clear_has_RequestData();
+    ::Serialize::CancelTradeOrder* temp = _impl_.RequestData_.cancel_order_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.RequestData_.cancel_order_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Serialize::CancelTradeOrder& TradeRequest::_internal_cancel_order() const {
+  return _internal_has_cancel_order()
+      ? *_impl_.RequestData_.cancel_order_
+      : reinterpret_cast< ::Serialize::CancelTradeOrder&>(::Serialize::_CancelTradeOrder_default_instance_);
+}
+inline const ::Serialize::CancelTradeOrder& TradeRequest::cancel_order() const {
+  // @@protoc_insertion_point(field_get:Serialize.TradeRequest.cancel_order)
+  return _internal_cancel_order();
+}
+inline ::Serialize::CancelTradeOrder* TradeRequest::unsafe_arena_release_cancel_order() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Serialize.TradeRequest.cancel_order)
+  if (_internal_has_cancel_order()) {
+    clear_has_RequestData();
+    ::Serialize::CancelTradeOrder* temp = _impl_.RequestData_.cancel_order_;
+    _impl_.RequestData_.cancel_order_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void TradeRequest::unsafe_arena_set_allocated_cancel_order(::Serialize::CancelTradeOrder* cancel_order) {
+  clear_RequestData();
+  if (cancel_order) {
+    set_has_cancel_order();
+    _impl_.RequestData_.cancel_order_ = cancel_order;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Serialize.TradeRequest.cancel_order)
+}
+inline ::Serialize::CancelTradeOrder* TradeRequest::_internal_mutable_cancel_order() {
+  if (!_internal_has_cancel_order()) {
+    clear_RequestData();
+    set_has_cancel_order();
+    _impl_.RequestData_.cancel_order_ = CreateMaybeMessage< ::Serialize::CancelTradeOrder >(GetArenaForAllocation());
+  }
+  return _impl_.RequestData_.cancel_order_;
+}
+inline ::Serialize::CancelTradeOrder* TradeRequest::mutable_cancel_order() {
+  ::Serialize::CancelTradeOrder* _msg = _internal_mutable_cancel_order();
+  // @@protoc_insertion_point(field_mutable:Serialize.TradeRequest.cancel_order)
   return _msg;
 }
 
@@ -4123,6 +4481,8 @@ inline void Quote::set_price(double value) {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -4134,6 +4494,11 @@ template <> struct is_proto_enum< ::Serialize::TradeOrder_TradeType> : ::std::tr
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::Serialize::TradeOrder_TradeType>() {
   return ::Serialize::TradeOrder_TradeType_descriptor();
+}
+template <> struct is_proto_enum< ::Serialize::CancelTradeOrder_TradeType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Serialize::CancelTradeOrder_TradeType>() {
+  return ::Serialize::CancelTradeOrder_TradeType_descriptor();
 }
 template <> struct is_proto_enum< ::Serialize::TradeRequest_CommandType> : ::std::true_type {};
 template <>
