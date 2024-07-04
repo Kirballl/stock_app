@@ -4,7 +4,7 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
         io_context_(io_context),
         acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), config.port)),
         session_manager_(std::make_shared<SessionManager>()) {
-    spdlog::info("\nServer launched! Listen  {} : {}", config.host, config.port);
+    spdlog::info("Server launched! Listen  {} : {}", config.host, config.port);
 
     session_manager_->init_database();
     session_manager_->init_core();
