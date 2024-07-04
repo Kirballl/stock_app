@@ -3,7 +3,6 @@
 ClientDataManager::ClientDataManager(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager),
                                          buy_orders_queue_(std::make_shared<OrderQueue>()),
                                          sell_orders_queue_(std::make_shared<OrderQueue>()) {
-    //initialize_from_database();
 }
 
 void ClientDataManager::initialize_from_database() {
@@ -13,12 +12,9 @@ void ClientDataManager::initialize_from_database() {
     for (const auto& client_balance : clients_balances) {
         clients_funds_data_[client_balance.username()] = client_balance.funds();
     }
-    std::cout << "clients_balances from db loaded to clients_funds_data_" << std::endl;
 
     auto active_buy_orders = database->load_active_orders_from_db(Serialize::TradeOrder::BUY);
-    std::cout << "active_buy_orders from db loaded to clients_funds_data_" << std::endl;
     auto active_sell_orders = database->load_active_orders_from_db(Serialize::TradeOrder::SELL);
-    std::cout << "active_sell_orders from db loaded to clients_funds_data_" << std::endl;
     for (const auto& order : active_buy_orders) {
         active_buy_orders_[order.order_id()] = order;
     }
@@ -26,14 +22,12 @@ void ClientDataManager::initialize_from_database() {
         active_sell_orders_[order.order_id()] = order;
     }
 
-    auto last_completed_orders = database->load_last_completed_orders(AMOUNT_LAST_COMPLETED_OREDRS);
-    std::cout << "last_completed_orders from db loaded to clients_funds_data_" << std::endl;
+    auto last_completed_orders = database->load_last_completed_orders(AMOUNT_LAST_COMPLETED_OREDRS);;
     for (const auto& completed_order : last_completed_orders) {
         completed_orders_.push_back(completed_order);
     }
 
     auto qoute_history = database->load_quote_history(AMOUNT_QUOTE_HISTORY);
-    std::cout << "qoute_history from db loaded to clients_funds_data_" << std::endl;
     for (const auto& quote : qoute_history) {
         quote_history_.push_back(quote);
     }
@@ -183,6 +177,7 @@ void ClientDataManager::create_new_client_fund_data(std::string new_key) {
     new_account_balance.set_rub_balance(0.0);
 
     clients_funds_data_[new_key] = new_account_balance;
+    spdlog::info("New client_fund_data username={} in client_data_manager created", new_key);
 }
 
 void ClientDataManager::push_order_to_active_orders(const Serialize::TradeOrder& order) {
@@ -195,7 +190,6 @@ void ClientDataManager::push_order_to_active_orders(const Serialize::TradeOrder&
 }
 
 Serialize::AccountBalance ClientDataManager::get_client_balance(const std::string& client_username) const {
-
     std::shared_lock<std::shared_mutex> get_client_balance_shared_lock(client_data_mutex_);
 
     auto hash_map_iterator = clients_funds_data_.find(client_username);

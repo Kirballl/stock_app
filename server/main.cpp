@@ -11,7 +11,6 @@
 #include "common.hpp" 
 #include "server.hpp"
 
-//TODO gtest - unit tests
 
 void signal_handler(const boost::system::error_code& error, int signal, std::shared_ptr<Server> server) {
     std::cout << "Interrupt signal received" << std::endl;

@@ -15,7 +15,7 @@ void SessionClientConnection::start () {
 
 void SessionClientConnection::async_read_data_from_socket() {
     auto self_ptr(shared_from_this());
-    // Read message length
+    //*INFO Read message length
     boost::asio::async_read(socket_,boost::asio::buffer(raw_data_length_from_socket_, sizeof(uint32_t)),
         [this, self_ptr](boost::system::error_code error_code, std::size_t length) {
             if (error_code) {
@@ -32,7 +32,7 @@ void SessionClientConnection::async_read_data_from_socket() {
             uint32_t msg_length = ntohl(*reinterpret_cast<uint32_t*>(raw_data_length_from_socket_));
             raw_data_from_socket_.resize(msg_length);
 
-            // Read message body
+            //*INFO Read message body
             boost::asio::async_read(socket_, boost::asio::buffer(raw_data_from_socket_, msg_length),
                 [this, self_ptr](boost::system::error_code error_code, std::size_t length) {
                     if (error_code) {

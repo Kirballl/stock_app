@@ -28,13 +28,11 @@ void SessionManager::init_mockdb(std::shared_ptr<IDatabase> mock_db) {
 void SessionManager::init_core() {
     core_ = std::make_shared<Core>(shared_from_this());
     core_->load_all_active_orders_from_db();
-    std::cout << "active orders from db loaded to core" << std::endl;
 }
 
 void SessionManager::init_client_data_manager() {
     client_data_manager_ = std::make_shared<ClientDataManager>(shared_from_this());
     client_data_manager_->initialize_from_database();
-    std::cout << "init_client_data_manager()" << std::endl;
 }
 
 void SessionManager::init_auth() {
@@ -138,8 +136,6 @@ void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> ses
 
     auto clients_sessions_iterator = std::find(clients_sessions_.begin(), clients_sessions_.end(), session);
     if (clients_sessions_iterator != clients_sessions_.end()) {
-         std::cout << "clients_sessions_.erase(clients_sessions_iterator);" << client_endpoint_info << std::endl;
-
         clients_sessions_.erase(clients_sessions_iterator);
 
         std::cout << "Session removed for client " << client_endpoint_info << std::endl;
@@ -176,7 +172,6 @@ void SessionManager::stop_all_sessions() {
     }
 
     for (auto& session : sessions_copy) {
-        std::cout << session->get_client_endpoint_info() << "->closing" << std::endl;
         session->close_this_session();
         std::cout << session->get_client_endpoint_info() << "->closed" << std::endl;
     }

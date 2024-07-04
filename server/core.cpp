@@ -1,7 +1,6 @@
 #include "core.hpp"
 
 Core::Core(std::shared_ptr<SessionManager> session_manager) : session_manager_(session_manager) {
-    //load_all_active_orders_from_db();
 }
 
 void Core::save_all_active_orders_to_db() {
@@ -34,8 +33,6 @@ void Core::load_all_active_orders_from_db() {
 
 //*INFO matching orders thread
 void Core::stock_loop() {
-
-    //
 
     while (session_manager_->is_runnig()) {
 
@@ -136,7 +133,6 @@ void Core::place_order_to_priority_queue(const Serialize::TradeOrder& order) {
 
 //*INFO: Matching engine
 void Core::process_orders() {
-    std::cout << "process_orders() started" << std::endl; //DEBUG
 
     while (!buy_orders_book_.empty() && !sell_orders_book_.empty()) {
         Serialize::TradeOrder buy_order = buy_orders_book_.top();
