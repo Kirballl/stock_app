@@ -43,7 +43,6 @@ try {
 
     } catch (std::exception& e) {
         spdlog::error("Exception: {}", e.what());
-        std::cerr << "Exeption: " << e.what() << std::endl;
     }
 
     return 0;

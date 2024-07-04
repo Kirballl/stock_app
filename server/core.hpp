@@ -72,13 +72,6 @@ private:
                                  int32_t transaction_amount, double transaction_cost); 
     bool move_order_to_completed_orders(Serialize::TradeOrder& completed_order);
 
-
-// DEBUG //
-   void print_orders_book();
-   std::string timestamp_to_readable(int64_t timestamp);
-// //
-
-
 private:
     mutable std::mutex core_mutex_;
 

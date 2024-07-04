@@ -136,7 +136,6 @@ Serialize::TradeResponse SessionClientConnection::handle_received_command(Serial
         auto auth = session_manager_->get_auth();
         //*INFO check jwt
         if(!auth->verify_token(request.jwt(), username_)) {
-            std::cerr << "Username sent invalid jwt, request from:" << get_client_endpoint_info() << std::endl;
             spdlog::info("Username {} sent invalid jwt, request from: {}",
                             username_, get_client_endpoint_info());
             response.set_response_msg(Serialize::TradeResponse::ERROR); 

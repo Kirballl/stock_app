@@ -36,17 +36,9 @@ void Core::stock_loop() {
 
     while (session_manager_->is_runnig()) {
 
-//                                       //
- std::cout << ">stock_loop_wait_for_orders" << std::endl;
-//                                       //
-
-
         auto client_data_manager = session_manager_->get_client_data_manager();
         client_data_manager->stock_loop_wait_for_orders(session_manager_);
 
-//                                       //
- std::cout << "stock_loop" << std::endl;
-//                                       //
         std::lock_guard<std::mutex> match_engine_lock_guard(core_mutex_);
 
         complement_order_books();
@@ -56,57 +48,9 @@ void Core::stock_loop() {
             break;
         }
 
-//                                       //
-
-        print_orders_book();
-//                                       //
-
         process_orders();
     }
 }
-
-
-//DEBUG
-void Core::print_orders_book() {
-    std::cout << "Buy Orders Book:" << std::endl;
-    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, BuyOrderComparator> temp_buy_queue = buy_orders_book_;
-    while (!temp_buy_queue.empty()) {
-        const Serialize::TradeOrder& order = temp_buy_queue.top();
-        std::cout << "Type: " << (order.type() == Serialize::TradeOrder::BUY ? "BUY" : "SELL")
-                << ", USD Cost: " << order.usd_cost()
-                << ", USD Amount: " << order.usd_amount()
-                << ", Timestamp: " << timestamp_to_readable(order.timestamp())
-                << ", Order ID: " << order.order_id()
-                << ", Username: " << order.username()
-                << std::endl;
-        temp_buy_queue.pop();
-    }
-    std::cout << "Sell Orders Book:" << std::endl;
-    std::priority_queue<Serialize::TradeOrder, std::vector<Serialize::TradeOrder>, SellOrderComparator> temp_sell_queue = sell_orders_book_;
-    while (!temp_sell_queue.empty()) {
-        const Serialize::TradeOrder& order = temp_sell_queue.top();
-        std::cout << "Type: " << (order.type() == Serialize::TradeOrder::BUY ? "BUY" : "SELL")
-                << ", USD Cost: " << order.usd_cost()
-                << ", USD Amount: " << order.usd_amount()
-                << ", Timestamp: " <<  timestamp_to_readable(order.timestamp())
-                << ", Order ID: " << order.order_id()
-                << ", Username: " << order.username()
-                << std::endl;
-        temp_sell_queue.pop();
-    }
-}
-std::string Core::timestamp_to_readable(int64_t timestamp) {
-    auto millis = std::chrono::milliseconds(timestamp);
-    auto secs = std::chrono::duration_cast<std::chrono::seconds>(millis);
-    std::time_t time = secs.count();
-    std::tm* tm = std::localtime(&time);
-
-    std::stringstream ss;
-    ss << std::put_time(tm, "%Y-%m-%d %H:%M:%S");
-    ss << '.' << std::setw(3) << std::setfill('0') << (millis.count() % 1000);
-    return ss.str();
-}
-//////////////////////////////////////
 
 void Core::complement_order_books() {
     auto client_data_manager = session_manager_->get_client_data_manager();
@@ -173,8 +117,6 @@ void Core::process_orders() {
 }
 
 bool Core::match_orders(Serialize::TradeOrder& sell_order, Serialize::TradeOrder& buy_order) {
-
-    std::cout << "match_orders   !!! " << std::endl;
 
     int32_t transaction_amount = std::min(sell_order.usd_amount(), buy_order.usd_amount());
     double transaction_cost = transaction_amount * buy_order.usd_cost(); //*INFO: RUB

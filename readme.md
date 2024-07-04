@@ -19,3 +19,8 @@ run client
 ```bash
 ./build/client/client
 ```
+
+run tests
+```bash
+./build/tests/trade_tests
+```

@@ -15,7 +15,6 @@ void SessionManager::init_database() {
     try {
         database_ = std::make_shared<Database>(db_config_info);
     } catch (const std::exception& e) {
-        std::cerr << "Error creating database: " << e.what() << std::endl;
         spdlog::error("Error creating database: exception: {}", e.what());
     }
 }
@@ -79,7 +78,6 @@ void SessionManager::try_to_create_new_session_client_connection() {
         std::lock_guard add_new_session_lock_guard(handle_sessions_mutex_);
         clients_sessions_.push_back(new_session_client_connection);
 
-        std::cout << "New client connected:" << new_session_client_connection->get_client_endpoint_info() << std::endl;
         spdlog::info("Session added for client {}", new_session_client_connection->get_client_endpoint_info());
     }
 }
@@ -88,7 +86,6 @@ void SessionManager::try_to_create_new_session_client_connection() {
 void SessionManager::add_new_connection(boost::asio::ip::tcp::socket new_client_socket) {
     auto new_socket = std::make_unique<boost::asio::ip::tcp::socket>(std::move(new_client_socket));
     if (!new_connections_queue_.enqueue(std::move(new_socket))) {
-        std::cerr << "Failed to add new_socket in new_connections_queue_" << std::endl;
         spdlog::error("Failed to add new_socket in new_connections_queue_");
     }
 }
@@ -137,8 +134,6 @@ void SessionManager::remove_session(std::shared_ptr<SessionClientConnection> ses
     auto clients_sessions_iterator = std::find(clients_sessions_.begin(), clients_sessions_.end(), session);
     if (clients_sessions_iterator != clients_sessions_.end()) {
         clients_sessions_.erase(clients_sessions_iterator);
-
-        std::cout << "Session removed for client " << client_endpoint_info << std::endl;
         spdlog::info("Session removed for client {}", client_endpoint_info);
     }
 }
@@ -169,7 +164,6 @@ void SessionManager::stop_all_sessions() {
 
     for (auto& session : sessions_copy) {
         session->close_this_session();
-        std::cout << session->get_client_endpoint_info() << "->closed" << std::endl;
     }
 
     {

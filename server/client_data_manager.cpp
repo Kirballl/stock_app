@@ -127,7 +127,6 @@ bool ClientDataManager::add_order_to_completed(const Serialize::TradeOrder& comp
 
     if (!remove_order_from_active_orders(completed_order.order_id(), completed_order.type())) {
         spdlog::error("Failed to remove_order_from_active_orders, order id: {}", completed_order.order_id());
-        std::cerr << "Failed to remove_order_from_active_orders, order id: " << completed_order.order_id()  << std::endl;
     }
 
     Serialize::Quote quote;
@@ -147,7 +146,6 @@ bool ClientDataManager::add_order_to_completed(const Serialize::TradeOrder& comp
 
     } catch (const std::exception& e) {
         spdlog::error("Failed to save completed order or quote to db: {}", e.what());
-        std::cerr << "Failed to save completed order or quote to db: " << e.what() << std::endl;
         return false;
     }
 

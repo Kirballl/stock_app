@@ -14,10 +14,9 @@ Server::Server(boost::asio::io_context& io_context, const Config& config) :
         auto database = session_manager_->get_database();
         database->truncate_active_orders_table();
     } catch (const std::exception& e) {
-        std::cerr << "Error to truncate active orders table:" << e.what() << std::endl;
+        spdlog::error("Error to truncate active orders table: {}", e.what());
     }
 
-    std::cout << "Server launched! Listen " << config.host << ":" << config.port << std::endl;
     start();
 }
 
@@ -36,7 +35,6 @@ void Server::accept_new_connection() {
                 session_manager_->add_new_connection(std::move(new_connectoin_socket));
             } else {
                 spdlog::error("Error accepting new connection {}", ec.message());
-                std::cerr << "Error accepting new connection: " << ec.message() << std::endl;
             }
             accept_new_connection();
         });
@@ -45,7 +43,6 @@ void Server::accept_new_connection() {
 
 void Server::stop() {
     spdlog::info("Stopping server...");
-    std::cout << "Stopping server..." << std::endl;
 
     session_manager_->stop();
     spdlog::info("session_manager_ stopped...");

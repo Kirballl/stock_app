@@ -13,7 +13,6 @@
 
 
 void signal_handler(const boost::system::error_code& error, int signal, std::shared_ptr<Server> server) {
-    std::cout << "Interrupt signal received" << std::endl;
     if (!error) {
         server->stop();
         spdlog::info("Interrupt signal ({}) received. Shutting down...", signal);
@@ -44,7 +43,6 @@ int main() {
     }
     catch (std::exception& e) {
         spdlog::error("Exception: {}", e.what());
-        std::cerr << "Exeption: " << e.what() << std::endl;
     }
     return 0;
 }
