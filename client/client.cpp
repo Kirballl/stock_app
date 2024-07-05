@@ -220,7 +220,6 @@ bool Client::handle_received_response_from_stock(const Serialize::TradeResponse&
             std::cout << "\nYou can't cancel this order" << std::endl;
             return true;
         }
-
         
         case Serialize::TradeResponse::ERROR : {
             std::cout << "\nUnkown error" << std::endl;

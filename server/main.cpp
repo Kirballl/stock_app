@@ -1,7 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <csignal>
-#include <functional>
 
 #include <boost/asio.hpp>
 #include <spdlog/spdlog.h> 
@@ -10,7 +8,6 @@
 #include "config.hpp"
 #include "common.hpp" 
 #include "server.hpp"
-
 
 void signal_handler(const boost::system::error_code& error, int signal, std::shared_ptr<Server> server) {
     if (!error) {

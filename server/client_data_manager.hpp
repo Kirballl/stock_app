@@ -6,7 +6,6 @@
 #include <shared_mutex>
 #include <algorithm>
 
-
 #include "common.hpp"
 #include "time_order_utils.hpp"
 #include "order_queue.hpp"
