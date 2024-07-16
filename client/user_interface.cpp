@@ -10,11 +10,10 @@ void UserInterface::run() {
     stock_menu();
 }
 
-
 void UserInterface::auth_menu() {
     while (true) {
 
-        std::string menu_message = "\nNTPro:\n"
+        std::string menu_message = "\nExchange the world:\n"
                                    "1) Sign up\n"
                                    "2) Sign in\n"
                                    "3) Exit\n";
